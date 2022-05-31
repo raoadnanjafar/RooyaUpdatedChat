@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Mersaal</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>rooya</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>youtube</string>
+		<string>whatsapp</string>
+		<string>instagram</string>
+		<string>fb</string>
+		<string>tel</string>
+		<string>mailto</string>
+	</array>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsForMedia</key>
+		<true/>
+	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Your Music Library is used to update Alerts.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Your bluetooth is used for directions.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Your bluetooth is used for directions.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Your calendar is used to give precise date for messages.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Your camera is used to update your profile picture and add product images.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Your contact list is used to connect</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Dialboxx uses your local network for Server communication.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is used to provide directions to the destination.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location is used to show you businesses nearby.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is used to provide directions to the destination.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Dialboxx needs to access your device microphone for audio.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Dialboxx would like to access your motion.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Your photo library is used to update profile picture and add product images.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>The app uses speech recognition for dictating messages.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
+</dict>
+</plist>
