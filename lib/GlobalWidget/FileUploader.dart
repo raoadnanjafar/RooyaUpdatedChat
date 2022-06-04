@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
+import 'package:rooya/ApiConfig/BaseURL.dart';
+import 'package:dio/dio.dart' as dio;
 
 Future sendFileMessage(Map<String, dynamic> mapdata) async {
   FormData formData = new FormData.fromMap(mapdata);
@@ -59,5 +61,29 @@ Future<String> uploadFile(String path) async {
   } catch (e) {
     print('Exception is = $e');
     return 'url';
+  }
+}
+
+Future sentMessageAsFile(
+    {String? filePath, String? userID, String? text}) async {
+  var file = File(filePath!);
+  String fileName = file.path.split('/').last;
+  Map<String, dynamic> data = {
+    'server_key': serverKey,
+    'user_id': '$userID',
+    'text': '$text',
+    'message_hash_id': '44444444',
+    'file': await dio.MultipartFile.fromFile(
+      '${file.path}',
+      filename: '$fileName',
+    )
+  };
+  FormData formData = new FormData.fromMap(data);
+  try {
+    final response = await Dio().post('$baseUrl$sendMessage$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
+  } catch (e) {
+    print('Exception is = $e');
   }
 }

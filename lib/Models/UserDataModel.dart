@@ -394,7 +394,7 @@ class UserData {
     lastDataUpdate = json['last_data_update'].toString();
     // details =
     // json['details'] != null ? new Details.fromJson(json['details']) : null;
-    lastAvatarMod = json['last_avatar_mod'];
+    lastAvatarMod = json['last_avatar_mod'].toString();
     lastCoverMod = json['last_cover_mod'].toString();
     points = json['points'].toString();
     dailyPoints = json['daily_points'].toString();

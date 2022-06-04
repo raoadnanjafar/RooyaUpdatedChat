@@ -1,10 +1,10 @@
-import 'package:avatar_glow/avatar_glow.dart';
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'package:dashed_circle/dashed_circle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,8 +20,10 @@ import 'package:rooya/Utils/StoryViewPage.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
-
 import 'UserChat/UserChat.dart';
+
+StreamController<double> sendSmsStreamcontroller =
+    StreamController<double>.broadcast();
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -36,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen>
   final controller = Get.put(ChatScreenProvider());
 
   var selectedIndexController = Get.find<SelectIndexController>();
-
+  StreamSubscription<double>? streamSubscription;
   @override
   void initState() {
     controller.getChatList();
@@ -51,19 +53,8 @@ class _ChatScreenState extends State<ChatScreen>
       });
     }
     getStoryData();
-
-////anim
-    animcontroller =
-        AnimationController(vsync: this, duration: Duration(seconds: 4));
-    base = CurvedAnimation(parent: animcontroller!, curve: Curves.easeOut);
-    reverse = Tween<double>(begin: 0.0, end: -1.0).animate(base!);
-    gap = Tween<double>(begin: 3.0, end: 0.0).animate(base!)
-      ..addListener(() {
-        setState(() {});
-      });
-    animcontroller!.forward();
-    Future.delayed(Duration(seconds: 5), () {
-      animcontroller!.repeat();
+    streamSubscription = sendSmsStreamcontroller.stream.listen((event) {
+      setState(() {});
     });
     super.initState();
   }
@@ -77,15 +68,10 @@ class _ChatScreenState extends State<ChatScreen>
 
   var listOfSelectedMember = <OneToOneChatModel>[].obs;
 
-  Animation? gap;
-  Animation<double>? base;
-  Animation<double>? reverse;
-  AnimationController? animcontroller;
-
   @override
   void dispose() {
     controller.leaveGroup();
-    animcontroller!.dispose();
+    streamSubscription!.cancel();
     super.dispose();
   }
 
@@ -244,7 +230,12 @@ class _ChatScreenState extends State<ChatScreen>
                 () => !controller.loadChat.value
                     ? SliverToBoxAdapter(
                         child: SizedBox(
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(
+                          child: SpinKitFadingCircle(
+                            color: buttonColor,
+                            size: 50.0,
+                          ),
+                        ),
                         height: height - 150,
                         width: width,
                       ))
@@ -324,6 +315,7 @@ class _ChatScreenState extends State<ChatScreen>
                               InkWell(
                                 onTap: () {
                                   if (listOfSelectedMember.isEmpty) {
+                                    controller.leaveGroup();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -335,23 +327,27 @@ class _ChatScreenState extends State<ChatScreen>
                                                   name: controller
                                                           .listofChat[index]
                                                           .firstName
-                                                          .toString() +
-                                                      controller
+                                                          .toString()
+                                                          .isEmpty
+                                                      ? controller
                                                           .listofChat[index]
-                                                          .lastName
-                                                          .toString(),
+                                                          .username
+                                                          .toString()
+                                                      : controller
+                                                              .listofChat[index]
+                                                              .firstName
+                                                              .toString() +
+                                                          controller
+                                                              .listofChat[index]
+                                                              .lastName
+                                                              .toString(),
                                                   profilePic: controller
                                                       .listofChat[index].avatar,
                                                   fromGroup: false,
                                                 ))).then((value) async {
-                                      //   controller.leaveGroup();
-                                      controller.getChatList();
-                                      Future.delayed(
-                                          Duration(
-                                              seconds: 1,
-                                              milliseconds: 500), () {
-                                        //   controller.connectToSocket();
-                                      });
+                                      controller.leaveGroup();
+                                      await controller.getChatList();
+                                      controller.connectToSocket();
                                       setState(() {});
                                     });
                                   } else {
@@ -426,53 +422,41 @@ class _ChatScreenState extends State<ChatScreen>
                                         leading: controller.idsOfUserStories
                                                 .contains(
                                                     '${controller.listofChat[index].userId}')
-                                            ? RotationTransition(
-                                                turns: base!,
-                                                child: DashedCircle(
-                                                  color: buttonColor,
-                                                  gapSize: gap!.value,
-                                                  dashes: 20,
-                                                  child: RotationTransition(
-                                                    turns: reverse!,
-                                                    child:
-                                                        CircularProfileAvatar(
-                                                      '',
-                                                      radius: 28,
-                                                      child: CachedNetworkImage(
-                                                        imageUrl:
-                                                            "${controller.listofChat[index].avatar!}",
-                                                        placeholder: (context,
-                                                                url) =>
-                                                            CircularProgressIndicator(),
-                                                        errorWidget: (context,
-                                                                url, error) =>
-                                                            Icon(Icons.error),
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      onTap:
-                                                          listOfSelectedMember
-                                                                  .isNotEmpty
-                                                              ? null
-                                                              : () {
-                                                                  if (listOfSelectedMember
-                                                                      .isEmpty) {
-                                                                    int i = controller
-                                                                        .idsOfUserStories
-                                                                        .indexWhere((element) =>
-                                                                            element ==
-                                                                            '${controller.listofChat[index].userId}');
-                                                                    Get.to(
-                                                                        StoryViewPage(
-                                                                      userStories:
-                                                                          controller
-                                                                              .storyList[i],
-                                                                    ));
-                                                                  }
-                                                                },
-                                                      imageFit: BoxFit.cover,
-                                                    ),
-                                                  ),
+                                            ? CircularProfileAvatar(
+                                                '',
+                                                radius: 28,
+                                                borderWidth: 2,
+                                                borderColor: buttonColor,
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      "${controller.listofChat[index].avatar!}",
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                  fit: BoxFit.cover,
                                                 ),
+                                                onTap: listOfSelectedMember
+                                                        .isNotEmpty
+                                                    ? null
+                                                    : () {
+                                                        if (listOfSelectedMember
+                                                            .isEmpty) {
+                                                          int i = controller
+                                                              .idsOfUserStories
+                                                              .indexWhere(
+                                                                  (element) =>
+                                                                      element ==
+                                                                      '${controller.listofChat[index].userId}');
+                                                          Get.to(StoryViewPage(
+                                                            userStories:
+                                                                controller
+                                                                    .storyList[i],
+                                                          ));
+                                                        }
+                                                      },
+                                                imageFit: BoxFit.cover,
                                               )
                                             : CircularProfileAvatar(
                                                 '',
@@ -641,20 +625,20 @@ class _ChatScreenState extends State<ChatScreen>
                                             fontFamily: AppFonts.segoeui),
                                       ),
                                       onTap: () async {
-                                        if (pickedFile != null) {
-                                          for (var i in listofmap) {
-                                            Map map = {
-                                              'message': '',
-                                              'memberId[]': '$i'
-                                            };
-                                            String id = await ApiUtils
-                                                .newsendMessagepost(map: map);
-                                            controller.sentMessageViaFile(
-                                                groupId: id,
-                                                filePath: '${pickedFile.path}');
-                                          }
-                                          Navigator.of(context).pop();
-                                        }
+                                        // if (pickedFile != null) {
+                                        //   for (var i in listofmap) {
+                                        //     Map map = {
+                                        //       'message': '',
+                                        //       'memberId[]': '$i'
+                                        //     };
+                                        //     String id = await ApiUtils
+                                        //         .newsendMessagepost(map: map);
+                                        //     controller.sentMessageViaFile(
+                                        //         groupId: id,
+                                        //         filePath: '${pickedFile.path}');
+                                        //   }
+                                        //   Navigator.of(context).pop();
+                                        // }
                                       },
                                     )
                                   : SizedBox()
@@ -1119,5 +1103,183 @@ class _ChatScreenState extends State<ChatScreen>
             ),
           );
         });
+  }
+}
+
+class CircularProfileAvatar extends StatefulWidget {
+  CircularProfileAvatar(this.imageUrl,
+      {this.initialsText = const Text(''),
+      this.cacheImage = true,
+      this.radius = 50.0,
+      this.borderWidth = 0.0,
+      this.borderColor = Colors.white,
+      this.backgroundColor = Colors.white,
+      this.elevation = 0.0,
+      this.showInitialTextAbovePicture = false,
+      this.onTap,
+      this.foregroundColor = Colors.transparent,
+      this.placeHolder,
+      this.errorWidget,
+      this.imageBuilder,
+      this.animateFromOldImageOnUrlChange,
+      this.progressIndicatorBuilder,
+      this.child,
+      this.imageFit = BoxFit.cover});
+
+  /// sets radius of the avatar circle, [borderWidth] is also included in this radius.
+  /// default value is 0.0
+  final double radius;
+
+  /// sets shadow of the circle,
+  /// default value is 0.0
+  final double elevation;
+
+  /// sets the borderWidth of the circile,
+  /// default value is 0.0
+  final double borderWidth;
+
+  /// The color with which to fill the border of the circle.
+  /// default value [Colors.white]
+  final Color borderColor;
+
+  /// The color with which to fill the circle.
+  /// default value [Colors.white]
+  final Color backgroundColor;
+
+  /// sets the [foregroundColor] of the circle, It only works if [showInitialTextAbovePicture] is set to true.
+  /// [foregroundColor] doesn't include border of the circle.
+  final Color foregroundColor;
+
+  /// it takes a URL of the profile image.
+  final String imageUrl;
+
+  /// Sets the initials of user's name.
+  final Text initialsText;
+
+  /// Displays initials above profile picture if set to true, You can set [foregroundColor] value as well if [showInitialTextAbovePicture]
+  /// is set to true.
+  final bool showInitialTextAbovePicture;
+
+  /// Cache the image against [imageUrl] in app memory if set true. it is true by default.
+  final bool cacheImage;
+
+  /// sets onTap gesture.
+  final GestureTapCallback? onTap;
+
+  /// Widget displayed while the target [imageUrl] is loading, works only if [cacheImage] is true.
+  final PlaceholderWidgetBuilder? placeHolder;
+
+  /// Widget displayed while the target [imageUrl] failed loading, works only if [cacheImage] is true.
+  final LoadingErrorWidgetBuilder? errorWidget;
+
+  /// Widget displayed while the target [imageUrl] is loading, works only if [cacheImage] is true.
+  final ProgressIndicatorBuilder? progressIndicatorBuilder;
+
+  /// Optional builder to further customize the display of the image.
+  final ImageWidgetBuilder? imageBuilder;
+
+  /// When set to true it will animate from the old image to the new image
+  /// if the url changes.
+  final bool? animateFromOldImageOnUrlChange;
+
+  /// Setting child will hide every other widget [initialsText] and profile picture against [imageUrl].
+  /// Best use case is passing [AssetImage] as profile picture. You can pass [imageUrl] as empty string if you want to set child value.
+  final Widget? child;
+
+  /// How to inscribe the image into the space allocated during layout.
+  /// Set the [BoxFit] value as you want.
+  final BoxFit imageFit;
+
+  @override
+  _CircularProfileAvatarState createState() => _CircularProfileAvatarState();
+}
+
+class _CircularProfileAvatarState extends State<CircularProfileAvatar> {
+  Widget? _initialsText;
+
+  @override
+  Widget build(BuildContext context) {
+    _initialsText = Center(child: widget.initialsText);
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Material(
+        type: MaterialType.circle,
+        elevation: widget.elevation,
+        color: widget.borderColor,
+        child: Container(
+            height: widget.radius * 2,
+            width: widget.radius * 2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.radius),
+              border: Border.all(
+                  width: widget.borderWidth, color: widget.borderColor),
+            ),
+            child: Center(
+              child: Container(
+                padding: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                    color: widget.backgroundColor,
+                    borderRadius: BorderRadius.circular(widget.radius)),
+                child: widget.child == null
+                    ? Stack(
+                        fit: StackFit.expand,
+                        children: widget.imageUrl.isEmpty
+                            ? <Widget>[_initialsText!]
+                            : widget.showInitialTextAbovePicture
+                                ? <Widget>[
+                                    profileImage(),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: widget.foregroundColor,
+                                        borderRadius: BorderRadius.circular(
+                                            widget.radius),
+                                      ),
+                                    ),
+                                    _initialsText!,
+                                  ]
+                                : <Widget>[
+                                    _initialsText!,
+                                    profileImage(),
+                                  ],
+                      )
+                    : child(),
+              ),
+            )),
+      ),
+    );
+  }
+
+  Widget child() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(widget.radius),
+      child: Container(
+        height: widget.radius * 2,
+        width: widget.radius * 2,
+        child: widget.child,
+      ),
+    );
+  }
+
+  Widget profileImage() {
+    return widget.cacheImage
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(widget.radius),
+            child: CachedNetworkImage(
+              fit: widget.imageFit,
+              imageUrl: widget.imageUrl,
+              errorWidget: widget.errorWidget,
+              placeholder: widget.placeHolder,
+              imageBuilder: widget.imageBuilder,
+              progressIndicatorBuilder: widget.progressIndicatorBuilder,
+              useOldImageOnUrlChange:
+                  widget.animateFromOldImageOnUrlChange ?? false,
+            ),
+          )
+        : ClipRRect(
+            borderRadius: BorderRadius.circular(widget.radius),
+            child: Image.network(
+              widget.imageUrl,
+              fit: widget.imageFit,
+            ));
   }
 }

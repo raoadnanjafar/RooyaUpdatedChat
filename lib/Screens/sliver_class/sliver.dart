@@ -32,18 +32,20 @@ class _MySliverState extends State<MySliver> {
             height: 9,
           ),
           ListTile(
-              onTap: () {
-                Get.to(UserChatInformation(
-                    userID:
-                        '${UserDataService.userDataModel!.userData!.userId}'));
-              },
               leading: CircularProfileAvatar(
                 '${UserDataService.userDataModel!.userData!.avatar}',
                 radius: 18,
                 backgroundColor: Colors.blueGrey[100]!,
+                onTap: () {
+                  Get.to(UserChatInformation(
+                      userID:
+                          '${UserDataService.userDataModel!.userData!.userId}'));
+                },
               ),
               title: Text(
-                '${UserDataService.userDataModel!.userData!.firstName} ${UserDataService.userDataModel!.userData!.lastName}',
+                UserDataService.userDataModel!.userData!.firstName!.isEmpty
+                    ? '${UserDataService.userDataModel!.userData!.username}'
+                    : '${UserDataService.userDataModel!.userData!.firstName} ${UserDataService.userDataModel!.userData!.lastName}',
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,

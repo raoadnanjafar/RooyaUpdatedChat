@@ -3,6 +3,7 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -223,7 +224,12 @@ class _GroupScreenState extends State<GroupScreen> {
                 () => !controller.loadChat.value
                     ? SliverToBoxAdapter(
                         child: SizedBox(
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(
+                          child: SpinKitFadingCircle(
+                            color: buttonColor,
+                            size: 50.0,
+                          ),
+                        ),
                         height: height - 150,
                         width: width,
                       ))
@@ -308,6 +314,7 @@ class _GroupScreenState extends State<GroupScreen> {
                               InkWell(
                                 onTap: () {
                                   if (listOfSelectedMember.isEmpty) {
+                                    controller.leaveGroup();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -328,12 +335,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                                 ))).then((value) async {
                                       controller.leaveGroup();
                                       await controller.getGroupList();
-                                      Future.delayed(
-                                          Duration(
-                                              seconds: 1,
-                                              milliseconds: 500), () {
-                                        controller.connectToSocket();
-                                      });
+                                      controller.connectToSocket();
                                       setState(() {});
                                     });
                                   } else {
@@ -616,7 +618,9 @@ class _GroupScreenState extends State<GroupScreen> {
                                           ),
                                         ),
                                         title: Text(
-                                          '${friendList[i].firstName} ${friendList[i].lastName}',
+                                          '${friendList[i].firstName}'.isEmpty
+                                              ? '${'${friendList[i].username}'}'
+                                              : '${friendList[i].firstName} ${friendList[i].lastName}',
                                           style: TextStyle(
                                               fontFamily: AppFonts.segoeui,
                                               fontSize: 13),

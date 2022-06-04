@@ -145,7 +145,7 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                         width: 5,
                                       ),
                                       Text(
-                                        '${infoController.infoModel.value.userData!.firstName} ' +
+                                       '${infoController.infoModel.value.userData!.firstName}'.isEmpty?'${infoController.infoModel.value.userData!.username}': '${infoController.infoModel.value.userData!.firstName} ' +
                                             '${infoController.infoModel.value.userData!.lastName}',
                                         style: TextStyle(
                                             fontSize: 14,

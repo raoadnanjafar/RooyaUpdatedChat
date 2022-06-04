@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record_mp3/record_mp3.dart';
 import 'package:rooya/AllDialog/showMessageDetaildDialog.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
+import 'package:rooya/GlobalWidget/FileUploader.dart';
 import 'package:rooya/GlobalWidget/Photo_View_Class.dart';
 import 'package:rooya/Models/GroupModel.dart';
 import 'package:rooya/Models/UserChatModel.dart';
@@ -29,6 +32,7 @@ import 'UserChatWidget/AudioChatUser.dart';
 import 'UserChatWidget/ContactViewUserChat.dart';
 import 'UserChatWidget/DocumentUserChat.dart';
 import 'UserChatWidget/LocationViewUserChat.dart';
+import 'UserChatWidget/SendSmsView.dart';
 import 'UserChatWidget/TextUserChat.dart';
 import 'UserChatWidget/VideoUserChat.dart';
 import 'UserChatWidget/imageViewUserChat.dart';
@@ -352,7 +356,8 @@ class _UserChatState extends State<UserChat>
                               scrollDirection: scrollDirection,
                               controller: autoScrollController,
                               itemBuilder: (c, i) {
-                                String? extension = '';
+                                String? extension =
+                                    '${getcontroller!.userChat[i].type}';
                                 if (getcontroller!.userChat[i].media != '') {
                                   // extension = p.extension(getcontroller!
                                   //     .oneToOneChat[i].message!.message!);
@@ -590,9 +595,15 @@ class _UserChatState extends State<UserChat>
                                                                               'longitude')
                                                                           ? LocationViewUserChat()
                                                                           : extension.contains('image')
-                                                                              ? ImageViewUserChat()
+                                                                              ? ImageViewUserChat(
+                                                                                  model: getcontroller!.userChat[i],
+                                                                                  fromGroup: widget.fromGroup,
+                                                                                )
                                                                               : extension.contains('video')
-                                                                                  ? VideoUserChat()
+                                                                                  ? VideoUserChat(
+                                                                                      model: getcontroller!.userChat[i],
+                                                                                      fromGroup: widget.fromGroup,
+                                                                                    )
                                                                                   : extension.contains('audio')
                                                                                       ? AudioChatUser()
                                                                                       : extension.contains('Doc')
@@ -661,7 +672,7 @@ class _UserChatState extends State<UserChat>
                                                                   BoxConstraints(
                                                                       maxWidth:
                                                                           width /
-                                                                              1.5),
+                                                                              1.3),
                                                               child:
                                                                   IntrinsicWidth(
                                                                 child:
@@ -853,9 +864,15 @@ class _UserChatState extends State<UserChat>
                                                                           : ''.contains('longitude')
                                                                               ? LocationViewUserChat()
                                                                               : extension.contains('image')
-                                                                                  ? ImageViewUserChat()
+                                                                                  ? ImageViewUserChat(
+                                                                                      model: getcontroller!.userChat[i],
+                                                                                      fromGroup: widget.fromGroup,
+                                                                                    )
                                                                                   : extension.contains('video')
-                                                                                      ? VideoUserChat()
+                                                                                      ? VideoUserChat(
+                                                                                          model: getcontroller!.userChat[i],
+                                                                                          fromGroup: widget.fromGroup,
+                                                                                        )
                                                                                       : extension.contains('audio')
                                                                                           ? AudioChatUser()
                                                                                           : extension.contains('Doc')
@@ -1245,143 +1262,155 @@ class _UserChatState extends State<UserChat>
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        // showModalBottomSheet(
-                                        //     context: context,
-                                        //     builder: (context) {
-                                        //       return Wrap(
-                                        //         children: [
-                                        //           ListTile(
-                                        //             leading: Icon(
-                                        //               Icons.image,
-                                        //               color: primaryColor,
-                                        //             ),
-                                        //             title: Text(
-                                        //               'Photo & Video',
-                                        //               style: TextStyle(
-                                        //                   fontSize: 16,
-                                        //                   letterSpacing: 0.5),
-                                        //             ),
-                                        //             onTap: () async {
-                                        //               FilePickerResult? result =
-                                        //                   await FilePicker
-                                        //                       .platform
-                                        //                       .pickFiles(
-                                        //                 type: FileType.media,
-                                        //               );
-                                        //               if (result!
-                                        //                   .files.isNotEmpty) {
-                                        //                 print(
-                                        //                     'file path is = ${result.files[0].path}');
-                                        //                 getcontroller!
-                                        //                     .sentMessageViaFile(
-                                        //                         groupId: widget
-                                        //                             .groupID,
-                                        //                         filePath:
-                                        //                             '${result.files[0].path}');
-                                        //                 Navigator.of(context)
-                                        //                     .pop();
-                                        //               }
-                                        //             },
-                                        //           ),
-                                        //           ListTile(
-                                        //             leading: Icon(
-                                        //               Icons.file_copy_outlined,
-                                        //               color: primaryColor,
-                                        //             ),
-                                        //             title: Text(
-                                        //               'Documents',
-                                        //               style: TextStyle(
-                                        //                   fontSize: 16,
-                                        //                   letterSpacing: 0.5),
-                                        //             ),
-                                        //             onTap: () async {
-                                        //               FilePickerResult? result =
-                                        //                   await FilePicker
-                                        //                       .platform
-                                        //                       .pickFiles(
-                                        //                 type: FileType.custom,
-                                        //                 allowedExtensions: [
-                                        //                   'pdf',
-                                        //                   'doc'
-                                        //                 ],
-                                        //               );
-                                        //               if (result!
-                                        //                   .files.isNotEmpty) {
-                                        //                 print(
-                                        //                     'file path is = ${result.files[0].path}');
-                                        //                 getcontroller!
-                                        //                     .sentMessageViaFile(
-                                        //                         groupId: widget
-                                        //                             .groupID,
-                                        //                         filePath:
-                                        //                             '${result.files[0].path}');
-                                        //                 Navigator.of(context)
-                                        //                     .pop();
-                                        //               }
-                                        //             },
-                                        //           ),
-                                        //           ListTile(
-                                        //             leading: Icon(
-                                        //               Icons
-                                        //                   .location_on_outlined,
-                                        //               color: primaryColor,
-                                        //             ),
-                                        //             title: Text(
-                                        //               'Location',
-                                        //               style: TextStyle(
-                                        //                   fontSize: 16,
-                                        //                   letterSpacing: 0.5),
-                                        //             ),
-                                        //             onTap: () {
-                                        //               Get.to(MapClass())!
-                                        //                   .then((value) {
-                                        //                 if (value is String) {
-                                        //                   print(
-                                        //                       'locatoin ia = $value');
-                                        //                   getcontroller!
-                                        //                       .onSentMessage(
-                                        //                           message:
-                                        //                               value,
-                                        //                           groupId: widget
-                                        //                               .groupID);
-                                        //                 }
-                                        //                 Navigator.of(context)
-                                        //                     .pop();
-                                        //               });
-                                        //             },
-                                        //           ),
-                                        //           ListTile(
-                                        //             leading: Icon(
-                                        //               Icons.person_outline,
-                                        //               color: primaryColor,
-                                        //             ),
-                                        //             title: Text(
-                                        //               'Contacts',
-                                        //               style: TextStyle(
-                                        //                   fontSize: 16,
-                                        //                   letterSpacing: 0.5),
-                                        //             ),
-                                        //             onTap: () {
-                                        //               Get.to(GetAllContactsPage())!
-                                        //                   .then((value) {
-                                        //                 if (value is String) {
-                                        //                   print(
-                                        //                       'Contacts ia = $value');
-                                        //                   getcontroller!
-                                        //                       .onSentMessage(
-                                        //                           message:
-                                        //                               value,
-                                        //                           groupId: widget
-                                        //                               .groupID);
-                                        //                 }
-                                        //                 Navigator.of(context)
-                                        //                     .pop();
-                                        //               });
-                                        //             },
-                                        //           ),
-                                        //         ],
-                                        //       );
-                                        //     });
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return Wrap(
+                                                children: [
+                                                  ListTile(
+                                                    leading: Icon(
+                                                      Icons.image,
+                                                      color: primaryColor,
+                                                    ),
+                                                    title: Text(
+                                                      'Photo & Video',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.5),
+                                                    ),
+                                                    onTap: () async {
+                                                      FilePickerResult? result =
+                                                          await FilePicker
+                                                              .platform
+                                                              .pickFiles(
+                                                        type: FileType.media,
+                                                      );
+                                                      if (result!
+                                                          .files.isNotEmpty) {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Get.to(SendSmsView(
+                                                          userID:
+                                                              widget.groupID,
+                                                          path:
+                                                              '${result.files[0].path}',
+                                                          extention:
+                                                              '${result.files[0].path}'
+                                                                      .contains(
+                                                                          '.mp4')
+                                                                  ? 'video'
+                                                                  : 'image',
+                                                        ))!
+                                                            .then((value) {
+                                                          getcontroller!
+                                                              .getAllMessage(
+                                                                  userID: widget
+                                                                      .groupID,
+                                                                  fromGroup: widget
+                                                                      .fromGroup);
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(
+                                                      Icons.file_copy_outlined,
+                                                      color: primaryColor,
+                                                    ),
+                                                    title: Text(
+                                                      'Documents',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.5),
+                                                    ),
+                                                    onTap: () async {
+                                                      // FilePickerResult? result =
+                                                      //     await FilePicker
+                                                      //         .platform
+                                                      //         .pickFiles(
+                                                      //   type: FileType.custom,
+                                                      //   allowedExtensions: [
+                                                      //     'pdf',
+                                                      //     'doc'
+                                                      //   ],
+                                                      // );
+                                                      // if (result!
+                                                      //     .files.isNotEmpty) {
+                                                      //   print(
+                                                      //       'file path is = ${result.files[0].path}');
+                                                      //   getcontroller!
+                                                      //       .sentMessageViaFile(
+                                                      //           groupId: widget
+                                                      //               .groupID,
+                                                      //           filePath:
+                                                      //               '${result.files[0].path}');
+                                                      //   Navigator.of(context)
+                                                      //       .pop();
+                                                      // }
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(
+                                                      Icons
+                                                          .location_on_outlined,
+                                                      color: primaryColor,
+                                                    ),
+                                                    title: Text(
+                                                      'Location',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.5),
+                                                    ),
+                                                    onTap: () {
+                                                      // Get.to(MapClass())!
+                                                      //     .then((value) {
+                                                      //   if (value is String) {
+                                                      //     print(
+                                                      //         'locatoin ia = $value');
+                                                      //     getcontroller!
+                                                      //         .onSentMessage(
+                                                      //             message:
+                                                      //                 value,
+                                                      //             groupId: widget
+                                                      //                 .groupID);
+                                                      //   }
+                                                      //   Navigator.of(context)
+                                                      //       .pop();
+                                                      // });
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(
+                                                      Icons.person_outline,
+                                                      color: primaryColor,
+                                                    ),
+                                                    title: Text(
+                                                      'Contacts',
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.5),
+                                                    ),
+                                                    onTap: () {
+                                                      // Get.to(GetAllContactsPage())!
+                                                      //     .then((value) {
+                                                      //   if (value is String) {
+                                                      //     print(
+                                                      //         'Contacts ia = $value');
+                                                      //     getcontroller!
+                                                      //         .onSentMessage(
+                                                      //             message:
+                                                      //                 value,
+                                                      //             groupId: widget
+                                                      //                 .groupID);
+                                                      //   }
+                                                      //   Navigator.of(context)
+                                                      //       .pop();
+                                                      // });
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                       },
                                       child: Icon(
                                         Icons.add,
@@ -1462,19 +1491,23 @@ class _UserChatState extends State<UserChat>
                                     ),
                                     InkWell(
                                       onTap: () async {
-                                        // final ImagePicker _picker =
-                                        //     ImagePicker();
-                                        // var pickedFile = await _picker.getImage(
-                                        //   source: ImageSource.camera,
-                                        // );
-                                        // print(
-                                        //     'file path is = ${pickedFile!.path}');
-                                        // if (pickedFile != null) {
-                                        //   getcontroller!.sentMessageViaFile(
-                                        //       groupId: widget.groupID,
-                                        //       filePath: '${pickedFile.path}');
-                                        //   Navigator.of(context).pop();
-                                        // }
+                                        final ImagePicker _picker =
+                                            ImagePicker();
+                                        var pickedFile = await _picker.getImage(
+                                          source: ImageSource.camera,
+                                        );
+                                        print(
+                                            'file path is = ${pickedFile!.path}');
+                                        Get.to(SendSmsView(
+                                          userID: widget.groupID,
+                                          extention: 'image',
+                                          path: '${pickedFile.path}',
+                                        ))!
+                                            .then((value) {
+                                          getcontroller!.getAllMessage(
+                                              userID: widget.groupID,
+                                              fromGroup: widget.fromGroup);
+                                        });
                                       },
                                       child: Icon(
                                         Icons.camera_alt_outlined,

@@ -12,6 +12,8 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:dio/dio.dart' as dio;
 
+import '../chat_screen.dart';
+
 class UserChatProvider extends GetxController {
   var startTyping = false.obs;
   var searchText = ''.obs;
@@ -45,6 +47,7 @@ class UserChatProvider extends GetxController {
         'id': '$userID'
       }, start: 0, limit: 100);
     }
+    sendSmsStreamcontroller.add(0.0);
   }
 
   sentMessageViaFile({String? filePath, String? groupId}) async {
@@ -86,27 +89,35 @@ class UserChatProvider extends GetxController {
         );
         socket!.on('typing', (value) {
           print('userTyping $value');
-          if(value['is_typing']==200){
+          if (value['is_typing'] == 200) {
             isReciverTyping.value = true;
-          }else{
+          } else {
             isReciverTyping.value = false;
           }
         });
-        if(fromGroup!){
+        if (fromGroup!) {
           socket!.on('group_message', (value) {
             log('group_message is = $value');
-            // oneToOneChat.insert(0, OneToOneChatModel.fromJson(value));
-            if (groupID != '') {
-              getAllMessage(userID: groupID,fromGroup: fromGroup);
-            }
+            // // oneToOneChat.insert(0, OneToOneChatModel.fromJson(value));
+            // if (groupID != '') {
+            //   getAllMessage(userID: groupID, fromGroup: fromGroup);
+            // }
+            Messages message = Messages.fromJson(value['message_res']);
+            // if (groupID != '') {
+            //   getAllMessage(userID: groupID,fromGroup: fromGroup);
+            // }
+            userChat.insert(0, message);
+            sendSmsStreamcontroller.add(0.0);
           });
-        }else{
+        } else {
           socket!.on('private_message', (value) {
-            log('newMessage is = $value');
-            // oneToOneChat.insert(0, OneToOneChatModel.fromJson(value));
-            if (groupID != '') {
-              getAllMessage(userID: groupID,fromGroup: fromGroup);
-            }
+            log('newMessage private_message is = $value');
+            Messages message = Messages.fromJson(value['message_res']);
+            // if (groupID != '') {
+            //   getAllMessage(userID: groupID,fromGroup: fromGroup);
+            // }
+            userChat.insert(0, message);
+            sendSmsStreamcontroller.add(0.0);
           });
         }
         // socket!.on('receiveSeen', (value) {
@@ -148,7 +159,7 @@ class UserChatProvider extends GetxController {
 
   var block_user = false.obs;
 
-  onSentMessage({String? message, String? to_userId,bool? fromGroup}) {
+  onSentMessage({String? message, String? to_userId, bool? fromGroup}) {
     // print('send message ${{
     //   'to_id': to_userId,
     //   'from_id':
@@ -158,22 +169,24 @@ class UserChatProvider extends GetxController {
     //   // isSticker: false
     // }}');
     try {
-      if(fromGroup!){
+      if (fromGroup!) {
         socket!.emit('group_message', {
-          'msg':message,
+          'msg': message,
           'group_id': to_userId,
-          'from_id': int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+          'from_id':
+              int.parse('${UserDataService.userDataModel!.userData!.userId}'),
           'username': '${UserDataService.userDataModel!.userData!.username}',
         });
-        getAllMessage(userID: to_userId, fromGroup:fromGroup);
-      }else{
+        getAllMessage(userID: to_userId, fromGroup: fromGroup);
+      } else {
         socket!.emit('private_message', {
-          'msg':message,
+          'msg': message,
           'to_id': to_userId,
-          'from_id': int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+          'from_id':
+              int.parse('${UserDataService.userDataModel!.userData!.userId}'),
           'username': '${UserDataService.userDataModel!.userData!.username}',
         });
-        getAllMessage(userID: to_userId, fromGroup:fromGroup);
+        getAllMessage(userID: to_userId, fromGroup: fromGroup);
       }
     } catch (e) {
       print('send message exaption is = $e');

@@ -563,7 +563,11 @@ class _GroupInformationState extends State<GroupInformation> {
                               title: Row(
                                 children: [
                                   Text(
-                                    '${groupModel.parts![index].firstName} ${groupModel.parts![index].lastName}',
+                                    groupModel.parts![index].firstName
+                                            .toString()
+                                            .isEmpty
+                                        ? '${groupModel.parts![index].username}'
+                                        : '${groupModel.parts![index].firstName} ${groupModel.parts![index].lastName}',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontFamily: AppFonts.segoeui,
@@ -933,7 +937,9 @@ class _GroupInformationState extends State<GroupInformation> {
                                           ),
                                         ),
                                         title: Text(
-                                          '${friendsList[i].firstName} ${friendsList[i].lastName}',
+                                          '${friendsList[i].firstName}'.isEmpty
+                                              ? '${friendsList[i].username}'
+                                              : '${friendsList[i].firstName} ${friendsList[i].lastName}',
                                           style: TextStyle(
                                               fontFamily: AppFonts.segoeui,
                                               fontSize: 13),

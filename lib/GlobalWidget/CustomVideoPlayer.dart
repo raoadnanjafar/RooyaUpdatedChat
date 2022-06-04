@@ -53,16 +53,19 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
               controller: betterPlayerController!,
             ),
           ),
-          Align(
-            alignment: Alignment.topRight,
-            child: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Get.back();
+                },
               ),
-              onPressed: () {
-                Get.back();
-              },
             ),
           )
         ],

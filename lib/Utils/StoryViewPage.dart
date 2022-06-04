@@ -28,18 +28,26 @@ class _StoryViewPageState extends State<StoryViewPage> {
             child: StoryView(
               controller: controller,
               storyItems: widget.userStories!.stories!.map((e) {
-                return StoryItem.inlineImage(
-                  url: "${e.thumbnail}",
-                  controller: controller,
-                  caption: Text(
-                    "${e.description}",
-                    style: TextStyle(
-                      color: Colors.white,
-                      backgroundColor: Colors.black54,
-                      fontSize: 17,
+                if (e.videos == null || e.videos!.isEmpty) {
+                  return StoryItem.inlineImage(
+                    url: "${e.thumbnail}",
+                    controller: controller,
+                    imageFit: BoxFit.contain,
+                    caption: Text(
+                      "${e.description}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        backgroundColor: Colors.black54,
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                 return StoryItem.pageVideo(
+                    '${e.videos![0].filename}',
+                    controller: controller,
+                  );
+                }
               }).toList(),
               onStoryShow: (s) {
                 print("Showing a story");

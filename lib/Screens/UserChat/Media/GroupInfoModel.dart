@@ -437,7 +437,7 @@ class UserData {
         json['API_notification_settings'])
         : null;
     isNotifyStopped = json['is_notify_stopped'].toString();
-    mutualFriendsData = json['mutual_friends_data'].cast<String>();
+   // mutualFriendsData = json['mutual_friends_data'].cast<String>();
     lastseenUnixTime = json['lastseen_unix_time'].toString();
     lastseenStatus = json['lastseen_status'].toString();
     isReported = json['is_reported'];

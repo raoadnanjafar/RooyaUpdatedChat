@@ -367,7 +367,7 @@ class ApiUtils {
     try {
       var responce = await http.get(url, headers: header);
       var data = jsonDecode(responce.body);
-      log('friend data is = $data');
+      //log('friend data is = $data');
       if (data['status'] is Map) {
         SearchUserModel modellist = SearchUserModel.fromJson(data['response']);
         return modellist;

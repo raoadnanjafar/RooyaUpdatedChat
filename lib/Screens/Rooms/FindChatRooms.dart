@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -284,7 +285,10 @@ class _FindChatRoomsState extends State<FindChatRooms> {
             Expanded(
                 child: Obx(() => !controller.loadChat.value
                     ? Center(
-                        child: CircularProgressIndicator(),
+                        child: SpinKitFadingCircle(
+                          color: buttonColor,
+                          size: 50.0,
+                        ),
                       )
                     : controller.listofChat.isEmpty
                         ? Center(

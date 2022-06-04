@@ -52,7 +52,17 @@ class _TextUserChatState extends State<TextUserChat> {
                     : '${widget.model!.messageUser!.avatar}',
                 placeholder: (context, url) =>
                     Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Icon(Icons.person),
+                errorWidget: (context, url, error) => CachedNetworkImage(
+                  imageUrl: widget.fromGroup!
+                      ? widget.model!.userData == null
+                          ? ''
+                          : '${widget.model!.userData!.avatar}'
+                      : '${widget.model!.messageUser!.avatar}',
+                  placeholder: (context, url) =>
+                      Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => Icon(Icons.person),
+                  fit: BoxFit.cover,
+                ),
                 fit: BoxFit.cover,
               ),
               imageFit: BoxFit.cover,
@@ -68,19 +78,25 @@ class _TextUserChatState extends State<TextUserChat> {
                 borderRadius: BorderRadius.circular(8)),
             child: Column(
               children: [
-                // widget.fromGroup!
-                //     ? Column(
-                //         children: [
-                //           Text(
-                //             '${getcontroller!.oneToOneChat[i].sender!.firstName} ${getcontroller!.oneToOneChat[i].sender!.lastName}',
-                //             style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontSize: 12),
-                //           ),
-                //           SizedBox(
-                //             height: height / 100,
-                //           ),
-                //         ],
-                //       )
-                //     : SizedBox(),
+                widget.fromGroup!
+                    ? Column(
+                        children: [
+                          Text(
+                            widget.model!.userData!.firstName!.isEmpty
+                                ? '${widget.model!.userData!.username}'
+                                : '${widget.model!.userData!.firstName}' +
+                                    ' ${widget.model!.userData!.lastName}',
+                            style: TextStyle(
+                                color: Colors.deepPurple,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: width / 1.5),
                   child: Text(

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
@@ -222,7 +223,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
                 () => !controller.loadChat.value
                     ? SliverToBoxAdapter(
                         child: SizedBox(
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(
+                          child: SpinKitFadingCircle(
+                            color: buttonColor,
+                            size: 50.0,
+                          ),
+                        ),
                         height: height - 150,
                         width: width,
                       ))
@@ -307,6 +313,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               InkWell(
                                 onTap: () {
                                   if (listOfSelectedMember.isEmpty) {
+                                    controller.leaveGroup();
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -327,12 +334,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ))).then((value) async {
                                       controller.leaveGroup();
                                       await controller.getGroupList();
-                                      Future.delayed(
-                                          Duration(
-                                              seconds: 1,
-                                              milliseconds: 500), () {
-                                        controller.connectToSocket();
-                                      });
+                                      controller.connectToSocket();
                                       setState(() {});
                                     });
                                   } else {
@@ -782,7 +784,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
                                           title: Text(
-                                            '${friendList[i].firstName} ${friendList[i].lastName}',
+                                            '${friendList[i].firstName}'.isEmpty
+                                                ? '${friendList[i].username}'
+                                                : '${friendList[i].firstName} ${friendList[i].lastName}',
                                             style: TextStyle(
                                                 fontFamily: AppFonts.segoeui,
                                                 fontSize: 13),
