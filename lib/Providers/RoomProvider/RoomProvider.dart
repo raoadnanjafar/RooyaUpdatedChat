@@ -43,8 +43,7 @@ class RoomProvider extends GetxController {
           'join',
           {
             "username": "${UserDataService.userDataModel!.userData!.username}",
-            'user_id':
-                int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+            'user_id':'${storage.read('token')}',
           },
         );
         socket!.on("group_message_page", (data) {

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +19,8 @@ import 'package:rooya/Utils/StoryViewPage.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
+import '../GlobalWidget/FileUploader.dart';
+import 'SearchUser/NewUserSearchPage.dart';
 import 'UserChat/UserChat.dart';
 
 StreamController<double> sendSmsStreamcontroller =
@@ -586,7 +587,6 @@ class _ChatScreenState extends State<ChatScreen>
               );
               print('file path is = ${pickedFile!.path}');
               var listofmap = [];
-              await controller.getFriendList();
               showMaterialModalBottomSheet(
                 context: context,
                 builder: (context) =>
@@ -625,20 +625,15 @@ class _ChatScreenState extends State<ChatScreen>
                                             fontFamily: AppFonts.segoeui),
                                       ),
                                       onTap: () async {
-                                        // if (pickedFile != null) {
-                                        //   for (var i in listofmap) {
-                                        //     Map map = {
-                                        //       'message': '',
-                                        //       'memberId[]': '$i'
-                                        //     };
-                                        //     String id = await ApiUtils
-                                        //         .newsendMessagepost(map: map);
-                                        //     controller.sentMessageViaFile(
-                                        //         groupId: id,
-                                        //         filePath: '${pickedFile.path}');
-                                        //   }
-                                        //   Navigator.of(context).pop();
-                                        // }
+                                        if (pickedFile != null) {
+                                          for (var i in listofmap) {
+                                            await sentMessageAsFile(
+                                                userID: i,
+                                                text: '',
+                                                filePath: '${pickedFile.path}');
+                                          }
+                                          Navigator.of(context).pop();
+                                        }
                                       },
                                     )
                                   : SizedBox()
@@ -648,8 +643,7 @@ class _ChatScreenState extends State<ChatScreen>
                         ),
                         Expanded(
                           child: ListView.builder(
-                            itemCount: controller
-                                .searchUserModel.value.friends!.length,
+                            itemCount: controller.friendList.length,
                             itemBuilder: (context, i) => Column(
                               children: [
                                 ListTile(
@@ -657,12 +651,15 @@ class _ChatScreenState extends State<ChatScreen>
                                     '',
                                     radius: 23,
                                     child: Image.network(
-                                      '${controller.searchUserModel.value.friends![i].profilePictureUrl}',
+                                      '${controller.friendList[i].avatar}',
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                   title: Text(
-                                    '${controller.searchUserModel.value.friends![i].firstName} ${controller.searchUserModel.value.friends![i].lastName}',
+                                    controller.friendList[i].firstName!.isEmpty
+                                        ? controller.friendList[i].username
+                                            .toString()
+                                        : '${controller.friendList[i].firstName} ${controller.friendList[i].lastName}',
                                     style: TextStyle(
                                         fontFamily: AppFonts.segoeui,
                                         fontSize: 13),
@@ -680,10 +677,7 @@ class _ChatScreenState extends State<ChatScreen>
                                               size: 18,
                                               color: !listofmap.contains(
                                                       controller
-                                                          .searchUserModel
-                                                          .value
-                                                          .friends![i]
-                                                          .userId
+                                                          .friendList[i].userId
                                                           .toString())
                                                   ? Colors.transparent
                                                   : Colors.white,
@@ -693,19 +687,13 @@ class _ChatScreenState extends State<ChatScreen>
                                             shape: BoxShape.circle,
                                             color: !listofmap.contains(
                                                     controller
-                                                        .searchUserModel
-                                                        .value
-                                                        .friends![i]
-                                                        .userId
+                                                        .friendList[i].userId
                                                         .toString())
                                                 ? Colors.transparent
                                                 : Colors.green,
                                             border: Border.all(
                                                 color: !listofmap.contains(
-                                                        controller
-                                                            .searchUserModel
-                                                            .value
-                                                            .friends![i]
+                                                        controller.friendList[i]
                                                             .userId
                                                             .toString())
                                                     ? Colors.black12
@@ -715,24 +703,15 @@ class _ChatScreenState extends State<ChatScreen>
                                         ),
                                         onTap: () {
                                           if (listofmap.contains(controller
-                                              .searchUserModel
-                                              .value
-                                              .friends![i]
-                                              .userId
+                                              .friendList[i].userId
                                               .toString())) {
                                             listofmap.remove(controller
-                                                .searchUserModel
-                                                .value
-                                                .friends![i]
-                                                .userId
+                                                .friendList[i].userId
                                                 .toString());
                                             setState(() {});
                                           } else {
                                             listofmap.add(controller
-                                                .searchUserModel
-                                                .value
-                                                .friends![i]
-                                                .userId
+                                                .friendList[i].userId
                                                 .toString()
                                                 .trim());
                                             setState(() {});
@@ -753,9 +732,10 @@ class _ChatScreenState extends State<ChatScreen>
                     ),
                   );
                 }),
-              ).then((value) {
+              ).then((value) async{
                 if (value is bool) {
                   selectedOneToOneChat.clear();
+                  await controller.getChatList();
                   setState(() {});
                 }
               });
@@ -808,14 +788,9 @@ class _ChatScreenState extends State<ChatScreen>
                                       onTap: () async {
                                         if (pickedFile != null) {
                                           for (var i in listofmap) {
-                                            Map map = {
-                                              'message': '',
-                                              'memberId[]': '$i'
-                                            };
-                                            String id = await ApiUtils
-                                                .newsendMessagepost(map: map);
-                                            controller.sentMessageViaFile(
-                                                groupId: id,
+                                            await sentMessageAsFile(
+                                                userID: i,
+                                                text: '',
                                                 filePath: '${pickedFile.path}');
                                           }
                                           Navigator.of(context).pop();
@@ -829,21 +804,20 @@ class _ChatScreenState extends State<ChatScreen>
                         ),
                         Expanded(
                           child: ListView.builder(
-                            itemCount: controller
-                                .searchUserModel.value.friends!.length,
+                            itemCount: controller.friendList.length,
                             itemBuilder: (context, i) => Column(
                               children: [
                                 ListTile(
                                   leading: CircularProfileAvatar(
-                                    '',
+                                    '${controller.friendList[i].avatar}',
                                     radius: 23,
-                                    child: Image.network(
-                                      '${controller.searchUserModel.value.friends![i].profilePictureUrl}',
-                                      fit: BoxFit.cover,
-                                    ),
+                                    imageFit: BoxFit.cover,
                                   ),
                                   title: Text(
-                                    '${controller.searchUserModel.value.friends![i].firstName} ${controller.searchUserModel.value.friends![i].lastName}',
+                                    controller.friendList[i].firstName!.isEmpty
+                                        ? controller.friendList[i].username
+                                            .toString()
+                                        : '${controller.friendList[i].firstName} ${controller.friendList[i].lastName}',
                                     style: TextStyle(
                                         fontFamily: AppFonts.segoeui,
                                         fontSize: 13),
@@ -861,10 +835,7 @@ class _ChatScreenState extends State<ChatScreen>
                                               size: 18,
                                               color: !listofmap.contains(
                                                       controller
-                                                          .searchUserModel
-                                                          .value
-                                                          .friends![i]
-                                                          .userId
+                                                          .friendList[i].userId
                                                           .toString())
                                                   ? Colors.transparent
                                                   : Colors.white,
@@ -874,19 +845,13 @@ class _ChatScreenState extends State<ChatScreen>
                                             shape: BoxShape.circle,
                                             color: !listofmap.contains(
                                                     controller
-                                                        .searchUserModel
-                                                        .value
-                                                        .friends![i]
-                                                        .userId
+                                                        .friendList[i].userId
                                                         .toString())
                                                 ? Colors.transparent
                                                 : Colors.green,
                                             border: Border.all(
                                                 color: !listofmap.contains(
-                                                        controller
-                                                            .searchUserModel
-                                                            .value
-                                                            .friends![i]
+                                                        controller.friendList[i]
                                                             .userId
                                                             .toString())
                                                     ? Colors.black12
@@ -896,24 +861,15 @@ class _ChatScreenState extends State<ChatScreen>
                                         ),
                                         onTap: () {
                                           if (listofmap.contains(controller
-                                              .searchUserModel
-                                              .value
-                                              .friends![i]
-                                              .userId
+                                              .friendList[i].userId
                                               .toString())) {
                                             listofmap.remove(controller
-                                                .searchUserModel
-                                                .value
-                                                .friends![i]
-                                                .userId
+                                                .friendList[i].userId
                                                 .toString());
                                             setState(() {});
                                           } else {
                                             listofmap.add(controller
-                                                .searchUserModel
-                                                .value
-                                                .friends![i]
-                                                .userId
+                                                .friendList[i].userId
                                                 .toString()
                                                 .trim());
                                             setState(() {});
@@ -934,9 +890,10 @@ class _ChatScreenState extends State<ChatScreen>
                     ),
                   );
                 }),
-              ).then((value) {
+              ).then((value) async{
                 if (value is bool) {
                   selectedOneToOneChat.clear();
+                  await controller.getChatList();
                   setState(() {});
                 }
               });
@@ -957,13 +914,17 @@ class _ChatScreenState extends State<ChatScreen>
           FloatingActionButton(
             heroTag: "btn2",
             onPressed: () {
-              // Get.to(NewUserSearchpage())!.then((value) async {
-              //   await controller.getGroupList();
-              //   Future.delayed(Duration(seconds: 1, milliseconds: 500), () {
-              //     controller.connectToSocket();
-              //   });
-              //   setState(() {});
-              // });
+              Get.to(NewUserSearchpage(
+                listofFriend: controller.friendList,
+              ))!
+                  .then((value) async {
+                controller.leaveGroup();
+                Future.delayed(Duration(milliseconds: 500), () async {
+                  await controller.getChatList();
+                  controller.connectToSocket();
+                });
+                setState(() {});
+              });
             },
             child: SvgPicture.asset(
               'assets/user/prs.svg',

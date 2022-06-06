@@ -1,12 +1,10 @@
 import 'package:get/get.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
-
-import 'SearchUserModel.dart';
+import '../../Models/FriendsListModel.dart';
 
 class NewUserSearchPageController extends GetxController {
-  var searchUserModel = SearchUserModel().obs;
-
-  getFriendList() async {
-    searchUserModel.value = await ApiUtils.getfriendList(limit: 50, start: 0);
+  var friendList = <Following>[].obs;
+  Future getFriendList() async {
+    friendList.value = await ApiUtils.allFriendList(limit: 50, start: 0);
   }
 }

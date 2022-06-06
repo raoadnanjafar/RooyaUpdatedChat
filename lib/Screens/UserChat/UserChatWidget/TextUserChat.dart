@@ -56,8 +56,8 @@ class _TextUserChatState extends State<TextUserChat> {
                   imageUrl: widget.fromGroup!
                       ? widget.model!.userData == null
                           ? ''
-                          : '${widget.model!.userData!.avatar}'
-                      : '${widget.model!.messageUser!.avatar}',
+                          : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                      : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
                   placeholder: (context, url) =>
                       Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => Icon(Icons.person),

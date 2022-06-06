@@ -5,13 +5,17 @@ import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/GlobalWidget/Photo_View_Class.dart';
 
+import '../../Models/FriendsListModel.dart';
+import '../UserChat/UserChat.dart';
 import 'NewUserChatPage.dart';
 import 'NewUserSearchpageController.dart';
 import 'SearchUser.dart';
 import 'SearchUserController.dart';
 
 class NewUserSearchpage extends StatefulWidget {
-  const NewUserSearchpage({Key? key}) : super(key: key);
+  final List<Following>? listofFriend;
+  const NewUserSearchpage({Key? key, required this.listofFriend})
+      : super(key: key);
 
   @override
   _NewUserSearchpageState createState() => _NewUserSearchpageState();
@@ -22,6 +26,9 @@ class _NewUserSearchpageState extends State<NewUserSearchpage> {
 
   @override
   void initState() {
+    Future.delayed(Duration(milliseconds: 50), () {
+      controller.friendList.value = widget.listofFriend!;
+    });
     openSearch = true;
     controller.getFriendList();
     super.initState();
@@ -39,7 +46,8 @@ class _NewUserSearchpageState extends State<NewUserSearchpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,leadingWidth: 30,
+        backgroundColor: Colors.white,
+        leadingWidth: 30,
         elevation: 0,
         title: Container(
           height: Get.height * 0.045,
@@ -87,7 +95,10 @@ class _NewUserSearchpageState extends State<NewUserSearchpage> {
           onPressed: () {
             Get.back();
           },
-          icon: Icon(Icons.arrow_back,color: Colors.black,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
         ),
       ),
       body: Stack(
@@ -102,7 +113,7 @@ class _NewUserSearchpageState extends State<NewUserSearchpage> {
                 ),
                 Expanded(
                   child: Obx(
-                    () => controller.searchUserModel.value.friends == null
+                    () => controller.friendList.isEmpty
                         ? Center(
                             child: CircularProgressIndicator(),
                           )
@@ -110,19 +121,20 @@ class _NewUserSearchpageState extends State<NewUserSearchpage> {
                             itemBuilder: (c, i) {
                               return ListTile(
                                 leading: CircularProfileAvatar(
-                                  '${controller.searchUserModel.value.friends![i].profilePictureUrl}',
+                                  '${controller.friendList[i].avatar}',
                                   elevation: 2,
                                   radius: 23,
                                   imageFit: BoxFit.cover,
                                   onTap: () {
                                     Get.to(Photo_View_Class(
-                                      url:
-                                          '${controller.searchUserModel.value.friends![i].profilePictureUrl}',
+                                      url: '${controller.friendList[i].avatar}',
                                     ));
                                   },
                                 ),
                                 title: Text(
-                                  '${controller.searchUserModel.value.friends![i].firstName} ${controller.searchUserModel.value.friends![i].lastName}',
+                                  controller.friendList[i].firstName!.isEmpty
+                                      ? '${controller.friendList[i].username}'
+                                      : '${controller.friendList[i].firstName} ${controller.friendList[i].lastName}',
                                   style: TextStyle(fontSize: 15),
                                 ),
                                 onTap: () async {
@@ -138,15 +150,43 @@ class _NewUserSearchpageState extends State<NewUserSearchpage> {
                                   // setState(() {
                                   //   isloading = false;
                                   // });
-                                  Get.to(NewUserChatPage(userID: '${controller.searchUserModel.value.friends![i].userId}',
-                                    name: '${controller.searchUserModel.value.friends![i].firstName} ${controller.searchUserModel.value.friends![i].lastName}',
-                                    profilePic:
-                                    '${controller.searchUserModel.value.friends![i].profilePictureUrl}',));
+                                  // Get.to(NewUserChatPage(
+                                  //   userID:
+                                  //       '${controller.searchUserModel.value.friends![i].userId}',
+                                  //   name:
+                                  //       '${controller.searchUserModel.value.friends![i].firstName} ${controller.searchUserModel.value.friends![i].lastName}',
+                                  //   profilePic:
+                                  //       '${controller.searchUserModel.value.friends![i].profilePictureUrl}',
+                                  // ));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (c) => UserChat(
+                                                groupID: controller
+                                                    .friendList[i].userId
+                                                    .toString(),
+                                                blocked: false,
+                                                name: controller
+                                                        .friendList[i].firstName
+                                                        .toString()
+                                                        .isEmpty
+                                                    ? controller
+                                                        .friendList[i].username
+                                                        .toString()
+                                                    : controller.friendList[i]
+                                                            .firstName
+                                                            .toString() +
+                                                        controller.friendList[i]
+                                                            .lastName
+                                                            .toString(),
+                                                profilePic: controller
+                                                    .friendList[i].avatar,
+                                                fromGroup: false,
+                                              )));
                                 },
                               );
                             },
-                            itemCount: controller
-                                .searchUserModel.value.friends!.length,
+                            itemCount: controller.friendList.length,
                           ),
                   ),
                 )

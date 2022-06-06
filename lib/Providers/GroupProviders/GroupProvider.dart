@@ -15,7 +15,7 @@ class GroupProvider extends GetxController {
         start: 0,
         mapData: {'server_key': serverKey, 'data_type': 'groups'});
     print('lenght = ${listofChat.value.length}');
-    loadChat.value=true;
+    loadChat.value = true;
   }
 
   Socket? socket;
@@ -23,7 +23,8 @@ class GroupProvider extends GetxController {
 
   connectToSocket() {
     try {
-      socket = io('$socketURL',
+      socket = io(
+          '$socketURL',
           OptionBuilder()
               .setTransports(['websocket'])
               .disableAutoConnect()
@@ -35,8 +36,7 @@ class GroupProvider extends GetxController {
           'join',
           {
             "username": "${UserDataService.userDataModel!.userData!.username}",
-            'user_id':
-            int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+            'user_id': '${storage.read('token')}',
           },
         );
         socket!.on("group_message_page", (data) {
@@ -100,5 +100,6 @@ class GroupProvider extends GetxController {
   Future getFriendList() async {
     friendList.value = await ApiUtils.allFriendList(limit: 50, start: 0);
   }
+
   var isLoading = false.obs;
 }

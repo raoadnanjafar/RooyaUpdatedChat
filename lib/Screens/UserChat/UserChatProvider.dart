@@ -22,13 +22,13 @@ class UserChatProvider extends GetxController {
 
   checkTypnigStatus({String? groupId}) {
     debounce(searchText, (value) {
-      socket!.emit('typing_done', {'userId': storage.read('userID')});
+      socket!.emit('typing_done', {'userId': '${storage.read('token')}'});
       startTyping.value = false;
     }, time: Duration(milliseconds: 500));
   }
 
   userTypingStart({String? groupId}) {
-    socket!.emit('typing', {'userId': storage.read('userID')});
+    socket!.emit('typing', {'userId': '${storage.read('token')}'});
   }
 
   var userChat = <Messages>[].obs;
@@ -83,8 +83,7 @@ class UserChatProvider extends GetxController {
           'join',
           {
             "username": "${UserDataService.userDataModel!.userData!.username}",
-            'user_id':
-                int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+            'user_id': '${storage.read('token')}',
           },
         );
         socket!.on('typing', (value) {
@@ -120,6 +119,9 @@ class UserChatProvider extends GetxController {
             sendSmsStreamcontroller.add(0.0);
           });
         }
+        socket!.on("lastseen", (data) {
+          print('last seen comming');
+        });
         // socket!.on('receiveSeen', (value) {
         //   print('receiveSeen = $value');
         //   if (!isRecive) {
@@ -173,8 +175,7 @@ class UserChatProvider extends GetxController {
         socket!.emit('group_message', {
           'msg': message,
           'group_id': to_userId,
-          'from_id':
-              int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+          'from_id': '${storage.read('token')}',
           'username': '${UserDataService.userDataModel!.userData!.username}',
         });
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
@@ -182,8 +183,7 @@ class UserChatProvider extends GetxController {
         socket!.emit('private_message', {
           'msg': message,
           'to_id': to_userId,
-          'from_id':
-              int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+          'from_id': '${storage.read('token')}',
           'username': '${UserDataService.userDataModel!.userData!.username}',
         });
         getAllMessage(userID: to_userId, fromGroup: fromGroup);

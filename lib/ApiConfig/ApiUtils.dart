@@ -132,6 +132,9 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('RemoveAdminpost is = $data');
+      if(data['api_status']!=200){
+        snackBarFailer('${data['error_text']}');
+      }
     } catch (e) {
       print('Exception is = $e');
     }
@@ -143,6 +146,7 @@ class ApiUtils {
       var responce = await http.post(url, headers: header, body: map);
       var data = jsonDecode(responce.body);
       print('send message data is = $data');
+
       if (data['status']['code'] == 200) {
       } else {}
     } catch (e) {
@@ -208,6 +212,9 @@ class ApiUtils {
             OneToOneChatOuterModel.fromJson(data);
         return modellist;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return OneToOneChatOuterModel(apiStatus: 400);
       }
     } catch (e) {
@@ -229,6 +236,9 @@ class ApiUtils {
             list.map((e) => GroupModel.fromJson(e)).toList();
         return modellist;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return [];
       }
     } catch (e) {
@@ -249,6 +259,9 @@ class ApiUtils {
             list.map((e) => GroupModel.fromJson(e)).toList();
         return modellist;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return [];
       }
     } catch (e) {
@@ -269,6 +282,9 @@ class ApiUtils {
             list.map((e) => UserStoryModel.fromJson(e)).toList();
         return modellist;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return [];
       }
     } catch (e) {
@@ -286,6 +302,9 @@ class ApiUtils {
       if (data['api_status'] == 200) {
         return true;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return false;
       }
     } catch (e) {
@@ -307,6 +326,9 @@ class ApiUtils {
             list.map((e) => GroupModel.fromJson(e)).toList();
         return modellist;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return [];
       }
     } catch (e) {
@@ -330,6 +352,9 @@ class ApiUtils {
         UserInfoModel model = UserInfoModel.fromJson(data);
         return model;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         log('group info Data not fine');
         return UserInfoModel();
       }
@@ -345,6 +370,9 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('createGroupByMember = $data');
+      if(data['api_status']!=200){
+        snackBarFailer('${data['error_text']}');
+      }
     } catch (e) {
       print('Exception is = $e');
     }
@@ -356,6 +384,9 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('addGroupMember = $data');
+      if(data['api_status']!=200){
+        snackBarFailer('${data['error_text']}');
+      }
     } catch (e) {
       print('Exception is = $e');
     }
@@ -394,6 +425,9 @@ class ApiUtils {
         FriendsListModel modellist = FriendsListModel.fromJson(data);
         return modellist.data!.following!;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return [];
       }
     } catch (e) {
@@ -414,6 +448,9 @@ class ApiUtils {
           ..messages!.reversed;
         return modellist.messages!;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return UserChatModel(apiStatus: 400, messages: []).messages!;
       }
     } catch (e) {
@@ -428,6 +465,9 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('send message is = $data');
+      if(data['api_status']!=200){
+        snackBarFailer('${data['error_text']}');
+      }
     } catch (e) {
       print('Exception is = $e');
     }
@@ -445,6 +485,9 @@ class ApiUtils {
           ..data!.messages!.reversed;
         return modellist.data!.messages!;
       } else {
+        if(data['api_status']!=200){
+          snackBarFailer('${data['error_text']}');
+        }
         return UserChatModel(apiStatus: 400, messages: []).messages!;
       }
     } catch (e) {

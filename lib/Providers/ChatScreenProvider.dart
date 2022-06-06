@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/BaseURL.dart';
 import 'package:rooya/GlobalWidget/FileUploader.dart';
+import 'package:rooya/Models/FriendsListModel.dart' as friendmodel;
 import 'package:rooya/Models/OneTwoOneOuterModel.dart';
 import 'package:rooya/Models/UserStoriesModel.dart';
-import 'package:rooya/Screens/SearchUser/SearchUserModel.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:dio/dio.dart' as dio;
@@ -44,8 +44,7 @@ class ChatScreenProvider extends GetxController {
           'join',
           {
             "username": "${UserDataService.userDataModel!.userData!.username}",
-            'user_id':
-                int.parse('${UserDataService.userDataModel!.userData!.userId}'),
+            'user_id':'${storage.read('token')}',
           },
         );
         socket!.on("private_message_page", (data) {
@@ -104,9 +103,9 @@ class ChatScreenProvider extends GetxController {
     socket!.dispose();
   }
 
-  var searchUserModel = SearchUserModel().obs;
-  getFriendList() async {
-    searchUserModel.value = await ApiUtils.getfriendList(limit: 50, start: 0);
+  var friendList = <friendmodel.Following>[].obs;
+  Future getFriendList() async {
+    friendList.value = await ApiUtils.allFriendList(limit: 50, start: 0);
   }
 
   var idsOfUserStories = [];
