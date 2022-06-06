@@ -716,8 +716,8 @@ class _GroupScreenState extends State<GroupScreen> {
                         ),
                         InkWell(
                           onTap: () async {
-                            if (listofmap.isNotEmpty) {
-                              if (groupNameController.text.trim().isNotEmpty) {
+                            // if (listofmap.isNotEmpty) {
+                            //   if (groupNameController.text.trim().isNotEmpty) {
                                 String ids = '';
                                 for (var i in listofmap) {
                                   if (i == listofmap.last) {
@@ -725,7 +725,9 @@ class _GroupScreenState extends State<GroupScreen> {
                                   } else {
                                     ids = ids + '$i,';
                                   }
+                                  print('Nameeeeeeeee$ids ');
                                 }
+                                print('Nameeeeeeeee ');
                                 mapData.call({
                                   'server_key': serverKey,
                                   'type': 'create',
@@ -733,14 +735,15 @@ class _GroupScreenState extends State<GroupScreen> {
                                       '${groupNameController.text.trim()}',
                                   'parts': ids
                                 });
+
                                 Navigator.of(context).pop();
-                              } else {
-                                snackBarFailer('Please Add Group name First');
-                              }
-                            } else {
-                              snackBarFailer(
-                                  'Please select group member first');
-                            }
+                            //   } else {
+                            //     snackBarFailer('Please Add Group name First');
+                            //   }
+                            // } else {
+                            //   snackBarFailer(
+                            //       'Please select group member first');
+                            // }
                           },
                           child: Container(
                             height: 40,

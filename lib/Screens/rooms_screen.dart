@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
@@ -22,7 +23,7 @@ import 'package:rooya/Providers/RoomProvider/RoomProvider.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
-
+import 'package:geocoding/geocoding.dart';
 import 'Rooms/FindChatRooms.dart';
 import 'UserChat/UserChat.dart';
 
@@ -36,9 +37,36 @@ class RoomsScreen extends StatefulWidget {
 class _RoomsScreenState extends State<RoomsScreen> {
   final controller = Get.put(RoomProvider());
   var selectedIndexController = Get.find<SelectIndexController>();
+  final Geolocator geolocator = Geolocator();
+  Position? _currentPosition;
+  String? _currentAddress;
 
+  Future<void> _getCurrentPosition() async {
+    await Geolocator.getCurrentPosition()
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+      _getAddressFromLatLng(_currentPosition!);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+        _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+        '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
   @override
   void initState() {
+    _getCurrentPosition();
     print('Click on group');
     controller.getGroupList();
     controller.connectToSocket();
@@ -616,7 +644,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               textEditingController: locationController,
                               googleAPIKey: "$google_map_api_key",
                               inputDecoration: InputDecoration(
-                                  hintText: 'Select location',
+                                  hintText: '$_currentAddress',
                                   hintStyle: TextStyle(
                                       fontSize: 13,
                                       fontFamily: AppFonts.segoeui),
@@ -886,8 +914,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                         ),
                         InkWell(
                           onTap: () async {
-                            if (listofmap.isNotEmpty) {
-                              if (groupNameController.text.trim().isNotEmpty) {
+                            // if (listofmap.isNotEmpty) {
+                            //   if (groupNameController.text.trim().isNotEmpty) {
                                 if (locationController.text.trim().isNotEmpty) {
                                   String ids = '';
                                   for (var i in listofmap) {
@@ -926,17 +954,18 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                     });
                                   }
                                   Navigator.of(context).pop();
-                                } else {
+                                 }
+                                else {
                                   snackBarFailer(
                                       'Please Select location First');
                                 }
-                              } else {
-                                snackBarFailer('Please Add Group name First');
-                              }
-                            } else {
-                              snackBarFailer(
-                                  'Please select group member first');
-                            }
+                            //   } else {
+                            //     snackBarFailer('Please Add Group name First');
+                            //   }
+                            // } else {
+                            //   snackBarFailer(
+                            //       'Please select group member first');
+                            // }
                           },
                           child: Container(
                             height: 40,
