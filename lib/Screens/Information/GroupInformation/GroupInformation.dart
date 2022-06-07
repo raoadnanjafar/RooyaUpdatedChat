@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,13 +16,16 @@ import 'package:rooya/Utils/primary_color.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:rooya/Utils/text_filed/app_font.dart';
 
+import '../../../GlobalWidget/FileUploader.dart';
 import 'GroupInformationProvider.dart';
 
 class GroupInformation extends StatefulWidget {
   final GroupModel? groupModel;
+  final String groupID;
   const GroupInformation({
     Key? key,
     this.groupModel,
+    required this.groupID,
   }) : super(key: key);
 
   @override
@@ -76,66 +80,65 @@ class _GroupInformationState extends State<GroupInformation> {
                             child: Container(
                               child: IconButton(
                                   onPressed: () async {
-                                    // FilePickerResult? result =
-                                    //     await FilePicker.platform
-                                    //         .pickFiles(
-                                    //   type: FileType.custom,
-                                    //   allowedExtensions: [
-                                    //     'jpg',
-                                    //     'jpeg',
-                                    //     'mp4',
-                                    //     'png',
-                                    //   ],
-                                    // );
-                                    // if (result!.files.isNotEmpty) {
-                                    //   print(
-                                    //       'file path is = ${result.files[0].path}');
-                                    //   setState(() {
-                                    //     isloading = true;
-                                    //   });
-                                    //   String path = await uploadFile(
-                                    //       '${result.files[0].path}');
-                                    //   print('upload path is =$path');
-                                    //   Map mapdata = {
-                                    //     'groupId': '${widget.groupID}',
-                                    //     'groupImage': '$path'
-                                    //   };
-                                    //   await ApiUtils
-                                    //       .changeGroupImagePost(
-                                    //           map: mapdata);
-                                    //   await infoController.getGroupInfo(
-                                    //       groupID: widget.groupID);
-                                    //   setState(() {
-                                    //     isloading = false;
-                                    //   });
-                                    // }
+                                    FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: [
+                                        'jpg',
+                                        'jpeg',
+                                        'png',
+                                      ],
+                                    );
+                                    if (result!.files.isNotEmpty) {
+                                      print('file path is = ${result.files[0].path}');
+                                      setState(() {
+                                        isloading = true;
+                                      });
+                                      await sentGroupImageFile(filePath: '${result.files[0].path}', groupId: groupModel.groupId.toString());
+                                      setState(() {
+                                        isloading = false;
+                                      });
+                                      GroupModel model = await infoController.getGroupList(groupModel.groupId!);
+                                      if (model.groupId != '') {
+                                        print('new data coming ');
+                                        groupModel = model;
+                                      }
+                                      setState(() {});
+                                      // Map mapdata = {
+                                      //   'Id': '28',
+                                      //   'avatar': '$path',
+                                      // 'server_key': serverKey,
+                                      // };
+
+                                      // await ApiUtils
+                                      //     .changeGroupImagePost(
+                                      //         map: mapdata);
+                                      // await infoController.getGroupInfo(
+                                      //     groupID: widget.groupID);
+                                      setState(() {
+                                        isloading = false;
+                                      });
+                                    }
                                   },
                                   icon: Icon(
                                     Icons.camera_alt_outlined,
                                     color: Colors.white,
                                   )),
                               margin: EdgeInsets.only(right: 10),
-                              decoration: BoxDecoration(
-                                  color: buttonColor, shape: BoxShape.circle),
+                              decoration: BoxDecoration(color: buttonColor, shape: BoxShape.circle),
                             ),
                           )
                         ],
                         flexibleSpace: FlexibleSpaceBar(
                           title: Text(
                             '${groupModel.groupName}',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: AppFonts.segoeui,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 14, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
                           ),
                           centerTitle: false,
                           background: CachedNetworkImage(
                             imageUrl: '${groupModel.avatar}',
                             fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Icon(Icons.error),
                           ),
                         ),
                       ),
@@ -166,16 +169,14 @@ class _GroupInformationState extends State<GroupInformation> {
                               height: height * 0.08,
                               //color: Colors.green,
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Container(
                                     height: height * 0.06,
                                     width: width * 0.45,
                                     color: Colors.blueGrey[50],
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           'Notification',
@@ -200,8 +201,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                     width: width * 0.45,
                                     color: Colors.blueGrey[50],
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text(
                                           'Favorite Message',
@@ -228,8 +228,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                 width: width * 0.93,
                                 color: Colors.blueGrey[50],
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
                                     Text(
                                       'Auto Save Media to Camera Role',
@@ -260,8 +259,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                     height: height * 0.02,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Card(
                                         elevation: 2,
@@ -279,8 +277,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                             ],
                                           ),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Container(
                                                 height: 40,
@@ -293,12 +290,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                               ),
                                               Text(
                                                 'Photos',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily:
-                                                        AppFonts.segoeui,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
                                               )
                                             ],
                                           ),
@@ -320,8 +312,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                             ],
                                           ),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Container(
                                                 height: 25,
@@ -334,12 +325,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                               ),
                                               Text(
                                                 'Videos',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily:
-                                                        AppFonts.segoeui,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
                                               )
                                             ],
                                           ),
@@ -351,8 +337,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                     height: height * 0.02,
                                   ),
                                   Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Card(
                                         elevation: 2,
@@ -370,8 +355,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                             ],
                                           ),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Container(
                                                 height: 40,
@@ -384,12 +368,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                               ),
                                               Text(
                                                 'Links',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily:
-                                                        AppFonts.segoeui,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
                                               )
                                             ],
                                           ),
@@ -411,8 +390,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                             ],
                                           ),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Container(
                                                 height: 35,
@@ -425,12 +403,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                               ),
                                               Text(
                                                 'Documents',
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily:
-                                                        AppFonts.segoeui,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
                                               )
                                             ],
                                           ),
@@ -446,23 +419,18 @@ class _GroupInformationState extends State<GroupInformation> {
                               width: width,
                               // color: Colors.red,
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(
                                         height: 7,
                                       ),
                                       Text(
                                         'Mutual Groups',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontFamily: AppFonts.segoeui,
-                                            fontSize: 11,
-                                            color: Colors.black),
+                                        style:
+                                            TextStyle(fontWeight: FontWeight.w500, fontFamily: AppFonts.segoeui, fontSize: 11, color: Colors.black),
                                       ),
                                       Text(
                                         '${groupModel.parts!.length} Participants',
@@ -476,21 +444,15 @@ class _GroupInformationState extends State<GroupInformation> {
                                   groupModel.owner == true
                                       ? InkWell(
                                           onTap: () async {
-                                            createGroup(context,
-                                                infoController.friendList,
-                                                (Map smap) async {
+                                            createGroup(context, infoController.friendList, (Map smap) async {
                                               setState(() {
                                                 isloading = true;
                                               });
-                                              await ApiUtils.addGroupMember(
-                                                  map: smap);
+                                              await ApiUtils.addGroupMember(map: smap);
                                               setState(() {
                                                 isloading = false;
                                               });
-                                              GroupModel model =
-                                                  await infoController
-                                                      .getGroupList(
-                                                          groupModel.groupId!);
+                                              GroupModel model = await infoController.getGroupList(groupModel.groupId!);
                                               if (model.groupId != '') {
                                                 print('new data coming ');
                                                 groupModel = model;
@@ -507,26 +469,15 @@ class _GroupInformationState extends State<GroupInformation> {
                                   Container(
                                     height: 40,
                                     width: 250,
-                                    decoration: BoxDecoration(
-                                        color: Colors.blueGrey[50],
-                                        borderRadius:
-                                            BorderRadius.circular(30)),
+                                    decoration: BoxDecoration(color: Colors.blueGrey[50], borderRadius: BorderRadius.circular(30)),
                                     child: TextField(
                                       decoration: InputDecoration(
                                         isDense: true,
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.white)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.white)),
-                                        border: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.white)),
+                                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                                        border: OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                                         hintText: 'Search here ...',
-                                        hintStyle: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black54),
+                                        hintStyle: TextStyle(fontSize: 12, color: Colors.black54),
                                         suffixIcon: Icon(
                                           Icons.search,
                                           size: 23,
@@ -542,8 +493,7 @@ class _GroupInformationState extends State<GroupInformation> {
                         ),
                       ),
                       SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
+                          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                         return Column(
                           children: [
                             ListTile(
@@ -551,53 +501,37 @@ class _GroupInformationState extends State<GroupInformation> {
                                 '',
                                 radius: 23,
                                 child: CachedNetworkImage(
-                                  imageUrl:
-                                      "${groupModel.parts![index].avatar}",
+                                  imageUrl: "${groupModel.parts![index].avatar}",
                                   fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
                                 ),
                               ),
                               title: Row(
                                 children: [
                                   Text(
-                                    groupModel.parts![index].firstName
-                                            .toString()
-                                            .isEmpty
+                                    groupModel.parts![index].firstName.toString().isEmpty
                                         ? '${groupModel.parts![index].username}'
                                         : '${groupModel.parts![index].firstName} ${groupModel.parts![index].lastName}',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: AppFonts.segoeui,
-                                        fontSize: 14),
+                                    style: TextStyle(fontWeight: FontWeight.w700, fontFamily: AppFonts.segoeui, fontSize: 14),
                                   ),
                                   SizedBox(
                                     width: 10,
                                   ),
                                   Text(
                                     '(Admin)',
-                                    style: TextStyle(
-                                        fontFamily: AppFonts.segoeui,
-                                        fontSize: 10),
+                                    style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 10),
                                   ),
                                 ],
                               ),
                               subtitle: Text(
                                 '',
-                                style: TextStyle(
-                                    color: Color(0XFF373737),
-                                    fontFamily: AppFonts.segoeui,
-                                    fontSize: 12),
+                                style: TextStyle(color: Color(0XFF373737), fontFamily: AppFonts.segoeui, fontSize: 12),
                               ),
-                              trailing: groupModel.parts![index].userId ==
-                                      groupModel.userId
+                              trailing: groupModel.parts![index].userId == groupModel.userId
                                   ? Text(
                                       'Admin',
-                                      style: TextStyle(
-                                          fontFamily: AppFonts.segoeui,
-                                          fontSize: 12),
+                                      style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 12),
                                     )
                                   : FocusedMenuHolder(
                                       blurSize: 0.1,
@@ -605,139 +539,91 @@ class _GroupInformationState extends State<GroupInformation> {
                                       menuWidth: width * 0.5,
                                       menuOffset: 0,
                                       openWithTap: true,
-                                      blurBackgroundColor:
-                                          Colors.white.withOpacity(0.3),
+                                      blurBackgroundColor: Colors.white.withOpacity(0.3),
                                       onCneTapMenuItems: !groupModel.owner!
                                           ? <FocusedMenuItem>[
-                                              FocusedMenuItem(
-                                                  title: Text("Info"),
-                                                  onPressed: () {}),
+                                              FocusedMenuItem(title: Text("Info"), onPressed: () {}),
                                             ]
                                           : groupModel.owner!
                                               ? <FocusedMenuItem>[
+                                                  FocusedMenuItem(title: Text("Info"), onPressed: () {}),
                                                   FocusedMenuItem(
-                                                      title: Text("Info"),
-                                                      onPressed: () {}),
-                                                  FocusedMenuItem(
-                                                      title: Text(
-                                                          "Remove from Admin"),
+                                                      title: Text("Remove from Admin"),
                                                       onPressed: () async {
                                                         setState(() {
                                                           isloading = true;
                                                         });
                                                         Map data = {
-                                                          'server_key':
-                                                              serverKey,
-                                                          'type':
-                                                              'remove_admin',
-                                                          'id':
-                                                              '${groupModel.groupId}',
-                                                          'parts':
-                                                              '${groupModel.parts![index].userId}'
+                                                          'server_key': serverKey,
+                                                          'type': 'remove_admin',
+                                                          'id': '${groupModel.groupId}',
+                                                          'parts': '${groupModel.parts![index].userId}'
                                                         };
                                                         print('${{
-                                                          'server_key':
-                                                              serverKey,
-                                                          'type':
-                                                              'remove_admin',
-                                                          'id':
-                                                              '${groupModel.groupId}',
-                                                          'parts':
-                                                              '${groupModel.parts![index].userId}'
+                                                          'server_key': serverKey,
+                                                          'type': 'remove_admin',
+                                                          'id': '${groupModel.groupId}',
+                                                          'parts': '${groupModel.parts![index].userId}'
                                                         }}');
-                                                        await ApiUtils
-                                                            .RemoveAdminpost(
-                                                                map: data);
-                                                        await infoController
-                                                            .getGroupList(
-                                                                groupModel
-                                                                    .groupId!);
+                                                        await ApiUtils.RemoveAdminpost(map: data);
+                                                        await infoController.getGroupList(groupModel.groupId!);
                                                         setState(() {
                                                           isloading = false;
                                                         });
                                                       }),
                                                   FocusedMenuItem(
-                                                      title: Text(
-                                                          "Remove from Group"),
+                                                      title: Text("Remove from Group"),
                                                       onPressed: () async {
                                                         setState(() {
                                                           isloading = true;
                                                         });
                                                         Map data = {
-                                                          'server_key':
-                                                              serverKey,
+                                                          'server_key': serverKey,
                                                           'type': 'remove_user',
-                                                          'id':
-                                                              '${groupModel.groupId}',
-                                                          'parts':
-                                                              '${groupModel.parts![index].userId}'
+                                                          'id': '${groupModel.groupId}',
+                                                          'parts': '${groupModel.parts![index].userId}'
                                                         };
-                                                        await ApiUtils
-                                                            .RemoveAdminpost(
-                                                                map: data);
-                                                        await infoController
-                                                            .getGroupList(
-                                                                groupModel
-                                                                    .groupId!);
+                                                        await ApiUtils.RemoveAdminpost(map: data);
+                                                        await infoController.getGroupList(groupModel.groupId!);
                                                         setState(() {
                                                           isloading = false;
                                                         });
                                                       }),
                                                 ]
                                               : <FocusedMenuItem>[
+                                                  FocusedMenuItem(title: Text("Info"), onPressed: () {}),
                                                   FocusedMenuItem(
-                                                      title: Text("Info"),
-                                                      onPressed: () {}),
-                                                  FocusedMenuItem(
-                                                      title: Text(
-                                                          "Make Group Admin"),
+                                                      title: Text("Make Group Admin"),
                                                       onPressed: () async {
                                                         setState(() {
                                                           isloading = true;
                                                         });
                                                         Map data = {
-                                                          'server_key':
-                                                              serverKey,
+                                                          'server_key': serverKey,
                                                           'type': 'make_admin',
-                                                          'id':
-                                                              '${groupModel.groupId}',
-                                                          'parts':
-                                                              '${groupModel.parts![index].userId}'
+                                                          'id': '${groupModel.groupId}',
+                                                          'parts': '${groupModel.parts![index].userId}'
                                                         };
-                                                        await ApiUtils
-                                                            .RemoveAdminpost(
-                                                                map: data);
-                                                        await infoController
-                                                            .getGroupList(
-                                                                groupModel
-                                                                    .groupId!);
+                                                        await ApiUtils.RemoveAdminpost(map: data);
+                                                        await infoController.getGroupList(groupModel.groupId!);
                                                         setState(() {
                                                           isloading = false;
                                                         });
                                                       }),
                                                   FocusedMenuItem(
-                                                      title: Text(
-                                                          "Remove from Group"),
+                                                      title: Text("Remove from Group"),
                                                       onPressed: () async {
                                                         setState(() {
                                                           isloading = true;
                                                         });
                                                         Map data = {
-                                                          'server_key':
-                                                              serverKey,
+                                                          'server_key': serverKey,
                                                           'type': 'remove_user',
-                                                          'id':
-                                                              '${groupModel.groupId}',
-                                                          'parts':
-                                                              '${groupModel.parts![index].userId}'
+                                                          'id': '${groupModel.groupId}',
+                                                          'parts': '${groupModel.parts![index].userId}'
                                                         };
-                                                        await ApiUtils
-                                                            .RemoveAdminpost(
-                                                                map: data);
-                                                        await infoController
-                                                            .getGroupList(
-                                                                groupModel
-                                                                    .groupId!);
+                                                        await ApiUtils.RemoveAdminpost(map: data);
+                                                        await infoController.getGroupList(groupModel.groupId!);
                                                         setState(() {
                                                           isloading = false;
                                                         });
@@ -756,10 +642,7 @@ class _GroupInformationState extends State<GroupInformation> {
                             Container(
                               height: 1,
                               color: Colors.black12,
-                              margin: EdgeInsets.only(
-                                  left: width * 0.23,
-                                  right: width * 0.040,
-                                  bottom: height * 0.018),
+                              margin: EdgeInsets.only(left: width * 0.23, right: width * 0.040, bottom: height * 0.018),
                             ),
                           ],
                         );
@@ -774,8 +657,7 @@ class _GroupInformationState extends State<GroupInformation> {
                         child: Center(
                           child: CircularProgressIndicator(),
                         ),
-                        decoration:
-                            BoxDecoration(color: Colors.black.withOpacity(0.3)),
+                        decoration: BoxDecoration(color: Colors.black.withOpacity(0.3)),
                       )
                     : SizedBox()
               ],
@@ -891,8 +773,7 @@ class _GroupInformationState extends State<GroupInformation> {
   //       });
   // }
   //
-  createGroup(BuildContext context, List<Following> friendsList,
-      Function(Map) mapData) {
+  createGroup(BuildContext context, List<Following> friendsList, Function(Map) mapData) {
     TextEditingController groupNameController = TextEditingController();
     return showDialog(
         context: context,
@@ -940,9 +821,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                           '${friendsList[i].firstName}'.isEmpty
                                               ? '${friendsList[i].username}'
                                               : '${friendsList[i].firstName} ${friendsList[i].lastName}',
-                                          style: TextStyle(
-                                              fontFamily: AppFonts.segoeui,
-                                              fontSize: 13),
+                                          style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 13),
                                         ),
                                         trailing: Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -954,28 +833,19 @@ class _GroupInformationState extends State<GroupInformation> {
                                                 child: Center(
                                                     child: Text(
                                                   'Add',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontFamily:
-                                                          AppFonts.segoeui,
-                                                      fontSize: 11),
+                                                  style: TextStyle(color: Colors.white, fontFamily: AppFonts.segoeui, fontSize: 11),
                                                 )),
                                                 decoration: BoxDecoration(
                                                     color: Colors.green,
-                                                    border: Border.all(
-                                                        color: Colors.green,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
+                                                    border: Border.all(color: Colors.green, width: 1),
+                                                    borderRadius: BorderRadius.circular(20)),
                                               ),
                                               onTap: () {
                                                 Map data = {
                                                   'server_key': serverKey,
                                                   'type': 'add_user',
                                                   'id': '${groupModel.groupId}',
-                                                  'parts':
-                                                      '${friendsList[i].userId}'
+                                                  'parts': '${friendsList[i].userId}'
                                                 };
                                                 mapData.call(data);
                                                 Navigator.of(context).pop();
@@ -1014,10 +884,7 @@ class _GroupInformationState extends State<GroupInformation> {
             children: [
               Text(
                 '$name',
-                style: TextStyle(
-                    fontFamily: AppFonts.segoeui,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 15, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 width: 10,

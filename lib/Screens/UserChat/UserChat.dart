@@ -312,7 +312,7 @@ class _UserChatState extends State<UserChat>
                                         userID: widget.groupID));
                                   } else {
                                     Get.to(GroupInformation(
-                                      groupModel: widget.groupModel,
+                                      groupModel: widget.groupModel, groupID: '',
                                     ));
                                   }
                                 },

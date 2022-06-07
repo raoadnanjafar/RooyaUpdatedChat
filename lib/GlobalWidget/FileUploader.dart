@@ -87,3 +87,26 @@ Future sentMessageAsFile(
     print('Exception is = $e');
   }
 }
+
+Future sentGroupImageFile(
+    {String? filePath,String? groupId}) async {
+  var file = File(filePath!);
+  String fileName = file.path.split('/').last;
+  Map<String, dynamic> data = {
+    'server_key': serverKey,
+    'id': groupId,
+    'type': 'edit',
+    'avatar': await dio.MultipartFile.fromFile(
+      '$filePath',
+      filename: '$fileName',
+    )
+  };
+  FormData formData = new FormData.fromMap(data);
+  try {
+    final response = await Dio().post('$baseUrl$updateGroupInformation$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
+  } catch (e) {
+    print('Exception is = $e');
+  }
+}

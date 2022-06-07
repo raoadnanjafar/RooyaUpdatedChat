@@ -22,6 +22,7 @@ final allStories = 'get-user-stories';
 final getRoom = 'group_chat';
 final getGroupChat = 'group_chat';
 final login = 'auth';
+final updateGroupInformation='group_chat';
 final userData = 'get-user-data';
 final sendMessage = 'send-message';
 final getMessage = 'get_user_messages';
@@ -81,16 +82,16 @@ class ApiUtils {
     }
   }
 
-  static Future changeGroupNamePost({Map? map}) async {
-    var url = Uri.parse('$baseUrl$changeGroupName');
-    try {
-      var responce = await http.post(url, headers: header, body: map);
-      var data = jsonDecode(responce.body);
-      print('changeGroupNamePost is = $data');
-    } catch (e) {
-      print('Exception is = $e');
-    }
-  }
+  // static Future changeGroupNamePost({Map? map}) async {
+  //   var url = Uri.parse('$baseUrl$updateGroupInformation');
+  //   try {
+  //     var responce = await http.post(url, headers: header, body: map);
+  //     var data = jsonDecode(responce.body);
+  //     print('changeGroupNamePost is = $data');
+  //   } catch (e) {
+  //     print('Exception is = $e');
+  //   }
+  // }
 
   static Future deleteMemberPost({Map? map}) async {
     var url = Uri.parse('$baseUrl$deleteMember');

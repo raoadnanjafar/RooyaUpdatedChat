@@ -182,7 +182,7 @@ class _NewUserSearchpageState extends State<NewUserSearchpage> {
                                                 profilePic: controller
                                                     .friendList[i].avatar,
                                                 fromGroup: false,
-                                              )));
+                                              ))).then((value) => Get.back());
                                 },
                               );
                             },
