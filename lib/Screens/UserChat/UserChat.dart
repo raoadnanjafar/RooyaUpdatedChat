@@ -211,7 +211,7 @@ class _UserChatState extends State<UserChat>
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    selectedOneToOneChat.clear();
+                                    selectedOneToOneChat.value=<Messages>[];
                                     setState(() {});
                                   },
                                   icon: Icon(Icons.clear)),
@@ -521,11 +521,13 @@ class _UserChatState extends State<UserChat>
                                                                       .black54,
                                                               menuOffset: 10,
                                                               onPressed: () {
+                                                                print('Clicked');
                                                                 if (getcontroller!
                                                                         .userChat[
                                                                             i]
                                                                         .replyId !=
                                                                     '0') {
+                                                                  print('in first');
                                                                   isActivePositionTap
                                                                           .value =
                                                                       false;
@@ -569,10 +571,13 @@ class _UserChatState extends State<UserChat>
                                                                       selectedOneToOneChat.add(
                                                                           getcontroller!
                                                                               .userChat[i]);
+                                                                      print('lenth is = ${selectedOneToOneChat.length}');
                                                                     } else {
+                                                                      print('lenth is = ${selectedOneToOneChat.length}');
                                                                       selectedOneToOneChat
                                                                           .remove(
                                                                               getcontroller!.userChat[i]);
+                                                                      print('lenth is = ${selectedOneToOneChat.length}');
                                                                     }
                                                                     setState(
                                                                         () {});

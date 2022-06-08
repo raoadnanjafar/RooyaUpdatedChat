@@ -479,7 +479,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               .listofChat[index]
                                                               .lastMessage!
                                                               .type ==
-                                                          'left_text'
+                                                          'text'
                                                       ? "${controller.listofChat[index].lastMessage!.text}"
                                                       : '${controller.listofChat[index].lastMessage!.type}',
                                               style: TextStyle(
