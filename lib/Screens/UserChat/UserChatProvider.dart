@@ -33,6 +33,7 @@ class UserChatProvider extends GetxController {
 
   var userChat = <Messages>[].obs;
   String groupID = '';
+  bool firstTime = false;
   Future getAllMessage({String? userID, bool? fromGroup = false}) async {
     groupID = userID!;
     if (!fromGroup!) {
@@ -48,6 +49,14 @@ class UserChatProvider extends GetxController {
       }, start: 0, limit: 100);
     }
     sendSmsStreamcontroller.add(0.0);
+    if (!firstTime) {
+      socket!.emit("seen_messages", {
+        'user_id': '${storage.read('token')}',
+        'recipient_id': '$groupID',
+        'message_id': '${userChat.last.id}'
+      });
+      firstTime = true;
+    }
   }
 
   sentMessageViaFile({String? filePath, String? groupId}) async {
@@ -202,6 +211,7 @@ class UserChatProvider extends GetxController {
     socket!.close();
     socket!.dispose();
     socket!.disconnect();
+    firstTime = true;
   }
 
   var recording_start = false.obs;

@@ -72,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen>
     await controller.getStoryList();
   }
 
-  var listOfSelectedMember = <OneToOneChatModel>[].obs;
+  var listOfSelectedMember = <Data>[].obs;
 
   @override
   void dispose() {
@@ -358,72 +358,51 @@ class _ChatScreenState extends State<ChatScreen>
                                       setState(() {});
                                     });
                                   } else {
-                                    // if (!listOfSelectedMember.contains(
-                                    //     controller.listofMember[index])) {
-                                    //   listOfSelectedMember
-                                    //       .add(controller.listofMember[index]);
-                                    // } else {
-                                    //   listOfSelectedMember.remove(
-                                    //       controller.listofMember[index]);
-                                    // }
-                                    // setState(() {});
+                                    if (!listOfSelectedMember.contains(
+                                        controller.listofChat[index])) {
+                                      listOfSelectedMember
+                                          .add(controller.listofChat[index]);
+                                    } else {
+                                      listOfSelectedMember.remove(
+                                          controller.listofChat[index]);
+                                    }
+                                    setState(() {});
                                   }
                                 },
                                 onLongPress: () {
-                                  // if (!listOfSelectedMember
-                                  //     .contains(controller.listofMember[index])) {
-                                  //   listOfSelectedMember
-                                  //       .add(controller.listofMember[index]);
-                                  // } else {
-                                  //   listOfSelectedMember
-                                  //       .remove(controller.listofMember[index]);
-                                  // }
-                                  // setState(() {});
+                                  if (!listOfSelectedMember
+                                      .contains(controller.listofChat[index])) {
+                                    listOfSelectedMember
+                                        .add(controller.listofChat[index]);
+                                  } else {
+                                    listOfSelectedMember
+                                        .remove(controller.listofChat[index]);
+                                  }
+                                  setState(() {});
                                 },
                                 child: Row(
                                   children: [
-                                    // listOfSelectedMember.isNotEmpty
-                                    //     ? !listOfSelectedMember.contains(
-                                    //             controller.listofMember[index])
-                                    //         ? Container(
-                                    //             height: 20,
-                                    //             width: 20,
-                                    //             decoration: BoxDecoration(
-                                    //                 shape: BoxShape.circle,
-                                    //                 border: Border.all(
-                                    //                     width: 1,
-                                    //                     color: buttonColor)),
-                                    //           )
-                                    //         : Container(
-                                    //             height: 20,
-                                    //             width: 20,
-                                    //             child: Icon(
-                                    //               Icons.check_circle,
-                                    //               color: buttonColor,
-                                    //             ),
-                                    //           )
-                                    //     : SizedBox(),
-
-                                    // RotationTransition(
-                                    //   turns: base!,
-                                    //   child: DashedCircle(
-                                    //     gapSize: gap!.value,
-                                    //     dashes: 40,
-                                    //     color: buttonColor,
-                                    //     child: RotationTransition(
-                                    //       turns: reverse!,
-                                    //       child: Padding(
-                                    //         padding: const EdgeInsets.all(5.0),
-                                    //         child: CircleAvatar(
-                                    //           radius: 80.0,
-                                    //           backgroundImage: NetworkImage(
-                                    //               "https://images.unsplash.com/photo-1564564295391-7f24f26f568b"
-                                    //           ),
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
+                                    listOfSelectedMember.isNotEmpty
+                                        ? !listOfSelectedMember.contains(
+                                                controller.listofChat[index])
+                                            ? Container(
+                                                height: 20,
+                                                width: 20,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: buttonColor)),
+                                              )
+                                            : Container(
+                                                height: 20,
+                                                width: 20,
+                                                child: Icon(
+                                                  Icons.check_circle,
+                                                  color: buttonColor,
+                                                ),
+                                              )
+                                        : SizedBox(),
                                     Expanded(
                                       child: ListTile(
                                         leading: controller.idsOfUserStories
@@ -503,7 +482,7 @@ class _ChatScreenState extends State<ChatScreen>
                                         subtitle: Text(
                                           controller.listofChat[index]
                                                       .lastMessage!.type ==
-                                                  'left_text'
+                                                  'text'
                                               ? "${controller.listofChat[index].lastMessage!.text}"
                                               : '${controller.listofChat[index].lastMessage!.type}',
                                           style: TextStyle(

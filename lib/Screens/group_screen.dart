@@ -467,7 +467,7 @@ class _GroupScreenState extends State<GroupScreen> {
                                                               .listofChat[index]
                                                               .lastMessage!
                                                               .type ==
-                                                          'left_text'
+                                                          'text'
                                                       ? "${controller.listofChat[index].lastMessage!.text}"
                                                       : '${controller.listofChat[index].lastMessage!.type}',
                                               style: TextStyle(
