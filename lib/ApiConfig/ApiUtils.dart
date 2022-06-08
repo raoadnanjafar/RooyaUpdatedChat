@@ -22,15 +22,16 @@ final allStories = 'get-user-stories';
 final getRoom = 'group_chat';
 final getGroupChat = 'group_chat';
 final login = 'auth';
-final updateGroupInformation='group_chat';
+final updateGroupInformation = 'group_chat';
 final userData = 'get-user-data';
 final sendMessage = 'send-message';
+final forwardMessage='forward_message';
 final getMessage = 'get_user_messages';
 final friendList = 'get-friends';
 final create_group = 'group_chat';
 final addMemberToGroup = 'group_chat';
 final removeGroup = 'removeGroup';
-final removeMessage = 'removePost';
+final removeMessage = 'delete_message';
 final getGroupsById = 'getGroupsById';
 final addGroupAdmin = 'group_chat';
 final RemoveAdmin = 'RemoveAdmin';
@@ -133,7 +134,7 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('RemoveAdminpost is = $data');
-      if(data['api_status']!=200){
+      if (data['api_status'] != 200) {
         snackBarFailer('${data['error_text']}');
       }
     } catch (e) {
@@ -142,14 +143,11 @@ class ApiUtils {
   }
 
   static Future sendMessagepost({Map? map}) async {
-    var url = Uri.parse('$baseUrl$sendMessage');
+    var url = Uri.parse('$baseUrl$forwardMessage$token');
     try {
       var responce = await http.post(url, headers: header, body: map);
       var data = jsonDecode(responce.body);
       print('send message data is = $data');
-
-      if (data['status']['code'] == 200) {
-      } else {}
     } catch (e) {
       print('Exception is = $e');
     }
@@ -174,13 +172,11 @@ class ApiUtils {
   }
 
   static Future removeMessageApi({Map? map}) async {
-    var url = Uri.parse('$baseUrl$removeMessage');
+    var url = Uri.parse('$baseUrl$removeMessage$token');
     try {
       var responce = await http.post(url, headers: header, body: map);
       var data = jsonDecode(responce.body);
       print('remove Message data is = $data');
-      if (data['status']['code'] == 200) {
-      } else {}
     } catch (e) {
       print('Exception is = $e');
     }
@@ -207,13 +203,15 @@ class ApiUtils {
       var data = jsonDecode(responce.body);
       // print('Chat data is = $data');
       print('Chat data is = ${data['api_status']}');
+
       if (data['api_status'] == 200) {
         print('in 200 now');
         OneToOneChatOuterModel modellist =
             OneToOneChatOuterModel.fromJson(data);
+        storage.write('chat_list', jsonEncode(data));
         return modellist;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return OneToOneChatOuterModel(apiStatus: 400);
@@ -235,9 +233,10 @@ class ApiUtils {
         List list = data['data'];
         List<GroupModel> modellist =
             list.map((e) => GroupModel.fromJson(e)).toList();
+        storage.write('group_list', jsonEncode(list));
         return modellist;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return [];
@@ -260,7 +259,7 @@ class ApiUtils {
             list.map((e) => GroupModel.fromJson(e)).toList();
         return modellist;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return [];
@@ -283,7 +282,7 @@ class ApiUtils {
             list.map((e) => UserStoryModel.fromJson(e)).toList();
         return modellist;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return [];
@@ -303,7 +302,7 @@ class ApiUtils {
       if (data['api_status'] == 200) {
         return true;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return false;
@@ -325,9 +324,10 @@ class ApiUtils {
         List list = data['data'];
         List<GroupModel> modellist =
             list.map((e) => GroupModel.fromJson(e)).toList();
+        storage.write('room_list', jsonEncode(list));
         return modellist;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return [];
@@ -353,7 +353,7 @@ class ApiUtils {
         UserInfoModel model = UserInfoModel.fromJson(data);
         return model;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         log('group info Data not fine');
@@ -371,7 +371,7 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('createGroupByMember = $data');
-      if(data['api_status']!=200){
+      if (data['api_status'] != 200) {
         snackBarFailer('${data['error_text']}');
       }
     } catch (e) {
@@ -385,7 +385,7 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('addGroupMember = $data');
-      if(data['api_status']!=200){
+      if (data['api_status'] != 200) {
         snackBarFailer('${data['error_text']}');
       }
     } catch (e) {
@@ -421,12 +421,11 @@ class ApiUtils {
         'user_id': '${UserDataService.userDataModel!.userData!.userId}'
       });
       var data = jsonDecode(responce.body);
-      log('friend data is = $data');
       if (data['api_status'] == 200) {
         FriendsListModel modellist = FriendsListModel.fromJson(data);
         return modellist.data!.following!;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return [];
@@ -449,7 +448,7 @@ class ApiUtils {
           ..messages!.reversed;
         return modellist.messages!;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return UserChatModel(apiStatus: 400, messages: []).messages!;
@@ -466,7 +465,7 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('send message is = $data');
-      if(data['api_status']!=200){
+      if (data['api_status'] != 200) {
         snackBarFailer('${data['error_text']}');
       }
     } catch (e) {
@@ -486,7 +485,7 @@ class ApiUtils {
           ..data!.messages!.reversed;
         return modellist.data!.messages!;
       } else {
-        if(data['api_status']!=200){
+        if (data['api_status'] != 200) {
           snackBarFailer('${data['error_text']}');
         }
         return UserChatModel(apiStatus: 400, messages: []).messages!;

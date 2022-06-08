@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,7 +42,12 @@ class _GroupScreenState extends State<GroupScreen> {
 
   @override
   void initState() {
-    print('Click on group');
+    var data = storage.hasData('group_list');
+    if (data) {
+      List list = jsonDecode(storage.read('group_list'));
+      controller.listofChat.value =
+          list.map((e) => GroupModel.fromJson(e)).toList();
+    }
     controller.getGroupList();
     controller.connectToSocket();
     if (controller.friendList.isEmpty) {
@@ -221,15 +228,11 @@ class _GroupScreenState extends State<GroupScreen> {
                       ),
               ),
               Obx(
-                () => !controller.loadChat.value
+                () => !controller.loadChat.value &&
+                        controller.listofChat.isEmpty
                     ? SliverToBoxAdapter(
                         child: SizedBox(
-                        child: Center(
-                          child: SpinKitFadingCircle(
-                            color: buttonColor,
-                            size: 50.0,
-                          ),
-                        ),
+                        child: Center(),
                         height: height - 150,
                         width: width,
                       ))
@@ -419,16 +422,62 @@ class _GroupScreenState extends State<GroupScreen> {
                                               fontFamily: AppFonts.segoeui,
                                               fontSize: 16),
                                         ),
-                                        subtitle: Text(
-                                          date == ''
-                                              ? ''
-                                              : "${controller.listofChat[index].lastMessage!.text}",
-                                          style: TextStyle(
-                                              color: Color(0XFF373737),
-                                              fontFamily: AppFonts.segoeui,
-                                              fontSize: 12),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                        subtitle: Row(
+                                          children: [
+                                            date == ''
+                                                ? SizedBox()
+                                                : CircularProfileAvatar(
+                                                    '',
+                                                    radius: 8,
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          "${controller.listofChat[index].userData!.avatar}",
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          CircularProgressIndicator(),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    imageFit: BoxFit.cover,
+                                                  ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              date == ''
+                                                  ? ''
+                                                  : controller
+                                                          .listofChat[index]
+                                                          .userData!
+                                                          .firstName!
+                                                          .isEmpty
+                                                      ? '${controller.listofChat[index].userData!.username} : '
+                                                      : '${controller.listofChat[index].userData!.firstName} ${controller.listofChat[index].userData!.lastName} : ',
+                                              style: TextStyle(
+                                                  color: Color(0XFF373737),
+                                                  fontFamily: AppFonts.segoeui,
+                                                  fontSize: 12),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              date == ''
+                                                  ? ''
+                                                  : controller
+                                                              .listofChat[index]
+                                                              .lastMessage!
+                                                              .type ==
+                                                          'left_text'
+                                                      ? "${controller.listofChat[index].lastMessage!.text}"
+                                                      : '${controller.listofChat[index].lastMessage!.type}',
+                                              style: TextStyle(
+                                                  color: Color(0XFF373737),
+                                                  fontFamily: AppFonts.segoeui,
+                                                  fontSize: 12),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
                                         trailing: Column(
                                           mainAxisSize: MainAxisSize.min,
@@ -520,10 +569,7 @@ class _GroupScreenState extends State<GroupScreen> {
             print('Over all object is = $smap');
           });
         },
-        child: SvgPicture.asset(
-          'assets/user/prs.svg',
-          color: Colors.white,
-        ),
+        child: Icon(Icons.add),
         backgroundColor: Color(0xFF0BAB0D),
       ),
     );
@@ -718,25 +764,25 @@ class _GroupScreenState extends State<GroupScreen> {
                           onTap: () async {
                             // if (listofmap.isNotEmpty) {
                             //   if (groupNameController.text.trim().isNotEmpty) {
-                                String ids = '';
-                                for (var i in listofmap) {
-                                  if (i == listofmap.last) {
-                                    ids = ids + '$i';
-                                  } else {
-                                    ids = ids + '$i,';
-                                  }
-                                  print('Nameeeeeeeee$ids ');
-                                }
-                                print('Nameeeeeeeee ');
-                                mapData.call({
-                                  'server_key': serverKey,
-                                  'type': 'create',
-                                  'group_name':
-                                      '${groupNameController.text.trim()}',
-                                  'parts': ids
-                                });
+                            String ids = '';
+                            for (var i in listofmap) {
+                              if (i == listofmap.last) {
+                                ids = ids + '$i';
+                              } else {
+                                ids = ids + '$i,';
+                              }
+                              print('Nameeeeeeeee$ids ');
+                            }
+                            print('Nameeeeeeeee ');
+                            mapData.call({
+                              'server_key': serverKey,
+                              'type': 'create',
+                              'group_name':
+                                  '${groupNameController.text.trim()}',
+                              'parts': ids
+                            });
 
-                                Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                             //   } else {
                             //     snackBarFailer('Please Add Group name First');
                             //   }

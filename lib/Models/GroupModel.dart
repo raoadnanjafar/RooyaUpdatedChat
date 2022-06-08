@@ -100,7 +100,7 @@ class GroupModel {
       data['user_data'] = this.userData!.toJson();
     }
     data['owner'] = this.owner;
-    if (this.lastMessage != null ) {
+    if (this.lastMessage != null) {
       data['last_message'] = this.lastMessage!.toJson();
     }
     // if (this.parts != null) {
@@ -245,7 +245,7 @@ class UserData {
   String? name;
   APINotificationSettings? aPINotificationSettings;
   int? isNotifyStopped;
-  List<String>? mutualFriendsData=[];
+  List<String>? mutualFriendsData = [];
   String? lastseenUnixTime;
   String? lastseenStatus;
   bool? isReported;
@@ -525,10 +525,11 @@ class UserData {
             json['API_notification_settings'])
         : null;
     isNotifyStopped = json['is_notify_stopped'];
-    if (json['mutual_friends_data'] != null && json['mutual_friends_data'] is List) {
+    if (json['mutual_friends_data'] != null &&
+        json['mutual_friends_data'] is List) {
       List list = json['mutual_friends_data'];
       list.forEach((element) {
-        if(element!=null){
+        if (element != null) {
           mutualFriendsData!.add(element);
         }
       });
@@ -908,9 +909,11 @@ class LastMessage {
     //     readReceipts!.add(new Null.fromJson(v));
     //   });
     // }
-    // userData = json['user_data'] != null
-    //     ? new UserData.fromJson(json['user_data'])
-    //     : null;
+    if (json.containsKey('user_data')) {
+      userData = json['user_data'] != null
+          ? new UserData.fromJson(json['user_data'])
+          : null;
+    }
     // reaction = json['reaction'] != null
     //     ? new Reaction.fromJson(json['reaction'])
     //     : null;
@@ -1094,7 +1097,7 @@ class UserDataForGroup {
   String? name;
   APINotificationSettings? aPINotificationSettings;
   String? isNotifyStopped;
-  List<String>? mutualFriendsData=[];
+  List<String>? mutualFriendsData = [];
   String? lastseenUnixTime;
   String? lastseenStatus;
   bool? isReported;
@@ -1690,7 +1693,7 @@ class Parts {
   String? name;
   APINotificationSettings? aPINotificationSettings;
   String? isNotifyStopped;
-  List<String>? mutualFriendsData=[];
+  List<String>? mutualFriendsData = [];
   String? lastseenUnixTime;
   String? lastseenStatus;
   bool? isReported;
@@ -1970,15 +1973,16 @@ class Parts {
             json['API_notification_settings'])
         : null;
     isNotifyStopped = json['is_notify_stopped'].toString();
-    if (json['mutual_friends_data'] != null && json['mutual_friends_data'] is List) {
+    if (json['mutual_friends_data'] != null &&
+        json['mutual_friends_data'] is List) {
       List list = json['mutual_friends_data'];
       list.forEach((element) {
-        if(element!=null){
+        if (element != null) {
           mutualFriendsData!.add(element);
         }
       });
     }
-   // mutualFriendsData = json['mutual_friends_data'].cast<String>();
+    // mutualFriendsData = json['mutual_friends_data'].cast<String>();
     lastseenUnixTime = json['lastseen_unix_time'].toString();
     lastseenStatus = json['lastseen_status'].toString();
     isReported = json['is_reported'];

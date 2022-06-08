@@ -7,6 +7,7 @@ import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/Models/UserChatModel.dart';
 import 'package:rooya/Screens/Information/UserChatInformation/user_chat_information.dart';
 import 'package:rooya/Utils/UserDataService.dart';
+import 'package:rooya/Utils/text_filed/app_font.dart';
 
 import '../UserChat.dart';
 
@@ -89,6 +90,7 @@ class _TextUserChatState extends State<TextUserChat> {
                             style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.bold,
+                                fontFamily: AppFonts.segoeui,
                                 fontSize: 12),
                           ),
                           SizedBox(
@@ -107,6 +109,7 @@ class _TextUserChatState extends State<TextUserChat> {
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w300,
+                        fontFamily: AppFonts.segoeui,
                         fontSize: 14),
                   ),
                 ),
@@ -122,6 +125,7 @@ class _TextUserChatState extends State<TextUserChat> {
                         '${dateFormat.format(date)}',
                         style: TextStyle(
                           color: Colors.black26,
+                          fontFamily: AppFonts.segoeui,
                           fontSize: 9.0,
                         ),
                       ),
@@ -156,6 +160,7 @@ class _TextUserChatState extends State<TextUserChat> {
                           ? returnColorFromString(receiveTextColor)
                           : returnColorFromString(sentTextColor),
                   fontWeight: FontWeight.w300,
+                  fontFamily: AppFonts.segoeui,
                   fontSize: 14),
             ),
             SizedBox(
@@ -174,6 +179,7 @@ class _TextUserChatState extends State<TextUserChat> {
                           : widget.model!.delivered != '0'
                               ? returnColorFromString(receiveTimeColor)
                               : returnColorFromString(sentTimeColor),
+                      fontFamily: AppFonts.segoeui,
                       fontSize: 9.0,
                     ),
                   ),

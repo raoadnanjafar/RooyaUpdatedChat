@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
@@ -42,32 +42,25 @@ class _RoomsScreenState extends State<RoomsScreen> {
   String? _currentAddress;
 
   Future<void> _getCurrentPosition() async {
-    await Geolocator.getCurrentPosition()
-        .then((Position position) {
+    await Geolocator.getCurrentPosition().then((Position position) {
       setState(() => _currentPosition = position);
-      _getAddressFromLatLng(_currentPosition!);
+      print(
+          'current position ${_currentPosition!.longitude} ${_currentPosition!.latitude}');
+      _currentAddress = '';
     }).catchError((e) {
-      debugPrint(e);
+      print('exeption 1= $e');
     });
   }
 
-  Future<void> _getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-        _currentPosition!.latitude, _currentPosition!.longitude)
-        .then((List<Placemark> placemarks) {
-      Placemark place = placemarks[0];
-      setState(() {
-        _currentAddress =
-        '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
-      });
-    }).catchError((e) {
-      debugPrint(e);
-    });
-  }
   @override
   void initState() {
+    var data = storage.hasData('room_list');
+    if (data) {
+      List list = jsonDecode(storage.read('room_list'));
+      controller.listofChat.value =
+          list.map((e) => GroupModel.fromJson(e)).toList();
+    }
     _getCurrentPosition();
-    print('Click on group');
     controller.getGroupList();
     controller.connectToSocket();
     if (controller.friendList.isEmpty) {
@@ -248,15 +241,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       ),
               ),
               Obx(
-                () => !controller.loadChat.value
+                () => !controller.loadChat.value &&
+                        controller.listofChat.isEmpty
                     ? SliverToBoxAdapter(
                         child: SizedBox(
-                        child: Center(
-                          child: SpinKitFadingCircle(
-                            color: buttonColor,
-                            size: 50.0,
-                          ),
-                        ),
                         height: height - 150,
                         width: width,
                       ))
@@ -446,16 +434,62 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               fontFamily: AppFonts.segoeui,
                                               fontSize: 16),
                                         ),
-                                        subtitle: Text(
-                                          date == ''
-                                              ? ''
-                                              : "${controller.listofChat[index].lastMessage!.text}",
-                                          style: TextStyle(
-                                              color: Color(0XFF373737),
-                                              fontFamily: AppFonts.segoeui,
-                                              fontSize: 12),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                        subtitle: Row(
+                                          children: [
+                                            date == ''
+                                                ? SizedBox()
+                                                : CircularProfileAvatar(
+                                                    '',
+                                                    radius: 8,
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          "${controller.listofChat[index].userData!.avatar}",
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          CircularProgressIndicator(),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    imageFit: BoxFit.cover,
+                                                  ),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              date == ''
+                                                  ? ''
+                                                  : controller
+                                                          .listofChat[index]
+                                                          .userData!
+                                                          .firstName!
+                                                          .isEmpty
+                                                      ? '${controller.listofChat[index].userData!.username} : '
+                                                      : '${controller.listofChat[index].userData!.firstName} ${controller.listofChat[index].userData!.lastName} : ',
+                                              style: TextStyle(
+                                                  color: Color(0XFF373737),
+                                                  fontFamily: AppFonts.segoeui,
+                                                  fontSize: 12),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text(
+                                              date == ''
+                                                  ? ''
+                                                  : controller
+                                                              .listofChat[index]
+                                                              .lastMessage!
+                                                              .type ==
+                                                          'left_text'
+                                                      ? "${controller.listofChat[index].lastMessage!.text}"
+                                                      : '${controller.listofChat[index].lastMessage!.type}',
+                                              style: TextStyle(
+                                                  color: Color(0XFF373737),
+                                                  fontFamily: AppFonts.segoeui,
+                                                  fontSize: 12),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
                                         trailing: Column(
                                           mainAxisSize: MainAxisSize.min,
@@ -916,49 +950,46 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           onTap: () async {
                             // if (listofmap.isNotEmpty) {
                             //   if (groupNameController.text.trim().isNotEmpty) {
-                                if (locationController.text.trim().isNotEmpty) {
-                                  String ids = '';
-                                  for (var i in listofmap) {
-                                    if (i == listofmap.last) {
-                                      ids = ids + '$i';
-                                    } else {
-                                      ids = ids + '$i,';
-                                    }
-                                  }
-                                  if (public) {
-                                    mapData.call({
-                                      'server_key': serverKey,
-                                      'type': 'create',
-                                      'group_name':
-                                          '${groupNameController.text.trim()}',
-                                      'parts': ids,
-                                      'variant': 'room',
-                                      'privacy': 'public',
-                                      'lat': lat.toString(),
-                                      'lng': lng.toString()
-                                    });
-                                  } else {
-                                    mapData.call({
-                                      'server_key': serverKey,
-                                      'type': 'create',
-                                      'group_name':
-                                          '${groupNameController.text.trim()}',
-                                      'parts': ids,
-                                      'variant': 'room',
-                                      'privacy': 'private',
-                                      'password': passwordController.text
-                                          .trim()
-                                          .toString(),
-                                      'lat': lat.toString(),
-                                      'lng': lng.toString()
-                                    });
-                                  }
-                                  Navigator.of(context).pop();
-                                 }
-                                else {
-                                  snackBarFailer(
-                                      'Please Select location First');
+                            if (locationController.text.trim().isNotEmpty) {
+                              String ids = '';
+                              for (var i in listofmap) {
+                                if (i == listofmap.last) {
+                                  ids = ids + '$i';
+                                } else {
+                                  ids = ids + '$i,';
                                 }
+                              }
+                              if (public) {
+                                mapData.call({
+                                  'server_key': serverKey,
+                                  'type': 'create',
+                                  'group_name':
+                                      '${groupNameController.text.trim()}',
+                                  'parts': ids,
+                                  'variant': 'room',
+                                  'privacy': 'public',
+                                  'lat': lat.toString(),
+                                  'lng': lng.toString()
+                                });
+                              } else {
+                                mapData.call({
+                                  'server_key': serverKey,
+                                  'type': 'create',
+                                  'group_name':
+                                      '${groupNameController.text.trim()}',
+                                  'parts': ids,
+                                  'variant': 'room',
+                                  'privacy': 'private',
+                                  'password':
+                                      passwordController.text.trim().toString(),
+                                  'lat': lat.toString(),
+                                  'lng': lng.toString()
+                                });
+                              }
+                              Navigator.of(context).pop();
+                            } else {
+                              snackBarFailer('Please Select location First');
+                            }
                             //   } else {
                             //     snackBarFailer('Please Add Group name First');
                             //   }

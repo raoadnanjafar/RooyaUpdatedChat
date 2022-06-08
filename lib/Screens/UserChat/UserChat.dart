@@ -13,6 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:record_mp3/record_mp3.dart';
 import 'package:rooya/AllDialog/showMessageDetaildDialog.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
+import 'package:rooya/ApiConfig/BaseURL.dart';
 import 'package:rooya/GlobalWidget/FileUploader.dart';
 import 'package:rooya/GlobalWidget/Photo_View_Class.dart';
 import 'package:rooya/Models/GroupModel.dart';
@@ -85,7 +86,7 @@ class _UserChatState extends State<UserChat>
   bool isfirst = false;
   DateFormat sdf2 = DateFormat("hh.mm aa");
   DateFormat sdf1 = DateFormat("hh:mm:ss aa");
-  var replyModel = <Messages>[].obs;
+  var replyModel = Messages().obs;
   var isActivereply = false.obs;
   UserChatProvider? getcontroller;
 
@@ -235,13 +236,13 @@ class _UserChatState extends State<UserChat>
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      // Clipboard.setData(ClipboardData(
-                                      //     text:
-                                      //     "${getcontroller!.oneToOneChat[i].message!.message}"));
-                                      // ScaffoldMessenger.of(context)
-                                      //     .showSnackBar(SnackBar(
-                                      //     content: Text("Coped"),
-                                      //     duration: Duration(seconds: 1)));
+                                      Clipboard.setData(ClipboardData(
+                                          text:
+                                              "${getcontroller!.userChat[i].text}"));
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text("Coped"),
+                                              duration: Duration(seconds: 1)));
                                     },
                                     icon: Icon(
                                       Icons.copy,
@@ -250,21 +251,20 @@ class _UserChatState extends State<UserChat>
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      // for (var i = 0;
-                                      // i < selectedOneToOneChat.length;
-                                      // i++) {
-                                      //   Map payLoad = {
-                                      //     'm_id':
-                                      //     '${selectedOneToOneChat[i].message!.mId}',
-                                      //     'userId':
-                                      //     '${selectedOneToOneChat[i].sender!.userId}'
-                                      //   };
-                                      //   ApiUtils.removeMessageApi(map: payLoad);
-                                      //   getcontroller!.oneToOneChat
-                                      //       .remove(selectedOneToOneChat[i]);
-                                      //   selectedOneToOneChat.clear();
-                                      //   setState(() {});
-                                      // }
+                                      for (var i = 0;
+                                          i < selectedOneToOneChat.length;
+                                          i++) {
+                                        Map payLoad = {
+                                          'server_key': serverKey,
+                                          'message_id':
+                                              '${selectedOneToOneChat[i].id}'
+                                        };
+                                        ApiUtils.removeMessageApi(map: payLoad);
+                                        getcontroller!.userChat
+                                            .remove(selectedOneToOneChat[i]);
+                                      }
+                                      selectedOneToOneChat.clear();
+                                      setState(() {});
                                     },
                                     icon: Icon(
                                       CupertinoIcons.delete,
@@ -312,7 +312,8 @@ class _UserChatState extends State<UserChat>
                                         userID: widget.groupID));
                                   } else {
                                     Get.to(GroupInformation(
-                                      groupModel: widget.groupModel, groupID: '',
+                                      groupModel: widget.groupModel,
+                                      groupID: '',
                                     ));
                                   }
                                 },
@@ -358,10 +359,6 @@ class _UserChatState extends State<UserChat>
                               itemBuilder: (c, i) {
                                 String? extension =
                                     '${getcontroller!.userChat[i].type}';
-                                if (getcontroller!.userChat[i].media != '') {
-                                  // extension = p.extension(getcontroller!
-                                  //     .oneToOneChat[i].message!.message!);
-                                }
                                 return AutoScrollTag(
                                     key: ValueKey(i),
                                     controller: autoScrollController!,
@@ -524,66 +521,78 @@ class _UserChatState extends State<UserChat>
                                                                       .black54,
                                                               menuOffset: 10,
                                                               onPressed: () {
-                                                                // if (getcontroller!
-                                                                //         .oneToOneChat[i]
-                                                                //         .oldmessage !=
-                                                                //     null) {
-                                                                //   isActivePositionTap
-                                                                //           .value =
-                                                                //       false;
-                                                                //   _scrollToIndex(getcontroller!
-                                                                //       .oneToOneChat
-                                                                //       .indexWhere((element) =>
-                                                                //           element.message!.message == getcontroller!.oneToOneChat[i].oldmessage!.oMessage &&
-                                                                //           element.sender!.userId.toString() == getcontroller!.oneToOneChat[i].oldmessage!.oSender.toString()));
-                                                                //   fadeIndex = getcontroller!
-                                                                //       .oneToOneChat
-                                                                //       .indexWhere((element) =>
-                                                                //           element.message!.message == getcontroller!.oneToOneChat[i].oldmessage!.oMessage &&
-                                                                //           element.sender!.userId.toString() == getcontroller!.oneToOneChat[i].oldmessage!.oSender.toString());
-                                                                //   setState(
-                                                                //       () {});
-                                                                //   Future.delayed(
-                                                                //       Duration(
-                                                                //           seconds: 1),
-                                                                //       () {
-                                                                //     fadeIndex =
-                                                                //         -1;
-                                                                //     isActivePositionTap.value =
-                                                                //         true;
-                                                                //     setState(
-                                                                //         () {});
-                                                                //   });
-                                                                // } else {
-                                                                //   if (selectedOneToOneChat
-                                                                //       .isNotEmpty) {
-                                                                //     if (!selectedOneToOneChat
-                                                                //         .contains(getcontroller!.oneToOneChat[i])) {
-                                                                //       selectedOneToOneChat
-                                                                //           .add(getcontroller!.oneToOneChat[i]);
-                                                                //     } else {
-                                                                //       selectedOneToOneChat
-                                                                //           .remove(getcontroller!.oneToOneChat[i]);
-                                                                //     }
-                                                                //     setState(
-                                                                //         () {});
-                                                                //   }
-                                                                // }
+                                                                if (getcontroller!
+                                                                        .userChat[
+                                                                            i]
+                                                                        .replyId !=
+                                                                    '0') {
+                                                                  isActivePositionTap
+                                                                          .value =
+                                                                      false;
+                                                                  _scrollToIndex(getcontroller!
+                                                                      .userChat
+                                                                      .indexWhere((element) =>
+                                                                          element
+                                                                              .replyId ==
+                                                                          getcontroller!
+                                                                              .userChat[i]
+                                                                              .id));
+                                                                  fadeIndex = getcontroller!
+                                                                      .userChat
+                                                                      .indexWhere((element) =>
+                                                                          element
+                                                                              .replyId ==
+                                                                          getcontroller!
+                                                                              .userChat[i]
+                                                                              .id);
+                                                                  setState(
+                                                                      () {});
+                                                                  Future.delayed(
+                                                                      Duration(
+                                                                          seconds:
+                                                                              1),
+                                                                      () {
+                                                                    fadeIndex =
+                                                                        -1;
+                                                                    isActivePositionTap
+                                                                            .value =
+                                                                        true;
+                                                                    setState(
+                                                                        () {});
+                                                                  });
+                                                                } else {
+                                                                  if (selectedOneToOneChat
+                                                                      .isNotEmpty) {
+                                                                    if (!selectedOneToOneChat
+                                                                        .contains(
+                                                                            getcontroller!.userChat[i])) {
+                                                                      selectedOneToOneChat.add(
+                                                                          getcontroller!
+                                                                              .userChat[i]);
+                                                                    } else {
+                                                                      selectedOneToOneChat
+                                                                          .remove(
+                                                                              getcontroller!.userChat[i]);
+                                                                    }
+                                                                    setState(
+                                                                        () {});
+                                                                  }
+                                                                }
                                                               },
                                                               onlongPress: () {
-                                                                // if (!selectedOneToOneChat
-                                                                //     .contains(
-                                                                //         getcontroller!.oneToOneChat[i])) {
-                                                                //   selectedOneToOneChat.add(
-                                                                //       getcontroller!
-                                                                //           .oneToOneChat[i]);
-                                                                // } else {
-                                                                //   selectedOneToOneChat
-                                                                //       .remove(
-                                                                //           getcontroller!.oneToOneChat[i]);
-                                                                // }
-                                                                // setState(
-                                                                //     () {});
+                                                                if (!selectedOneToOneChat
+                                                                    .contains(
+                                                                        getcontroller!
+                                                                            .userChat[i])) {
+                                                                  selectedOneToOneChat.add(
+                                                                      getcontroller!
+                                                                          .userChat[i]);
+                                                                } else {
+                                                                  selectedOneToOneChat.remove(
+                                                                      getcontroller!
+                                                                          .userChat[i]);
+                                                                }
+                                                                setState(() {});
                                                               },
                                                               openWithTap: true,
                                                               child: Column(
@@ -694,19 +703,19 @@ class _UserChatState extends State<UserChat>
                                                                       10,
                                                                   onlongPress:
                                                                       () async {
-                                                                    // if (!selectedOneToOneChat
-                                                                    //     .contains(
-                                                                    //         getcontroller!.oneToOneChat[i])) {
-                                                                    //   selectedOneToOneChat.add(
-                                                                    //       getcontroller!
-                                                                    //           .oneToOneChat[i]);
-                                                                    // } else {
-                                                                    //   selectedOneToOneChat
-                                                                    //       .remove(
-                                                                    //           getcontroller!.oneToOneChat[i]);
-                                                                    // }
-                                                                    // setState(
-                                                                    //     () {});
+                                                                    if (!selectedOneToOneChat
+                                                                        .contains(
+                                                                            getcontroller!.userChat[i])) {
+                                                                      selectedOneToOneChat.add(
+                                                                          getcontroller!
+                                                                              .userChat[i]);
+                                                                    } else {
+                                                                      selectedOneToOneChat
+                                                                          .remove(
+                                                                              getcontroller!.userChat[i]);
+                                                                    }
+                                                                    setState(
+                                                                        () {});
                                                                   },
                                                                   onCneTapMenuItems: <
                                                                       FocusedMenuItem>[
@@ -741,14 +750,14 @@ class _UserChatState extends State<UserChat>
                                                                             "Forward"),
                                                                         onPressed:
                                                                             () {
-                                                                          // if (!selectedOneToOneChat
-                                                                          //     .contains(getcontroller!.oneToOneChat[i])) {
-                                                                          //   selectedOneToOneChat.add(getcontroller!.oneToOneChat[i]);
-                                                                          // } else {
-                                                                          //   selectedOneToOneChat.remove(getcontroller!.oneToOneChat[i]);
-                                                                          // }
-                                                                          // setState(
-                                                                          //     () {});
+                                                                          if (!selectedOneToOneChat
+                                                                              .contains(getcontroller!.userChat[i])) {
+                                                                            selectedOneToOneChat.add(getcontroller!.userChat[i]);
+                                                                          } else {
+                                                                            selectedOneToOneChat.remove(getcontroller!.userChat[i]);
+                                                                          }
+                                                                          setState(
+                                                                              () {});
                                                                         },
                                                                         trailingIcon: Icon(
                                                                             CupertinoIcons
@@ -760,15 +769,15 @@ class _UserChatState extends State<UserChat>
                                                                             'Copy'),
                                                                         onPressed:
                                                                             () {
-                                                                          // Clipboard.setData(
-                                                                          //     ClipboardData(text: "${getcontroller!.oneToOneChat[i].message!.message}"));
-                                                                          // ScaffoldMessenger.of(context)
-                                                                          //     .showSnackBar(SnackBar(
-                                                                          //   content:
-                                                                          //       Text('Copyed'),
-                                                                          //   duration:
-                                                                          //       Duration(seconds: 1),
-                                                                          // ));
+                                                                          Clipboard.setData(
+                                                                              ClipboardData(text: "${getcontroller!.userChat[i].text}"));
+                                                                          ScaffoldMessenger.of(context)
+                                                                              .showSnackBar(SnackBar(
+                                                                            content:
+                                                                                Text('Copyed'),
+                                                                            duration:
+                                                                                Duration(seconds: 1),
+                                                                          ));
                                                                         },
                                                                         trailingIcon: Icon(
                                                                             CupertinoIcons
@@ -784,19 +793,20 @@ class _UserChatState extends State<UserChat>
                                                                         ),
                                                                         onPressed:
                                                                             () {
-                                                                          // Map payLoad =
-                                                                          //     {
-                                                                          //   'm_id':
-                                                                          //       '${getcontroller!.oneToOneChat[i].message!.mId}',
-                                                                          //   'userId':
-                                                                          //       '${getcontroller!.oneToOneChat[i].sender!.userId}'
-                                                                          // };
-                                                                          //
-                                                                          // ApiUtils.removeMessageApi(
-                                                                          //     map: payLoad);
-                                                                          // getcontroller!
-                                                                          //     .oneToOneChat
-                                                                          //     .removeAt(i);
+                                                                          Map payLoad =
+                                                                              {
+                                                                            'server_key':
+                                                                                serverKey,
+                                                                            'message_id':
+                                                                                '${getcontroller!.userChat[i].id}'
+                                                                          };
+                                                                          ApiUtils.removeMessageApi(
+                                                                              map: payLoad);
+                                                                          getcontroller!
+                                                                              .userChat
+                                                                              .removeAt(i);
+                                                                          setState(
+                                                                              () {});
                                                                         },
                                                                         trailingIcon:
                                                                             Icon(
@@ -810,51 +820,53 @@ class _UserChatState extends State<UserChat>
                                                                   ],
                                                                   onPressed:
                                                                       () {
-                                                                    // if (getcontroller!
-                                                                    //         .oneToOneChat[i]
-                                                                    //         .oldmessage !=
-                                                                    //     null) {
-                                                                    //   isActivePositionTap
-                                                                    //           .value =
-                                                                    //       false;
-                                                                    //   _scrollToIndex(getcontroller!
-                                                                    //       .oneToOneChat
-                                                                    //       .indexWhere((element) =>
-                                                                    //           element.message!.message == getcontroller!.oneToOneChat[i].oldmessage!.oMessage &&
-                                                                    //           element.sender!.userId.toString() == getcontroller!.oneToOneChat[i].oldmessage!.oSender.toString()));
-                                                                    //   fadeIndex = getcontroller!
-                                                                    //       .oneToOneChat
-                                                                    //       .indexWhere((element) =>
-                                                                    //           element.message!.message == getcontroller!.oneToOneChat[i].oldmessage!.oMessage &&
-                                                                    //           element.sender!.userId.toString() == getcontroller!.oneToOneChat[i].oldmessage!.oSender.toString());
-                                                                    //   setState(
-                                                                    //       () {});
-                                                                    //   Future.delayed(
-                                                                    //       Duration(
-                                                                    //           seconds: 1),
-                                                                    //       () {
-                                                                    //     fadeIndex =
-                                                                    //         -1;
-                                                                    //     isActivePositionTap.value =
-                                                                    //         true;
-                                                                    //     setState(
-                                                                    //         () {});
-                                                                    //   });
-                                                                    // } else {
-                                                                    //   if (selectedOneToOneChat
-                                                                    //       .isNotEmpty) {
-                                                                    //     if (!selectedOneToOneChat
-                                                                    //         .contains(getcontroller!.oneToOneChat[i])) {
-                                                                    //       selectedOneToOneChat
-                                                                    //           .add(getcontroller!.oneToOneChat[i]);
-                                                                    //     } else {
-                                                                    //       selectedOneToOneChat
-                                                                    //           .remove(getcontroller!.oneToOneChat[i]);
-                                                                    //     }
-                                                                    //     setState(
-                                                                    //         () {});
-                                                                    //   }
-                                                                    // }
+                                                                    if (getcontroller!
+                                                                            .userChat[i]
+                                                                            .replyId !=
+                                                                        '0') {
+                                                                      isActivePositionTap
+                                                                              .value =
+                                                                          false;
+                                                                      _scrollToIndex(getcontroller!.userChat.indexWhere((element) =>
+                                                                          element
+                                                                              .replyId ==
+                                                                          getcontroller!
+                                                                              .userChat[i]
+                                                                              .id));
+                                                                      fadeIndex = getcontroller!.userChat.indexWhere((element) =>
+                                                                          element
+                                                                              .replyId ==
+                                                                          getcontroller!
+                                                                              .userChat[i]
+                                                                              .id);
+                                                                      setState(
+                                                                          () {});
+                                                                      Future.delayed(
+                                                                          Duration(
+                                                                              seconds: 1),
+                                                                          () {
+                                                                        fadeIndex =
+                                                                            -1;
+                                                                        isActivePositionTap.value =
+                                                                            true;
+                                                                        setState(
+                                                                            () {});
+                                                                      });
+                                                                    } else {
+                                                                      if (selectedOneToOneChat
+                                                                          .isNotEmpty) {
+                                                                        if (!selectedOneToOneChat
+                                                                            .contains(getcontroller!.userChat[i])) {
+                                                                          selectedOneToOneChat
+                                                                              .add(getcontroller!.userChat[i]);
+                                                                        } else {
+                                                                          selectedOneToOneChat
+                                                                              .remove(getcontroller!.userChat[i]);
+                                                                        }
+                                                                        setState(
+                                                                            () {});
+                                                                      }
+                                                                    }
                                                                   },
                                                                   child: Column(
                                                                     children: [
@@ -902,10 +914,10 @@ class _UserChatState extends State<UserChat>
                                                     ],
                                                   ),
                                         onRightSwipe: () {
-                                          // replyModel.value =
-                                          //     getcontroller!.oneToOneChat[i];
-                                          // isActivereply.value = true;
-                                          // setState(() {});
+                                          replyModel.value =
+                                              getcontroller!.userChat[i];
+                                          isActivereply.value = true;
+                                          setState(() {});
                                         },
                                         onLeftSwipe: () {
                                           //smsInformation(context: context);
@@ -922,82 +934,82 @@ class _UserChatState extends State<UserChat>
                             padding: EdgeInsets.only(
                                 left: width / 25, right: width / 25),
                           ))),
-                  // isActivereply.value == true
-                  //     ? Container(
-                  //         decoration: BoxDecoration(color: Colors.blueGrey[50]),
-                  //         child: Row(
-                  //           children: [
-                  //             Container(
-                  //               height: height * 0.060,
-                  //               width: 3,
-                  //               decoration:
-                  //                   BoxDecoration(color: Colors.deepPurple),
-                  //             ),
-                  //             SizedBox(
-                  //               width: 5,
-                  //             ),
-                  //             Expanded(
-                  //               child: Column(
-                  //                 mainAxisAlignment: MainAxisAlignment.center,
-                  //                 crossAxisAlignment: CrossAxisAlignment.start,
-                  //                 children: [
-                  //                   Text(
-                  //                     storage.read('userID') !=
-                  //                             replyModel.value.sender!.userId
-                  //                                 .toString()
-                  //                         ? '${replyModel.value.sender!.firstName} ${replyModel.value.sender!.lastName}'
-                  //                         : 'You',
-                  //                     style: TextStyle(
-                  //                         fontSize: 13,
-                  //                         fontWeight: FontWeight.w500,
-                  //                         color: Colors.deepPurple),
-                  //                   ),
-                  //                   SizedBox(
-                  //                     height: 2,
-                  //                   ),
-                  //                   Text(
-                  //                     replyModel.value.message!.type == 'text'
-                  //                         ? '${replyModel.value.message!.message}'
-                  //                         : '${replyModel.value.message!.type}',
-                  //                     maxLines: 1,
-                  //                     style: TextStyle(fontSize: 10),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //             ),
-                  //             SizedBox(
-                  //               height: 10,
-                  //             ),
-                  //             Container(
-                  //               child: Row(
-                  //                 children: [
-                  //                   InkWell(
-                  //                     onTap: () {
-                  //                       replyModel.value = OneToOneChatModel();
-                  //                       isActivereply.value = false;
-                  //                       setState(() {});
-                  //                     },
-                  //                     child: Container(
-                  //                       child: Icon(
-                  //                         Icons.close,
-                  //                         size: 17,
-                  //                       ),
-                  //                       decoration: BoxDecoration(
-                  //                           color: Colors.black12,
-                  //                           shape: BoxShape.circle),
-                  //                       padding: EdgeInsets.all(3),
-                  //                     ),
-                  //                   ),
-                  //                   SizedBox(
-                  //                     width: 10,
-                  //                   )
-                  //                 ],
-                  //               ),
-                  //             )
-                  //           ],
-                  //         ),
-                  //       )
-                  //     : SizedBox(),
+                  isActivereply.value == true
+                      ? Container(
+                          decoration: BoxDecoration(color: Colors.blueGrey[50]),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: height * 0.060,
+                                width: 3,
+                                decoration:
+                                    BoxDecoration(color: Colors.deepPurple),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      storage.read('userID') !=
+                                              replyModel.value.userData!.userId
+                                                  .toString()
+                                          ? '${replyModel.value.userData!.firstName} ${replyModel.value.userData!.lastName}'
+                                          : 'You',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.deepPurple),
+                                    ),
+                                    SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      replyModel.value.type == 'text'
+                                          ? '${replyModel.value.text}'
+                                          : '${replyModel.value.type}',
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 10),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        replyModel.value = Messages();
+                                        isActivereply.value = false;
+                                        setState(() {});
+                                      },
+                                      child: Container(
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 17,
+                                        ),
+                                        decoration: BoxDecoration(
+                                            color: Colors.black12,
+                                            shape: BoxShape.circle),
+                                        padding: EdgeInsets.all(3),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : SizedBox(),
                   selectedOneToOneChat.isNotEmpty
                       ? Container(
                           height: height * 0.050,
@@ -1069,22 +1081,24 @@ class _UserChatState extends State<UserChat>
                                                                         .segoeui),
                                                           ),
                                                           onTap: () {
-                                                            // for (var i
-                                                            //     in listofmap) {
-                                                            //   for (var j
-                                                            //       in selectedOneToOneChat) {
-                                                            //     Map map = {
-                                                            //       'message':
-                                                            //           '${j.message!.message}',
-                                                            //       'memberId[]':
-                                                            //           '$i'
-                                                            //     };
-                                                            //     ApiUtils
-                                                            //         .sendMessagepost(
-                                                            //             map:
-                                                            //                 map);
-                                                            //   }
-                                                            // }
+                                                            for (var i
+                                                                in listofmap) {
+                                                              for (var j
+                                                                  in selectedOneToOneChat) {
+                                                                Map map = {
+                                                                  'server_key':
+                                                                      serverKey,
+                                                                  'id':
+                                                                      '${j.id}',
+                                                                  'recipient_id':
+                                                                      i
+                                                                };
+                                                                ApiUtils
+                                                                    .sendMessagepost(
+                                                                        map:
+                                                                            map);
+                                                              }
+                                                            }
                                                             Navigator.of(
                                                                     context)
                                                                 .pop(true);
@@ -1097,128 +1111,120 @@ class _UserChatState extends State<UserChat>
                                                         .spaceBetween,
                                               ),
                                             ),
-                                            // Expanded(
-                                            //   child: ListView.builder(
-                                            //     itemCount: getcontroller!
-                                            //         .searchUserModel
-                                            //         .value
-                                            //         .friends!
-                                            //         .length,
-                                            //     itemBuilder: (context, i) =>
-                                            //         Column(
-                                            //       children: [
-                                            //         ListTile(
-                                            //           leading:
-                                            //               CircularProfileAvatar(
-                                            //             '',
-                                            //             radius: 23,
-                                            //             child: Image.network(
-                                            //               '${getcontroller!.searchUserModel.value.friends![i].profilePictureUrl}',
-                                            //               fit: BoxFit.cover,
-                                            //             ),
-                                            //           ),
-                                            //           title: Text(
-                                            //             '${getcontroller!.searchUserModel.value.friends![i].firstName} ${getcontroller!.searchUserModel.value.friends![i].lastName}',
-                                            //             style: TextStyle(
-                                            //                 fontFamily: AppFonts
-                                            //                     .segoeui,
-                                            //                 fontSize: 13),
-                                            //           ),
-                                            //           trailing: Row(
-                                            //             mainAxisSize:
-                                            //                 MainAxisSize.min,
-                                            //             children: [
-                                            //               InkWell(
-                                            //                 child: Container(
-                                            //                   height: 25,
-                                            //                   width: 60,
-                                            //                   child: Center(
-                                            //                     child: Icon(
-                                            //                       Icons.check,
-                                            //                       size: 18,
-                                            //                       color: !listofmap.contains(getcontroller!
-                                            //                               .searchUserModel
-                                            //                               .value
-                                            //                               .friends![
-                                            //                                   i]
-                                            //                               .userId
-                                            //                               .toString())
-                                            //                           ? Colors
-                                            //                               .transparent
-                                            //                           : Colors
-                                            //                               .white,
-                                            //                     ),
-                                            //                   ),
-                                            //                   decoration:
-                                            //                       BoxDecoration(
-                                            //                     shape: BoxShape
-                                            //                         .circle,
-                                            //                     color: !listofmap.contains(getcontroller!
-                                            //                             .searchUserModel
-                                            //                             .value
-                                            //                             .friends![
-                                            //                                 i]
-                                            //                             .userId
-                                            //                             .toString())
-                                            //                         ? Colors
-                                            //                             .transparent
-                                            //                         : Colors
-                                            //                             .green,
-                                            //                     border: Border.all(
-                                            //                         color: !listofmap.contains(getcontroller!
-                                            //                                 .searchUserModel
-                                            //                                 .value
-                                            //                                 .friends![
-                                            //                                     i]
-                                            //                                 .userId
-                                            //                                 .toString())
-                                            //                             ? Colors
-                                            //                                 .black12
-                                            //                             : Colors
-                                            //                                 .green,
-                                            //                         width: 2),
-                                            //                   ),
-                                            //                 ),
-                                            //                 onTap: () {
-                                            //                   if (listofmap.contains(
-                                            //                       getcontroller!
-                                            //                           .searchUserModel
-                                            //                           .value
-                                            //                           .friends![
-                                            //                               i]
-                                            //                           .userId
-                                            //                           .toString())) {
-                                            //                     listofmap.remove(
-                                            //                         getcontroller!
-                                            //                             .searchUserModel
-                                            //                             .value
-                                            //                             .friends![
-                                            //                                 i]
-                                            //                             .userId
-                                            //                             .toString());
-                                            //                     setState(() {});
-                                            //                   } else {
-                                            //                     listofmap.add(getcontroller!
-                                            //                         .searchUserModel
-                                            //                         .value
-                                            //                         .friends![i]
-                                            //                         .userId
-                                            //                         .toString()
-                                            //                         .trim());
-                                            //                     setState(() {});
-                                            //                   }
-                                            //                 },
-                                            //               ),
-                                            //             ],
-                                            //           ),
-                                            //         ),
-                                            //         SizedBox(
-                                            //           height: 8,
-                                            //         ),
-                                            //       ],
-                                            //     ),
-                                            //   ),
-                                            // )
+                                            Expanded(
+                                              child: ListView.builder(
+                                                itemCount: getcontroller!
+                                                    .friendList.length,
+                                                itemBuilder: (context, i) =>
+                                                    Column(
+                                                  children: [
+                                                    ListTile(
+                                                      leading:
+                                                          CircularProfileAvatar(
+                                                        '',
+                                                        radius: 23,
+                                                        child: Image.network(
+                                                          '${getcontroller!.friendList[i].avatar}',
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                      title: Text(
+                                                        getcontroller!
+                                                                .friendList[i]
+                                                                .firstName!
+                                                                .isEmpty
+                                                            ? '${getcontroller!.friendList[i].username}'
+                                                            : '${getcontroller!.friendList[i].firstName} ${getcontroller!.friendList[i].lastName}',
+                                                        style: TextStyle(
+                                                            fontFamily: AppFonts
+                                                                .segoeui,
+                                                            fontSize: 13),
+                                                      ),
+                                                      trailing: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          InkWell(
+                                                            child: Container(
+                                                              height: 25,
+                                                              width: 60,
+                                                              child: Center(
+                                                                child: Icon(
+                                                                  Icons.check,
+                                                                  size: 18,
+                                                                  color: !listofmap.contains(getcontroller!
+                                                                          .friendList[
+                                                                              i]
+                                                                          .userId
+                                                                          .toString())
+                                                                      ? Colors
+                                                                          .transparent
+                                                                      : Colors
+                                                                          .white,
+                                                                ),
+                                                              ),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color: !listofmap.contains(getcontroller!
+                                                                        .friendList[
+                                                                            i]
+                                                                        .userId
+                                                                        .toString())
+                                                                    ? Colors
+                                                                        .transparent
+                                                                    : Colors
+                                                                        .green,
+                                                                border: Border.all(
+                                                                    color: !listofmap.contains(getcontroller!
+                                                                            .friendList[
+                                                                                i]
+                                                                            .userId
+                                                                            .toString())
+                                                                        ? Colors
+                                                                            .black12
+                                                                        : Colors
+                                                                            .green,
+                                                                    width: 2),
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              if (listofmap.contains(
+                                                                  getcontroller!
+                                                                      .friendList[
+                                                                          i]
+                                                                      .userId
+                                                                      .toString())) {
+                                                                listofmap.remove(
+                                                                    getcontroller!
+                                                                        .friendList[
+                                                                            i]
+                                                                        .userId
+                                                                        .toString());
+                                                                setState(() {});
+                                                              } else {
+                                                                listofmap.add(
+                                                                    getcontroller!
+                                                                        .friendList[
+                                                                            i]
+                                                                        .userId
+                                                                        .toString()
+                                                                        .trim());
+                                                                setState(() {});
+                                                              }
+                                                            },
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            )
                                           ],
                                         ),
                                       );

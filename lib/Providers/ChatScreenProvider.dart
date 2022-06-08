@@ -44,7 +44,7 @@ class ChatScreenProvider extends GetxController {
           'join',
           {
             "username": "${UserDataService.userDataModel!.userData!.username}",
-            'user_id':'${storage.read('token')}',
+            'user_id': '${storage.read('token')}',
           },
         );
         socket!.on("private_message_page", (data) {

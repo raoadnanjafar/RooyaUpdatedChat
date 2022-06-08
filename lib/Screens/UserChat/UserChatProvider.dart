@@ -94,6 +94,9 @@ class UserChatProvider extends GetxController {
             isReciverTyping.value = false;
           }
         });
+        socket!.on('lastseen', (value) {
+          print('comming last seen now');
+        });
         if (fromGroup!) {
           socket!.on('group_message', (value) {
             log('group_message is = $value');

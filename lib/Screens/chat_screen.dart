@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 import '../GlobalWidget/FileUploader.dart';
+import '../Models/OneTwoOneOuterModel.dart';
 import 'SearchUser/NewUserSearchPage.dart';
 import 'UserChat/UserChat.dart';
 
@@ -42,6 +44,12 @@ class _ChatScreenState extends State<ChatScreen>
   StreamSubscription<double>? streamSubscription;
   @override
   void initState() {
+    var data = storage.hasData('chat_list');
+    if (data) {
+      controller.listofChat.value =
+          OneToOneChatOuterModel.fromJson(jsonDecode(storage.read('chat_list')))
+              .data!;
+    }
     controller.getChatList();
     controller.connectToSocket();
     // controller.leaveGroup();
@@ -62,9 +70,6 @@ class _ChatScreenState extends State<ChatScreen>
 
   getStoryData() async {
     await controller.getStoryList();
-    Future.delayed(Duration(milliseconds: 30), () {
-      setState(() {});
-    });
   }
 
   var listOfSelectedMember = <OneToOneChatModel>[].obs;
@@ -228,15 +233,16 @@ class _ChatScreenState extends State<ChatScreen>
                       ),
               ),
               Obx(
-                () => !controller.loadChat.value
+                () => !controller.loadChat.value &&
+                        controller.listofChat.isEmpty
                     ? SliverToBoxAdapter(
                         child: SizedBox(
                         child: Center(
-                          child: SpinKitFadingCircle(
-                            color: buttonColor,
-                            size: 50.0,
-                          ),
-                        ),
+                            // child: SpinKitFadingCircle(
+                            //   color: buttonColor,
+                            //   size: 50.0,
+                            // ),
+                            ),
                         height: height - 150,
                         width: width,
                       ))
@@ -495,7 +501,11 @@ class _ChatScreenState extends State<ChatScreen>
                                               fontSize: 16),
                                         ),
                                         subtitle: Text(
-                                          "${controller.listofChat[index].lastMessage!.text}",
+                                          controller.listofChat[index]
+                                                      .lastMessage!.type ==
+                                                  'left_text'
+                                              ? "${controller.listofChat[index].lastMessage!.text}"
+                                              : '${controller.listofChat[index].lastMessage!.type}',
                                           style: TextStyle(
                                               color: Color(0XFF373737),
                                               fontFamily: AppFonts.segoeui,
@@ -732,7 +742,7 @@ class _ChatScreenState extends State<ChatScreen>
                     ),
                   );
                 }),
-              ).then((value) async{
+              ).then((value) async {
                 if (value is bool) {
                   selectedOneToOneChat.clear();
                   await controller.getChatList();
@@ -890,7 +900,7 @@ class _ChatScreenState extends State<ChatScreen>
                     ),
                   );
                 }),
-              ).then((value) async{
+              ).then((value) async {
                 if (value is bool) {
                   selectedOneToOneChat.clear();
                   await controller.getChatList();
