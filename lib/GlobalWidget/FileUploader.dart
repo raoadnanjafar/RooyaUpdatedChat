@@ -110,3 +110,38 @@ Future sentGroupImageFile(
     print('Exception is = $e');
   }
 }
+
+Future sentGroupNameFile(
+    {String? groupId,String? groupName}) async {
+  Map<String, dynamic> data = {
+    'server_key': serverKey,
+    'id': groupId,
+    'type': 'edit',
+    'group_name': groupName,
+  };
+  FormData formData = new FormData.fromMap(data);
+  try {
+    final response = await Dio().post('$baseUrl$updateGroupInformation$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
+  } catch (e) {
+    print('Exception is = $e');
+  }
+}
+
+Future deleteGroup(
+    {String? groupId}) async {
+  Map<String, dynamic> data = {
+    'server_key': serverKey,
+    'id': groupId,
+    'type': 'delete',
+  };
+  FormData formData = new FormData.fromMap(data);
+  try {
+    final response = await Dio().post('$baseUrl$updateGroupInformation$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
+  } catch (e) {
+    print('Exception is = $e');
+  }
+}

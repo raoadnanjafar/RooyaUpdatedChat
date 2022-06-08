@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/BaseURL.dart';
+import 'package:rooya/GlobalWidget/FileUploader.dart';
 import 'package:rooya/GlobalWidget/Photo_View_Class.dart';
 import 'package:rooya/GlobalWidget/SnackBarApp.dart';
 import 'package:rooya/Models/FriendsListModel.dart';
@@ -253,12 +254,17 @@ class _GroupScreenState extends State<GroupScreen> {
                             motion: const ScrollMotion(),
                             dismissible: DismissiblePane(onDismissed: () {}),
                             children: [
-                              SlidableAction(
-                                onPressed: doNothing,
-                                backgroundColor: Color(0xFFFE4A49),
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete,
-                                label: 'Delete',
+                              InkWell(
+                                onTap:()async{
+                                  //await deleteGroup(groupId: GroupMo)
+                        },
+                                child: SlidableAction(
+                                  onPressed: doNothing,
+                                  backgroundColor: Color(0xFFFE4A49),
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete,
+                                  label: 'Delete',
+                                ),
                               ),
                               SlidableAction(
                                 onPressed: doNothing,

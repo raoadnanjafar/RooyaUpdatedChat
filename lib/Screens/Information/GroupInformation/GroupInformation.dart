@@ -17,6 +17,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:rooya/Utils/text_filed/app_font.dart';
 
 import '../../../GlobalWidget/FileUploader.dart';
+import '../../../GlobalWidget/SnackBarApp.dart';
 import 'GroupInformationProvider.dart';
 
 class GroupInformation extends StatefulWidget {
@@ -80,6 +81,21 @@ class _GroupInformationState extends State<GroupInformation> {
                             child: Container(
                               child: IconButton(
                                   onPressed: () async {
+                                    UpdateInfo(context, groupModel);
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  )),
+                              margin: EdgeInsets.only(right: 10),
+                              decoration: BoxDecoration(color: buttonColor, shape: BoxShape.circle),
+                            ),
+                          ),
+                          Visibility(
+                            visible: true,
+                            child: Container(
+                              child: IconButton(
+                                  onPressed: () async {
                                     FilePickerResult? result = await FilePicker.platform.pickFiles(
                                       type: FileType.custom,
                                       allowedExtensions: [
@@ -103,17 +119,6 @@ class _GroupInformationState extends State<GroupInformation> {
                                         groupModel = model;
                                       }
                                       setState(() {});
-                                      // Map mapdata = {
-                                      //   'Id': '28',
-                                      //   'avatar': '$path',
-                                      // 'server_key': serverKey,
-                                      // };
-
-                                      // await ApiUtils
-                                      //     .changeGroupImagePost(
-                                      //         map: mapdata);
-                                      // await infoController.getGroupInfo(
-                                      //     groupID: widget.groupID);
                                       setState(() {
                                         isloading = false;
                                       });
@@ -126,7 +131,7 @@ class _GroupInformationState extends State<GroupInformation> {
                               margin: EdgeInsets.only(right: 10),
                               decoration: BoxDecoration(color: buttonColor, shape: BoxShape.circle),
                             ),
-                          )
+                          ),
                         ],
                         flexibleSpace: FlexibleSpaceBar(
                           title: Text(
@@ -664,115 +669,113 @@ class _GroupInformationState extends State<GroupInformation> {
             )));
   }
 
-  // TextEditingController groupNameController = TextEditingController();
-  // TextEditingController groupDescriptionController = TextEditingController();
-  //
-  // UpdateInfo(BuildContext context, UserInfoModel model, Function(Map) mapData) {
-  //   groupNameController.text = model.groupName ?? '';
-  //   groupDescriptionController.text = model.groupDecs ?? '';
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return AlertDialog(
-  //             insetPadding: EdgeInsets.only(left: 10, right: 10),
-  //             content: StatefulBuilder(
-  //               builder: (context, setState) {
-  //                 return Container(
-  //                     height: 500,
-  //                     width: 400,
-  //                     //color: Colors.green,
-  //                     child: Column(children: [
-  //                       Text(
-  //                         'Update Group Info',
-  //                         style: TextStyle(color: Colors.green, fontSize: 16),
-  //                       ),
-  //                       SizedBox(
-  //                         height: 12,
-  //                       ),
-  //                       SizedBox(
-  //                         height: 12,
-  //                       ),
-  //                       Container(
-  //                         width: double.infinity,
-  //                         decoration: BoxDecoration(
-  //                             color: Color(0XFFF5F5F5),
-  //                             borderRadius: BorderRadius.circular(8)),
-  //                         child: TextField(
-  //                           controller: groupNameController,
-  //                           decoration: InputDecoration(
-  //                               border: InputBorder.none,
-  //                               hintText: 'Group Name',
-  //                               hintStyle: TextStyle(
-  //                                   fontSize: 13, fontFamily: AppFonts.segoeui),
-  //                               contentPadding: EdgeInsets.only(left: 8)),
-  //                         ),
-  //                       ),
-  //                       SizedBox(
-  //                         height: 12,
-  //                       ),
-  //                       Container(
-  //                         width: double.infinity,
-  //                         padding: EdgeInsets.all(5),
-  //                         decoration: BoxDecoration(
-  //                             color: Color(0XFFF5F5F5),
-  //                             borderRadius: BorderRadius.circular(8)),
-  //                         child: TextField(
-  //                           controller: groupDescriptionController,
-  //                           maxLines: 14,
-  //                           decoration: InputDecoration(
-  //                               border: InputBorder.none,
-  //                               hintText: 'Group Description',
-  //                               hintStyle: TextStyle(
-  //                                   fontSize: 13, fontFamily: AppFonts.segoeui),
-  //                               contentPadding: EdgeInsets.only(left: 8)),
-  //                         ),
-  //                       ),
-  //                       SizedBox(
-  //                         height: 14,
-  //                       ),
-  //                       InkWell(
-  //                         onTap: () {
-  //                           if (groupNameController.text.trim().isNotEmpty &&
-  //                               groupDescriptionController.text
-  //                                   .trim()
-  //                                   .isNotEmpty) {
-  //                             Map map = {
-  //                               'groupId': '${model.groupId}',
-  //                               'groupName': '${groupNameController.text}',
-  //                               'description':
-  //                                   '${groupDescriptionController.text}'
-  //                             };
-  //                             mapData.call(map);
-  //                             Navigator.of(context).pop();
-  //                           } else {
-  //                             snackBarFailer('Please fill up all the fields');
-  //                           }
-  //                         },
-  //                         child: Center(
-  //                           child: Container(
-  //                             height: height * 0.050,
-  //                             width: width * 0.3,
-  //                             child: Center(
-  //                               child: Text(
-  //                                 'Update',
-  //                                 style: TextStyle(
-  //                                     color: Colors.white,
-  //                                     fontSize: 13,
-  //                                     fontFamily: AppFonts.segoeui),
-  //                               ),
-  //                             ),
-  //                             decoration: BoxDecoration(
-  //                                 color: buttonColor,
-  //                                 borderRadius: BorderRadius.circular(30)),
-  //                           ),
-  //                         ),
-  //                       )
-  //                     ]));
-  //               },
-  //             ));
-  //       });
-  // }
-  //
+  TextEditingController groupNameController = TextEditingController();
+  TextEditingController groupDescriptionController = TextEditingController();
+
+  UpdateInfo(
+    BuildContext context,
+    GroupModel model,
+  ) {
+    groupNameController.text = model.groupName ?? '';
+    // groupDescriptionController.text = model.groupDecs ?? '';
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              insetPadding: EdgeInsets.only(left: 10, right: 10),
+              content: StatefulBuilder(
+                builder: (context, setState) {
+                  return Container(
+                      height: 500,
+                      width: 400,
+                      //color: Colors.green,
+                      child: Column(children: [
+                        Text(
+                          'Update Group Info',
+                          style: TextStyle(color: Colors.green, fontSize: 16),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
+                          child: TextField(
+                            controller: groupNameController,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Group Name',
+                                hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
+                                contentPadding: EdgeInsets.only(left: 8)),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
+                          child: TextField(
+                            controller: groupDescriptionController,
+                            maxLines: 14,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Group Description',
+                                hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
+                                contentPadding: EdgeInsets.only(left: 8)),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            if (groupNameController.text.trim().isNotEmpty) {
+                              await sentGroupNameFile(groupId: groupModel.groupId.toString(), groupName: groupNameController.text.toString());
+                              setState(() {});
+                              GroupModel model = await infoController.getGroupList(groupModel.groupId!);
+                              if (model.groupId != '') {
+                                print('new data coming ');
+                                groupModel = model;
+                              }
+                              setState(() {});
+
+                              // Map map = {
+                              //   'groupId': '${model.groupId}',
+                              //   'groupName': '${groupNameController.text}',
+                              //   'description':
+                              //       '${groupDescriptionController.text}'
+                              // };
+                              // mapData.call(map);
+                              Navigator.of(context).pop();
+                            } else {
+                              snackBarFailer('Please fill up all the fields');
+                            }
+                          },
+                          child: Center(
+                            child: Container(
+                              height: height * 0.050,
+                              width: width * 0.3,
+                              child: Center(
+                                child: Text(
+                                  'Update',
+                                  style: TextStyle(color: Colors.white, fontSize: 13, fontFamily: AppFonts.segoeui),
+                                ),
+                              ),
+                              decoration: BoxDecoration(color: buttonColor, borderRadius: BorderRadius.circular(30)),
+                            ),
+                          ),
+                        )
+                      ]));
+                },
+              ));
+        });
+  }
+
   createGroup(BuildContext context, List<Following> friendsList, Function(Map) mapData) {
     TextEditingController groupNameController = TextEditingController();
     return showDialog(
