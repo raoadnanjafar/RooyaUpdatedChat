@@ -10,8 +10,6 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:dio/dio.dart' as dio;
 
-import '../Models/UserChatModel.dart';
-
 class ChatScreenProvider extends GetxController {
   var listofChat = <Data>[].obs;
   var loadChat = false.obs;
@@ -53,10 +51,8 @@ class ChatScreenProvider extends GetxController {
           print('private_message_page');
           getChatList();
         });
-        socket!.on('group_message', (value) {
-
-        });
-        socket!.on('private_message', (value) {
+        socket!.on("msg_delivered", (data) {
+          print('Deliverd now message');
         });
       });
     } catch (e) {
