@@ -107,15 +107,7 @@ class UserChatProvider extends GetxController {
         socket!.on('lastseen', (value) {});
         if (fromGroup!) {
           socket!.on('group_message', (value) {
-            //  log('group_message is = $value');
-            // // oneToOneChat.insert(0, OneToOneChatModel.fromJson(value));
-            // if (groupID != '') {
-            //   getAllMessage(userID: groupID, fromGroup: fromGroup);
-            // }
             Messages message = Messages.fromJson(value['message_res']);
-            // if (groupID != '') {
-            //   getAllMessage(userID: groupID,fromGroup: fromGroup);
-            // }
             userChat.insert(0, message);
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
@@ -126,11 +118,7 @@ class UserChatProvider extends GetxController {
           });
         } else {
           socket!.on('private_message', (value) {
-            // log('newMessage private_message is = $value');
             Messages message = Messages.fromJson(value['message_res']);
-            // if (groupID != '') {
-            //   getAllMessage(userID: groupID,fromGroup: fromGroup);
-            // }
             userChat.insert(0, message);
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
@@ -210,9 +198,6 @@ class UserChatProvider extends GetxController {
           });
         }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        Future.delayed(Duration(seconds: 1), () {
-          getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        });
       } else {
         if (replyID != '') {
           print('has reply id$replyID');
@@ -232,9 +217,6 @@ class UserChatProvider extends GetxController {
           });
         }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        Future.delayed(Duration(seconds: 1), () {
-          getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        });
       }
     } catch (e) {
       print('send message exaption is = $e');

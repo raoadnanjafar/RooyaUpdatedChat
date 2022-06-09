@@ -10,6 +10,8 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:dio/dio.dart' as dio;
 
+import '../Models/UserChatModel.dart';
+
 class ChatScreenProvider extends GetxController {
   var listofChat = <Data>[].obs;
   var loadChat = false.obs;
@@ -51,46 +53,24 @@ class ChatScreenProvider extends GetxController {
           print('private_message_page');
           getChatList();
         });
-        // socket!.emit(
-        //     'register',
-        //     jsonEncode({
-        //       '_r': '${storage.read('token')}',
-        //       'url': "https://cc.rooyatech.com/",
-        //       'registrarType': "client",
-        //     }));
-        // socket!.on('pendingMessage', (value) async {
-        //   print('new upcoming message is = $value');
-        //   UpcomingMessageModel model =
-        //       UpcomingMessageModel.fromJson(jsonDecode(value));
-        //   await getChatList();
-        //   if (alreadyOpenGroup != model.groupData!.groupId.toString() &&
-        //       openSearch) {
-        //     alreadyOpenGroup = model.groupData!.groupId.toString();
-        //     Navigator.of(Get.context!).pop();
-        //     Get.to(OneToOneChat(
-        //       groupID: model.groupData!.groupId.toString(),
-        //       name: "${model.groupData!.members![0].firstName} " +
-        //           "${model.groupData!.members![0].lastName}",
-        //       profilePic: "${model.groupData!.members![0].profilePictureUrl}",
-        //     ))!
-        //         .then((value) => {});
-        //     // Navigator.push(
-        //     //     Get.context!,
-        //     //     MaterialPageRoute(
-        //     //         builder: (c) => OneToOneChat(
-        //     //               groupID: model.groupData!.groupId.toString(),
-        //     //               name: "${model.groupData!.members![0].firstName} " +
-        //     //                   "${model.groupData!.members![0].lastName}",
-        //     //               profilePic:
-        //     //                   "${model.groupData!.members![0].profilePictureUrl}",
-        //     //             ))).then((value) async {});
-        //   }
-        //   await getChatList();
-        // });
-        // socket!.on('blockStatus', (value) {
-        //   print('blockStatus = $value');
-        //   getChatList();
-        // });
+        socket!.on('group_message', (value) {
+          print('group_message');
+          Messages message = Messages.fromJson(value['message_res']);
+          socket!.emit("seen_messages", {
+            'user_id': '${storage.read('token')}',
+            'recipient_id': '${message.groupId}',
+            'message_id': '${message.id}'
+          });
+        });
+        socket!.on('private_message', (value) {
+          print('private_message =$value');
+          Messages message = Messages.fromJson(value['message_res']);
+          socket!.emit("seen_messages", {
+            'user_id': '${storage.read('token')}',
+            'recipient_id': '${message.groupId}',
+            'message_id': '${message.id}'
+          });
+        });
       });
     } catch (e) {
       print('Exception =$e');
