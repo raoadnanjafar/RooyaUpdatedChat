@@ -229,7 +229,7 @@ class UserChatProvider extends GetxController {
     socket!.close();
     socket!.dispose();
     socket!.disconnect();
-    firstTime = true;
+    firstTime = false;
   }
 
   var recording_start = false.obs;
