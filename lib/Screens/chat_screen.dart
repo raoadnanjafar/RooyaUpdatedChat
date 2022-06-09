@@ -52,10 +52,6 @@ class _ChatScreenState extends State<ChatScreen>
     }
     controller.getChatList();
     controller.connectToSocket();
-    // controller.leaveGroup();
-    Future.delayed(Duration(seconds: 2), () {
-      controller.connectToSocket();
-    });
     if (!streamController.hasListener) {
       streamController.stream.listen((event) {
         setState(() {});
@@ -352,7 +348,6 @@ class _ChatScreenState extends State<ChatScreen>
                                                       .listofChat[index].avatar,
                                                   fromGroup: false,
                                                 ))).then((value) async {
-                                      controller.leaveGroup();
                                       await controller.getChatList();
                                       controller.connectToSocket();
                                       setState(() {});
