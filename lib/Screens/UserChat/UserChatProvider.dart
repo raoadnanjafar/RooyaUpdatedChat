@@ -111,7 +111,7 @@ class UserChatProvider extends GetxController {
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
               'recipient_id': '${message.userData!.userId}',
-              'message_id': '${userChat.last.id}'
+              'message_id': '${message.id}'
             });
             sendSmsStreamcontroller.add(0.0);
           });
@@ -122,7 +122,7 @@ class UserChatProvider extends GetxController {
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
               'recipient_id': '${message.messageUser!.userId}',
-              'message_id': '${userChat.last.id}'
+              'message_id': '${message.id}'
             });
             sendSmsStreamcontroller.add(0.0);
           });
@@ -167,9 +167,6 @@ class UserChatProvider extends GetxController {
           });
         }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        Future.delayed(Duration(seconds: 1), () {
-          getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        });
       } else {
         if (replyID != '') {
           print('has reply id$replyID');
@@ -189,9 +186,6 @@ class UserChatProvider extends GetxController {
           });
         }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        Future.delayed(Duration(seconds: 1), () {
-          getAllMessage(userID: to_userId, fromGroup: fromGroup);
-        });
       }
     } catch (e) {
       print('send message exaption is = $e');
