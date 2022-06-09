@@ -105,17 +105,26 @@ class UserChatProvider extends GetxController {
             isReciverTyping.value = false;
           }
         });
-        socket!.on('lastseen', (value) {});
         if (fromGroup!) {
           socket!.on('group_message', (value) {
             Messages message = Messages.fromJson(value['message_res']);
             userChat.insert(0, message);
+            socket!.emit("seen_messages", {
+              'user_id': '${storage.read('token')}',
+              'recipient_id': '$groupID',
+              'message_id': '${userChat.last.id}'
+            });
             sendSmsStreamcontroller.add(0.0);
           });
         } else {
           socket!.on('private_message', (value) {
             Messages message = Messages.fromJson(value['message_res']);
             userChat.insert(0, message);
+            socket!.emit("seen_messages", {
+              'user_id': '${storage.read('token')}',
+              'recipient_id': '$groupID',
+              'message_id': '${userChat.last.id}'
+            });
             sendSmsStreamcontroller.add(0.0);
           });
         }
