@@ -53,24 +53,11 @@ class ChatScreenProvider extends GetxController {
           print('private_message_page');
           getChatList();
         });
-        // socket!.on('group_message', (value) {
-        //   print('group_message');
-        //   Messages message = Messages.fromJson(value['message_res']);
-        //   socket!.emit("msg_delivered", {
-        //     'user_id': '${storage.read('token')}',
-        //     'recipient_id': '${message.userData!.userId}',
-        //     'message_id': '${message.id}'
-        //   });
-        // });
-        // socket!.on('private_message', (value) {
-        //   print('private_message =$value');
-        //   Messages message = Messages.fromJson(value['message_res']);
-        //   socket!.emit("msg_delivered", {
-        //     'user_id': '${storage.read('token')}',
-        //     'recipient_id': '${message.messageUser!.userId}',
-        //     'message_id': '${message.id}'
-        //   });
-        // });
+        socket!.on('group_message', (value) {
+
+        });
+        socket!.on('private_message', (value) {
+        });
       });
     } catch (e) {
       print('Exception =$e');

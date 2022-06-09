@@ -110,7 +110,7 @@ class UserChatProvider extends GetxController {
             userChat.insert(0, message);
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
-              'recipient_id': '$groupID',
+              'recipient_id': '${message.userData!.userId}',
               'message_id': '${userChat.last.id}'
             });
             sendSmsStreamcontroller.add(0.0);
@@ -121,7 +121,7 @@ class UserChatProvider extends GetxController {
             userChat.insert(0, message);
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
-              'recipient_id': '$groupID',
+              'recipient_id': '${message.messageUser!.userId}',
               'message_id': '${userChat.last.id}'
             });
             sendSmsStreamcontroller.add(0.0);
@@ -133,6 +133,7 @@ class UserChatProvider extends GetxController {
         });
         socket!.on("msg_delivered", (data) {
           print('message delivered now');
+          getAllMessage(userID: groupID, fromGroup: fromGroup);
         });
       });
     } catch (e) {
