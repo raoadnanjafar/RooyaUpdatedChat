@@ -10,6 +10,8 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:dio/dio.dart' as dio;
 
+import '../Models/UserChatModel.dart';
+
 class ChatScreenProvider extends GetxController {
   var listofChat = <Data>[].obs;
   var loadChat = false.obs;
@@ -51,8 +53,13 @@ class ChatScreenProvider extends GetxController {
           print('private_message_page');
           getChatList();
         });
-        socket!.on("msg_delivered", (data) {
-          print('Deliverd now message');
+        socket!.on('private_message', (value) {
+          Messages message = Messages.fromJson(value['message_res']);
+          socket!.emit("seen_messages", {
+            'user_id': '${storage.read('token')}',
+            'recipient_id': '${UserDataService.userDataModel!.userData!.userId}',
+            'message_id': '${message.id}'
+          });
         });
       });
     } catch (e) {
