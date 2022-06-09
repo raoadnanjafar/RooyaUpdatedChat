@@ -58,7 +58,7 @@ class ChatScreenProvider extends GetxController {
           Messages message = Messages.fromJson(value['message_res']);
           socket!.emit("seen_messages", {
             'user_id': '${storage.read('token')}',
-            'recipient_id': '${message.groupId}',
+            'recipient_id': '${message.userData!.userId}',
             'message_id': '${message.id}'
           });
         });
@@ -67,7 +67,7 @@ class ChatScreenProvider extends GetxController {
           Messages message = Messages.fromJson(value['message_res']);
           socket!.emit("seen_messages", {
             'user_id': '${storage.read('token')}',
-            'recipient_id': '${message.groupId}',
+            'recipient_id': '${message.messageUser!.userId}',
             'message_id': '${message.id}'
           });
         });
