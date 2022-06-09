@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -211,7 +212,7 @@ class _UserChatState extends State<UserChat>
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    selectedOneToOneChat.value=<Messages>[];
+                                    selectedOneToOneChat.value = <Messages>[];
                                     setState(() {});
                                   },
                                   icon: Icon(Icons.clear)),
@@ -521,13 +522,15 @@ class _UserChatState extends State<UserChat>
                                                                       .black54,
                                                               menuOffset: 10,
                                                               onPressed: () {
-                                                                print('Clicked');
+                                                                print(
+                                                                    'Clicked');
                                                                 if (getcontroller!
                                                                         .userChat[
                                                                             i]
                                                                         .replyId !=
                                                                     '0') {
-                                                                  print('in first');
+                                                                  print(
+                                                                      'in first');
                                                                   isActivePositionTap
                                                                           .value =
                                                                       false;
@@ -571,13 +574,16 @@ class _UserChatState extends State<UserChat>
                                                                       selectedOneToOneChat.add(
                                                                           getcontroller!
                                                                               .userChat[i]);
-                                                                      print('lenth is = ${selectedOneToOneChat.length}');
+                                                                      print(
+                                                                          'lenth is = ${selectedOneToOneChat.length}');
                                                                     } else {
-                                                                      print('lenth is = ${selectedOneToOneChat.length}');
+                                                                      print(
+                                                                          'lenth is = ${selectedOneToOneChat.length}');
                                                                       selectedOneToOneChat
                                                                           .remove(
                                                                               getcontroller!.userChat[i]);
-                                                                      print('lenth is = ${selectedOneToOneChat.length}');
+                                                                      print(
+                                                                          'lenth is = ${selectedOneToOneChat.length}');
                                                                     }
                                                                     setState(
                                                                         () {});
@@ -945,7 +951,7 @@ class _UserChatState extends State<UserChat>
                           child: Row(
                             children: [
                               Container(
-                                height: height * 0.060,
+                                height: height * 0.070,
                                 width: 3,
                                 decoration:
                                     BoxDecoration(color: Colors.deepPurple),
@@ -958,26 +964,60 @@ class _UserChatState extends State<UserChat>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      storage.read('userID') !=
-                                              replyModel.value.userData!.userId
-                                                  .toString()
-                                          ? '${replyModel.value.userData!.firstName} ${replyModel.value.userData!.lastName}'
-                                          : 'You',
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.deepPurple),
-                                    ),
+                                    replyModel.value.userData != null
+                                        ? Text(
+                                            storage.read('userID') !=
+                                                    replyModel
+                                                        .value.userData!.userId
+                                                        .toString()
+                                                ? replyModel.value.userData!
+                                                        .firstName!.isEmpty
+                                                    ? '${replyModel.value.userData!.username}'
+                                                    : '${replyModel.value.userData!.firstName} ${replyModel.value.userData!.lastName}'
+                                                : 'You',
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.deepPurple),
+                                          )
+                                        : storage.read('userID') !=
+                                                replyModel
+                                                    .value.messageUser!.userId
+                                                    .toString()
+                                            ? CircularProfileAvatar(
+                                                '',
+                                                radius: 12,
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      "${replyModel.value.messageUser!.avatar!}",
+                                                  placeholder: (context, url) =>
+                                                      CircularProgressIndicator(),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                imageFit: BoxFit.cover,
+                                              )
+                                            : Text(
+                                                'You',
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.deepPurple),
+                                              ),
                                     SizedBox(
                                       height: 2,
                                     ),
-                                    Text(
-                                      replyModel.value.type == 'text'
-                                          ? '${replyModel.value.text}'
-                                          : '${replyModel.value.type}',
-                                      maxLines: 1,
-                                      style: TextStyle(fontSize: 10),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 5),
+                                      child: Text(
+                                        replyModel.value.type == 'text'
+                                            ? '${replyModel.value.text}'
+                                            : '${replyModel.value.type}',
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 10),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1573,22 +1613,20 @@ class _UserChatState extends State<UserChat>
                                           : InkWell(
                                               onTap: () {
                                                 if (isActivereply.value) {
-                                                  // Map map = {
-                                                  //   'message':
-                                                  //       '${controller.text}',
-                                                  //   'groupId': widget.groupID,
-                                                  //   'reply_msg_id':
-                                                  //       '${replyModel.value.message!.mId}'
-                                                  // };
-                                                  // ApiUtils.sendMessagepost(
-                                                  //     map: map);
-                                                  // replyModel.value =
-                                                  //     OneToOneChatModel();
-                                                  // isActivereply.value = false;
-                                                  // controller.clear();
-                                                  // getcontroller!
-                                                  //     .searchText.value = '';
-                                                  // setState(() {});
+                                                  getcontroller!.onSentMessage(
+                                                      message: controller.text,
+                                                      to_userId: widget.groupID,
+                                                      fromGroup:
+                                                          widget.fromGroup,
+                                                      replyID: replyModel
+                                                          .value.id
+                                                          .toString());
+                                                  replyModel.value = Messages();
+                                                  isActivereply.value = false;
+                                                  controller.clear();
+                                                  getcontroller!
+                                                      .searchText.value = '';
+                                                  setState(() {});
                                                 } else {
                                                   if (controller.text
                                                       .trim()

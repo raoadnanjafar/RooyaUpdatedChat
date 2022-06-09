@@ -37,6 +37,7 @@ class UserChatProvider extends GetxController {
   Future getAllMessage({String? userID, bool? fromGroup = false}) async {
     groupID = userID!;
     if (!fromGroup!) {
+      print('object = ${{'server_key': serverKey, 'recipient_id': userID}}');
       userChat.value = await ApiUtils.getMessage_list(
           map: {'server_key': serverKey, 'recipient_id': userID},
           start: 0,
@@ -103,9 +104,7 @@ class UserChatProvider extends GetxController {
             isReciverTyping.value = false;
           }
         });
-        socket!.on('lastseen', (value) {
-          print('comming last seen now');
-        });
+        socket!.on('lastseen', (value) {});
         if (fromGroup!) {
           socket!.on('group_message', (value) {
             log('group_message is = $value');
@@ -132,7 +131,8 @@ class UserChatProvider extends GetxController {
           });
         }
         socket!.on("lastseen", (data) {
-          print('last seen comming');
+          print('get last seen');
+          getAllMessage(userID: groupID, fromGroup: fromGroup);
         });
         // socket!.on('receiveSeen', (value) {
         //   print('receiveSeen = $value');
@@ -173,31 +173,48 @@ class UserChatProvider extends GetxController {
 
   var block_user = false.obs;
 
-  onSentMessage({String? message, String? to_userId, bool? fromGroup}) {
-    // print('send message ${{
-    //   'to_id': to_userId,
-    //   'from_id':
-    //       int.parse('${UserDataService.userDataModel!.userData!.userId}'),
-    //   'username': '${UserDataService.userDataModel!.userData!.username}',
-    //   // mediaId: mediaId,
-    //   // isSticker: false
-    // }}');
+  onSentMessage(
+      {String? message,
+      String? to_userId,
+      bool? fromGroup,
+      String? replyID = ''}) {
     try {
       if (fromGroup!) {
-        socket!.emit('group_message', {
-          'msg': message,
-          'group_id': to_userId,
-          'from_id': '${storage.read('token')}',
-          'username': '${UserDataService.userDataModel!.userData!.username}',
-        });
+        if (replyID != '') {
+          socket!.emit('group_message', {
+            'msg': message,
+            'group_id': to_userId,
+            'from_id': '${storage.read('token')}',
+            'username': '${UserDataService.userDataModel!.userData!.username}',
+            'message_reply_id': replyID
+          });
+        } else {
+          socket!.emit('group_message', {
+            'msg': message,
+            'group_id': to_userId,
+            'from_id': '${storage.read('token')}',
+            'username': '${UserDataService.userDataModel!.userData!.username}',
+          });
+        }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
       } else {
-        socket!.emit('private_message', {
-          'msg': message,
-          'to_id': to_userId,
-          'from_id': '${storage.read('token')}',
-          'username': '${UserDataService.userDataModel!.userData!.username}',
-        });
+        if (replyID != '') {
+          print('has reply id$replyID');
+          socket!.emit('private_message', {
+            'msg': message,
+            'to_id': to_userId,
+            'from_id': '${storage.read('token')}',
+            'username': '${UserDataService.userDataModel!.userData!.username}',
+            'message_reply_id': replyID
+          });
+        } else {
+          socket!.emit('private_message', {
+            'msg': message,
+            'to_id': to_userId,
+            'from_id': '${storage.read('token')}',
+            'username': '${UserDataService.userDataModel!.userData!.username}',
+          });
+        }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
       }
     } catch (e) {

@@ -442,7 +442,7 @@ class ApiUtils {
     try {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
-      print('message list is this = $data');
+     // print('message list is this = $data');
       if (data['api_status'] == 200) {
         UserChatModel modellist = UserChatModel.fromJson(data)
           ..messages!.reversed;
@@ -479,7 +479,7 @@ class ApiUtils {
     try {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
-      print('message list is this = $data');
+      //print('message list is this = $data');
       if (data['api_status'] == 200) {
         GroupChatModel modellist = GroupChatModel.fromJson(data)
           ..data!.messages!.reversed;
