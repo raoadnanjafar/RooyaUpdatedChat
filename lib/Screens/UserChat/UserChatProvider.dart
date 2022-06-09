@@ -104,7 +104,6 @@ class UserChatProvider extends GetxController {
             isReciverTyping.value = false;
           }
         });
-        socket!.on('lastseen', (value) {});
         if (fromGroup!) {
           socket!.on('group_message', (value) {
             Messages message = Messages.fromJson(value['message_res']);
@@ -112,7 +111,7 @@ class UserChatProvider extends GetxController {
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
               'recipient_id': '$groupID',
-              'message_id': '${message.id}'
+              'message_id': '${userChat.last.id}'
             });
             sendSmsStreamcontroller.add(0.0);
           });
@@ -123,7 +122,7 @@ class UserChatProvider extends GetxController {
             socket!.emit("seen_messages", {
               'user_id': '${storage.read('token')}',
               'recipient_id': '$groupID',
-              'message_id': '${message.id}'
+              'message_id': '${userChat.last.id}'
             });
             sendSmsStreamcontroller.add(0.0);
           });
@@ -135,37 +134,6 @@ class UserChatProvider extends GetxController {
         socket!.on("msg_delivered", (data) {
           print('message delivered now');
         });
-        // socket!.on('receiveSeen', (value) {
-        //   print('receiveSeen = $value');
-        //   if (!isRecive) {
-        //     isRecive = true;
-        //     if (groupID != '') {
-        //       getAllMessage(userID: groupID);
-        //     }
-        //     Future.delayed(Duration(seconds: 2), () {
-        //       isRecive = false;
-        //     });
-        //   }
-        // });
-        // socket!.on('updateStatus', (value) {
-        //   print('updateStatus app = $value');
-        //   if (value['status'] == 1) {
-        //     isOnline.value = true;
-        //   } else {
-        //     isOnline.value = false;
-        //   }
-        //   if (groupID != '') {
-        //     getAllMessage(userID: groupID);
-        //   }
-        // });
-        // socket!.on('blockStatus', (value) {
-        //   print('blockStatus is = $value');
-        //   if (value['block'] == 0) {
-        //     block_user.value = false;
-        //   } else {
-        //     block_user.value = true;
-        //   }
-        // });
       });
     } catch (e) {
       print(e.toString());
@@ -198,6 +166,9 @@ class UserChatProvider extends GetxController {
           });
         }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
+        Future.delayed(Duration(seconds: 1), () {
+          getAllMessage(userID: to_userId, fromGroup: fromGroup);
+        });
       } else {
         if (replyID != '') {
           print('has reply id$replyID');
@@ -217,6 +188,9 @@ class UserChatProvider extends GetxController {
           });
         }
         getAllMessage(userID: to_userId, fromGroup: fromGroup);
+        Future.delayed(Duration(seconds: 1), () {
+          getAllMessage(userID: to_userId, fromGroup: fromGroup);
+        });
       }
     } catch (e) {
       print('send message exaption is = $e');
