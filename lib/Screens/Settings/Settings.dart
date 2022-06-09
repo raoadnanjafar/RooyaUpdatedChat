@@ -231,6 +231,7 @@ class _SettingsState extends State<Settings> {
                     selectController.updateColor(0);
                     // controller.listofMember.value=[];
                     storage.erase();
+                    Get.deleteAll(force: true);
                     Get.offAll(SignInTabsHandle());
                   },
                   child: seetingRowWithOutIcon(
