@@ -1,39 +1,4 @@
-import 'package:rooya/Models/ReplyModel.dart';
-import 'package:rooya/Models/UserDataModel.dart';
-
-class UserChatModel {
-  int? apiStatus;
-  List<Messages>? messages = <Messages>[];
-  int? typing;
-  int? isRecording;
-
-  UserChatModel({this.apiStatus, this.messages, this.typing, this.isRecording});
-
-  UserChatModel.fromJson(Map<String, dynamic> json) {
-    apiStatus = json['api_status'];
-    if (json['messages'] != null) {
-      messages = <Messages>[];
-      json['messages'].forEach((v) {
-        messages!.add(new Messages.fromJson(v));
-      });
-    }
-    typing = json['typing'];
-    isRecording = json['is_recording'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['api_status'] = this.apiStatus;
-    if (this.messages != null) {
-      data['messages'] = this.messages!.map((v) => v.toJson()).toList();
-    }
-    data['typing'] = this.typing;
-    data['is_recording'] = this.isRecording;
-    return data;
-  }
-}
-
-class Messages {
+class ReplyModel {
   String? id;
   String? fromId;
   String? groupId;
@@ -61,19 +26,16 @@ class Messages {
   String? listening;
   String? delivered;
   MessageUser? messageUser;
+  String? orText;
+  int? onwer;
+  Reaction? reaction;
   String? pin;
   String? fav;
-  ReplyModel? reply;
-  // List<Null>? story;
-  Reaction? reaction;
   String? timeText;
   String? position;
   String? type;
-  String? product;
-  String? fileSize;
-  UserData? userData;
 
-  Messages(
+  ReplyModel(
       {this.id,
       this.fromId,
       this.groupId,
@@ -101,19 +63,17 @@ class Messages {
       this.listening,
       this.delivered,
       this.messageUser,
+      this.orText,
+      this.onwer,
+      this.reaction,
       this.pin,
       this.fav,
-      this.reply,
-      // this.story,
-      this.reaction,
       this.timeText,
       this.position,
       this.type,
-      this.product,
-      this.userData,
-      this.fileSize});
+      });
 
-  Messages.fromJson(Map<String, dynamic> json) {
+  ReplyModel.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
     fromId = json['from_id'].toString();
     groupId = json['group_id'].toString();
@@ -143,30 +103,16 @@ class Messages {
     messageUser = json['messageUser'] != null
         ? new MessageUser.fromJson(json['messageUser'])
         : null;
-    if (json.containsKey('user_data')) {
-      if (json['user_data'] != null && json['user_data'] != false) {
-        userData = UserData.fromJson(json['user_data']);
-      }
-    }
+    orText = json['or_text'].toString();
+    onwer = json['onwer'];
+    // reaction = json['reaction'] != null
+    //     ? new Reaction.fromJson(json['reaction'])
+    //     : null;
     pin = json['pin'].toString();
     fav = json['fav'].toString();
-    if (json['reply'] is Map) {
-      reply = ReplyModel.fromJson(json['reply']);
-    }
-    // if (json['story'] != null) {
-    //   story = <Null>[];
-    //   json['story'].forEach((v) {
-    //     story!.add(new Null.fromJson(v));
-    //   });
-    // }
-    reaction = json['reaction'] != null
-        ? new Reaction.fromJson(json['reaction'])
-        : null;
     timeText = json['time_text'].toString();
     position = json['position'].toString();
     type = json['type'].toString();
-    //product = json['product'];
-    fileSize = json['file_size'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -200,22 +146,16 @@ class Messages {
     if (this.messageUser != null) {
       data['messageUser'] = this.messageUser!.toJson();
     }
+    data['or_text'] = this.orText;
+    data['onwer'] = this.onwer;
+    // if (this.reaction != null) {
+    //   data['reaction'] = this.reaction!.toJson();
+    // }
     data['pin'] = this.pin;
     data['fav'] = this.fav;
-    // if (this.reply != null) {
-    //   data['reply'] = this.reply!.map((v) => v.toJson()).toList();
-    // }
-    // if (this.story != null) {
-    //   data['story'] = this.story!.map((v) => v.toJson()).toList();
-    // }
-    if (this.reaction != null) {
-      data['reaction'] = this.reaction!.toJson();
-    }
     data['time_text'] = this.timeText;
     data['position'] = this.position;
     data['type'] = this.type;
-    data['product'] = this.product;
-    data['file_size'] = this.fileSize;
     return data;
   }
 }
@@ -243,15 +183,13 @@ class Reaction {
   bool? isReacted;
   String? type;
   String? count;
-  String? i1;
 
-  Reaction({this.isReacted, this.type, this.count, this.i1});
+  Reaction({this.isReacted, this.type, this.count});
 
   Reaction.fromJson(Map<String, dynamic> json) {
     isReacted = json['is_reacted'];
     type = json['type'].toString();
     count = json['count'].toString();
-    i1 = json['1'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -259,7 +197,6 @@ class Reaction {
     data['is_reacted'] = this.isReacted;
     data['type'] = this.type;
     data['count'] = this.count;
-    data['1'] = this.i1;
     return data;
   }
 }
