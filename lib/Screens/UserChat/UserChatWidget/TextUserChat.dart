@@ -7,6 +7,7 @@ import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/Models/UserChatModel.dart';
 import 'package:rooya/Screens/Information/UserChatInformation/user_chat_information.dart';
 import 'package:rooya/Utils/UserDataService.dart';
+import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 
 import '../UserChat.dart';
@@ -26,7 +27,7 @@ class _TextUserChatState extends State<TextUserChat> {
     var date = DateTime.fromMillisecondsSinceEpoch(
         int.parse("${widget.model!.time}") * 1000);
     if (widget.model!.position != 'right') {
-      if(widget.model!.replyId=='0'){
+      if (widget.model!.replyId == '0') {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -49,16 +50,16 @@ class _TextUserChatState extends State<TextUserChat> {
                 child: CachedNetworkImage(
                   imageUrl: widget.fromGroup!
                       ? widget.model!.userData == null
-                      ? ''
-                      : '${widget.model!.userData!.avatar}'
+                          ? ''
+                          : '${widget.model!.userData!.avatar}'
                       : '${widget.model!.messageUser!.avatar}',
                   placeholder: (context, url) =>
                       Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => CachedNetworkImage(
                     imageUrl: widget.fromGroup!
                         ? widget.model!.userData == null
-                        ? ''
-                        : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                            ? ''
+                            : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
                         : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
                     placeholder: (context, url) =>
                         Center(child: CircularProgressIndicator()),
@@ -82,23 +83,23 @@ class _TextUserChatState extends State<TextUserChat> {
                 children: [
                   widget.fromGroup!
                       ? Column(
-                    children: [
-                      Text(
-                        widget.model!.userData!.firstName!.isEmpty
-                            ? '${widget.model!.userData!.username}'
-                            : '${widget.model!.userData!.firstName}' +
-                            ' ${widget.model!.userData!.lastName}',
-                        style: TextStyle(
-                            color: Colors.deepPurple,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: AppFonts.segoeui,
-                            fontSize: 12),
-                      ),
-                      SizedBox(
-                        height: height / 100,
-                      ),
-                    ],
-                  )
+                          children: [
+                            Text(
+                              widget.model!.userData!.firstName!.isEmpty
+                                  ? '${widget.model!.userData!.username}'
+                                  : '${widget.model!.userData!.firstName}' +
+                                      ' ${widget.model!.userData!.lastName}',
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              height: height / 100,
+                            ),
+                          ],
+                        )
                       : SizedBox(),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -139,7 +140,7 @@ class _TextUserChatState extends State<TextUserChat> {
             ),
           ],
         );
-      }else{
+      } else {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -162,16 +163,16 @@ class _TextUserChatState extends State<TextUserChat> {
                 child: CachedNetworkImage(
                   imageUrl: widget.fromGroup!
                       ? widget.model!.userData == null
-                      ? ''
-                      : '${widget.model!.userData!.avatar}'
+                          ? ''
+                          : '${widget.model!.userData!.avatar}'
                       : '${widget.model!.messageUser!.avatar}',
                   placeholder: (context, url) =>
                       Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => CachedNetworkImage(
                     imageUrl: widget.fromGroup!
                         ? widget.model!.userData == null
-                        ? ''
-                        : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                            ? ''
+                            : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
                         : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
                     placeholder: (context, url) =>
                         Center(child: CircularProgressIndicator()),
@@ -187,7 +188,7 @@ class _TextUserChatState extends State<TextUserChat> {
               width: 5,
             ),
             Container(
-              padding: EdgeInsets.all(width / 30),
+              padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
               decoration: BoxDecoration(
                   color: Color(0xffF3F3F3),
                   borderRadius: BorderRadius.circular(8)),
@@ -195,36 +196,96 @@ class _TextUserChatState extends State<TextUserChat> {
                 children: [
                   widget.fromGroup!
                       ? Column(
-                    children: [
-                      Text(
-                        widget.model!.userData!.firstName!.isEmpty
-                            ? '${widget.model!.userData!.username}'
-                            : '${widget.model!.userData!.firstName}' +
-                            ' ${widget.model!.userData!.lastName}',
-                        style: TextStyle(
-                            color: Colors.deepPurple,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: AppFonts.segoeui,
-                            fontSize: 12),
-                      ),
-                      SizedBox(
-                        height: height / 100,
-                      ),
-                    ],
-                  )
+                          children: [
+                            Text(
+                              widget.model!.userData!.firstName!.isEmpty
+                                  ? '${widget.model!.userData!.username}'
+                                  : '${widget.model!.userData!.firstName}' +
+                                      ' ${widget.model!.userData!.lastName}',
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 12),
+                            ),
+                            SizedBox(
+                              height: height / 100,
+                            ),
+                          ],
+                        )
                       : SizedBox(),
+                  Container(
+                    height: height * 0.070,
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(5)),
+                    margin: EdgeInsets.only(
+                        left: width * 0.010,
+                        right: width * 0.010,
+                        top: height * 0.0050),
+                    child: Row(children: [
+                      Container(
+                        height: height * 0.070,
+                        width: 4,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              bottomLeft: Radius.circular(30)),
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5),
+                          CircularProfileAvatar(
+                            '',
+                            radius: 10,
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "${widget.model!.reply!.messageUser!.avatar}",
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                              fit: BoxFit.cover,
+                            ),
+                            imageFit: BoxFit.cover,
+                          ),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: width / 1.5,minWidth: 30),
+                            child: Text(
+                              '${widget.model!.reply!.text}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      )
+                    ]),
+                  ),
                   ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: width / 1.5),
-                    child: Text(
-                      '${widget.model!.text}',
-                      //  decrypString(
-                      //      encript: '${widget.model!.text}',
-                      //      pass: widget.model!.time),
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w300,
-                          fontFamily: AppFonts.segoeui,
-                          fontSize: 14),
+                    constraints:
+                        BoxConstraints(maxWidth: width / 1.5),
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Text(
+                        '${widget.model!.text}',
+                        //  decrypString(
+                        //      encript: '${widget.model!.text}',
+                        //      pass: widget.model!.time),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w300,
+                            fontFamily: AppFonts.segoeui,
+                            fontSize: 14),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -254,7 +315,7 @@ class _TextUserChatState extends State<TextUserChat> {
         );
       }
     } else {
-      if(widget.model!.replyId=='0'){
+      if (widget.model!.replyId == '0') {
         return Container(
           padding: EdgeInsets.symmetric(
               vertical: height * 0.010, horizontal: width * 0.030),
@@ -262,8 +323,8 @@ class _TextUserChatState extends State<TextUserChat> {
               color: widget.model!.seen != '0'
                   ? returnColorFromString(seenBackColor)
                   : widget.model!.delivered != '0'
-                  ? returnColorFromString(receiveBackColor)
-                  : returnColorFromString(sentBackColor),
+                      ? returnColorFromString(receiveBackColor)
+                      : returnColorFromString(sentBackColor),
               borderRadius: BorderRadius.circular(8)),
           child: Column(
             children: [
@@ -273,8 +334,8 @@ class _TextUserChatState extends State<TextUserChat> {
                     color: widget.model!.seen != '0'
                         ? returnColorFromString(seenTextColor)
                         : widget.model!.delivered != '0'
-                        ? returnColorFromString(receiveTextColor)
-                        : returnColorFromString(sentTextColor),
+                            ? returnColorFromString(receiveTextColor)
+                            : returnColorFromString(sentTextColor),
                     fontWeight: FontWeight.w300,
                     fontFamily: AppFonts.segoeui,
                     fontSize: 14),
@@ -293,8 +354,8 @@ class _TextUserChatState extends State<TextUserChat> {
                         color: widget.model!.seen != '0'
                             ? returnColorFromString(seenTimeColor)
                             : widget.model!.delivered != '0'
-                            ? returnColorFromString(receiveTimeColor)
-                            : returnColorFromString(sentTimeColor),
+                                ? returnColorFromString(receiveTimeColor)
+                                : returnColorFromString(sentTimeColor),
                         fontFamily: AppFonts.segoeui,
                         fontSize: 9.0,
                       ),
@@ -305,98 +366,171 @@ class _TextUserChatState extends State<TextUserChat> {
                   ),
                   widget.model!.seen != '0'
                       ? FaIcon(
-                    FontAwesomeIcons.checkDouble,
-                    size: 15,
-                    color: returnColorFromString(seenCheck),
-                  )
+                          FontAwesomeIcons.checkDouble,
+                          size: 15,
+                          color: returnColorFromString(seenCheck),
+                        )
                       : widget.model!.delivered != '0'
-                      ? FaIcon(
-                    FontAwesomeIcons.checkDouble,
-                    size: 15,
-                    color: returnColorFromString(receiveCheck),
-                  )
-                      : FaIcon(
-                    FontAwesomeIcons.check,
-                    size: 15,
-                    color: returnColorFromString(sentCheck),
-                  ),
+                          ? FaIcon(
+                              FontAwesomeIcons.checkDouble,
+                              size: 15,
+                              color: returnColorFromString(receiveCheck),
+                            )
+                          : FaIcon(
+                              FontAwesomeIcons.check,
+                              size: 15,
+                              color: returnColorFromString(sentCheck),
+                            ),
                 ],
               )
             ],
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
         );
-      }else{
-        return Container(
-          padding: EdgeInsets.symmetric(
-              vertical: height * 0.010, horizontal: width * 0.030),
-          decoration: BoxDecoration(
-              color: widget.model!.seen != '0'
-                  ? returnColorFromString(seenBackColor)
-                  : widget.model!.delivered != '0'
-                  ? returnColorFromString(receiveBackColor)
-                  : returnColorFromString(sentBackColor),
-              borderRadius: BorderRadius.circular(8)),
-          child: Column(
-            children: [
-              Text(
-                '${widget.model!.text}',
-                style: TextStyle(
-                    color: widget.model!.seen != '0'
-                        ? returnColorFromString(seenTextColor)
-                        : widget.model!.delivered != '0'
-                        ? returnColorFromString(receiveTextColor)
-                        : returnColorFromString(sentTextColor),
-                    fontWeight: FontWeight.w300,
-                    fontFamily: AppFonts.segoeui,
-                    fontSize: 14),
-              ),
-              SizedBox(
-                height: height / 100,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: width / 50),
-                    child: Text(
-                      '${dateFormat.format(date)}',
-                      style: TextStyle(
-                        color: widget.model!.seen != '0'
-                            ? returnColorFromString(seenTimeColor)
-                            : widget.model!.delivered != '0'
-                            ? returnColorFromString(receiveTimeColor)
-                            : returnColorFromString(sentTimeColor),
-                        fontFamily: AppFonts.segoeui,
-                        fontSize: 9.0,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 3,
-                  ),
-                  widget.model!.seen != '0'
-                      ? FaIcon(
-                    FontAwesomeIcons.checkDouble,
-                    size: 15,
-                    color: returnColorFromString(seenCheck),
-                  )
+      } else {
+        return Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  color: widget.model!.seen != '0'
+                      ? returnColorFromString(seenBackColor)
                       : widget.model!.delivered != '0'
-                      ? FaIcon(
-                    FontAwesomeIcons.checkDouble,
-                    size: 15,
-                    color: returnColorFromString(receiveCheck),
-                  )
-                      : FaIcon(
-                    FontAwesomeIcons.check,
-                    size: 15,
-                    color: returnColorFromString(sentCheck),
+                          ? returnColorFromString(receiveBackColor)
+                          : returnColorFromString(sentBackColor),
+                  borderRadius: BorderRadius.circular(8)),
+              child: Column(
+                children: [
+                  Container(
+                    height: height * 0.070,
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(5)),
+                    margin: EdgeInsets.only(
+                        left: width * 0.010,
+                        right: width * 0.010,
+                        top: height * 0.0050),
+                    child: Row(children: [
+                      Container(
+                        height: height * 0.070,
+                        width: 4,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              bottomLeft: Radius.circular(30)),
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5),
+                          CircularProfileAvatar(
+                            '',
+                            radius: 10,
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  "${widget.model!.reply!.messageUser!.avatar}",
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                              fit: BoxFit.cover,
+                            ),
+                            imageFit: BoxFit.cover,
+                          ),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: width / 1.5),
+                            child: Text(
+                              '${widget.model!.reply!.text}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 14),
+                            ),
+                          ),
+                        ],
+                      )
+                    ]),
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${widget.model!.text}',
+                          style: TextStyle(
+                              color: widget.model!.seen != '0'
+                                  ? returnColorFromString(seenTextColor)
+                                  : widget.model!.delivered != '0'
+                                      ? returnColorFromString(receiveTextColor)
+                                      : returnColorFromString(sentTextColor),
+                              fontWeight: FontWeight.w300,
+                              fontFamily: AppFonts.segoeui,
+                              fontSize: 14),
+                        ),
+                        SizedBox(
+                          height: height / 100,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: width / 50),
+                              child: Text(
+                                '${dateFormat.format(date)}',
+                                style: TextStyle(
+                                  color: widget.model!.seen != '0'
+                                      ? returnColorFromString(seenTimeColor)
+                                      : widget.model!.delivered != '0'
+                                          ? returnColorFromString(
+                                              receiveTimeColor)
+                                          : returnColorFromString(
+                                              sentTimeColor),
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 9.0,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 3,
+                            ),
+                            widget.model!.seen != '0'
+                                ? FaIcon(
+                                    FontAwesomeIcons.checkDouble,
+                                    size: 15,
+                                    color: returnColorFromString(seenCheck),
+                                  )
+                                : widget.model!.delivered != '0'
+                                    ? FaIcon(
+                                        FontAwesomeIcons.checkDouble,
+                                        size: 15,
+                                        color:
+                                            returnColorFromString(receiveCheck),
+                                      )
+                                    : FaIcon(
+                                        FontAwesomeIcons.check,
+                                        size: 15,
+                                        color: returnColorFromString(sentCheck),
+                                      ),
+                          ],
+                        )
+                      ],
+                    ),
+                    padding: EdgeInsets.only(
+                        left: width * 0.030,
+                        bottom: height * 0.010,
+                        right: width * 0.030,
+                        top: height * 0.0050),
                   ),
                 ],
-              )
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
-          ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+          ],
         );
       }
     }
