@@ -10,8 +10,8 @@ import 'PageManager.dart';
 
 class CustomAudioPlayer extends StatefulWidget {
   final String? url;
-
-  const CustomAudioPlayer({Key? key, this.url}) : super(key: key);
+  final Color? color;
+  const CustomAudioPlayer({Key? key, this.url, this.color}) : super(key: key);
 
   @override
   _CustomAudioPlayerState createState() => _CustomAudioPlayerState();
@@ -35,6 +35,7 @@ class _CustomAudioPlayerState extends State<CustomAudioPlayer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.color,
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5),
           child: Transform.translate(

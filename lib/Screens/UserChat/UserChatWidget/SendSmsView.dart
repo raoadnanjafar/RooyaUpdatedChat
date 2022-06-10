@@ -1,12 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:rooya/Plugins/PicEditor/image_editor.dart';
 import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/GlobalWidget/FileUploader.dart';
 
+import '../../../Plugins/PicEditor/image_editor.dart';
 import 'VideoEditorCustom.dart';
 
 class SendSmsView extends StatefulWidget {
@@ -47,6 +46,9 @@ class _SendSmsViewState extends State<SendSmsView> {
                             height: MediaQuery.of(context).size.height * 0.9,
                             width: MediaQuery.of(context).size.width,
                             child: widget.extention == 'image'
+                                // ? ImageEditor(
+                                //     image: File('${widget.path}').readAsBytesSync(),
+                                //   )
                                 ? ImageEditor(
                                     originImage: File(widget.path!),
                                     doneFile: (File file) async {

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
+import 'package:rooya/ApiConfig/BaseURL.dart';
 import 'package:rooya/GlobalWidget/Photo_View_Class.dart';
 import 'package:rooya/Plugins/FocusedMenu/focused_menu.dart';
 import 'package:rooya/Plugins/FocusedMenu/modals.dart';
@@ -252,10 +253,23 @@ class _ChatScreenState extends State<ChatScreen>
                           key: const ValueKey(0),
                           startActionPane: ActionPane(
                             motion: const ScrollMotion(),
+                            dragDismissible: false,
                             dismissible: DismissiblePane(onDismissed: () {}),
                             children: [
                               SlidableAction(
-                                onPressed: doNothing,
+                                onPressed: (c) async {
+                                  Map map = {
+                                    'server_key': serverKey,
+                                    'user_id':
+                                        '${controller.listofChat[index].userId}'
+                                  };
+                                  ApiUtils.deleteConversation(map: map)
+                                      .then((value) {
+                                    controller.getChatList();
+                                  });
+                                  controller.listofChat.removeAt(index);
+                                  setState(() {});
+                                },
                                 backgroundColor: Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,
                                 icon: Icons.delete,
@@ -358,8 +372,8 @@ class _ChatScreenState extends State<ChatScreen>
                                       listOfSelectedMember
                                           .add(controller.listofChat[index]);
                                     } else {
-                                      listOfSelectedMember.remove(
-                                          controller.listofChat[index]);
+                                      listOfSelectedMember
+                                          .remove(controller.listofChat[index]);
                                     }
                                     setState(() {});
                                   }

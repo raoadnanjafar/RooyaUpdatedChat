@@ -26,6 +26,7 @@ class UserChatInformation extends StatefulWidget {
     this.userID,
   }) : super(key: key);
 
+
   @override
   _UserChatInformationState createState() => _UserChatInformationState();
 }

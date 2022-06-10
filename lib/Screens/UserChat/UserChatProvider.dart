@@ -151,7 +151,7 @@ class UserChatProvider extends GetxController {
     try {
       if (fromGroup!) {
         if (replyID != '') {
-          socket!.emit('group_message', {
+          socket!.emit('group_message_page', {
             'msg': message,
             'group_id': to_userId,
             'from_id': '${storage.read('token')}',

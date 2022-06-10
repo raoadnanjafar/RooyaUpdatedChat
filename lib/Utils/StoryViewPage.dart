@@ -4,6 +4,7 @@ import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/Models/UserStoriesModel.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
+import 'package:video_player/video_player.dart';
 
 class StoryViewPage extends StatefulWidget {
   final UserStoryModel? userStories;
@@ -33,8 +34,10 @@ class _StoryViewPageState extends State<StoryViewPage> {
                     url: "${e.thumbnail}",
                     controller: controller,
                     imageFit: BoxFit.contain,
+                    duration: Duration(seconds: 10),
                     caption: Text(
                       "${e.description}",
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
                         backgroundColor: Colors.black54,
@@ -43,9 +46,10 @@ class _StoryViewPageState extends State<StoryViewPage> {
                     ),
                   );
                 } else {
-                 return StoryItem.pageVideo(
+                  return StoryItem.pageVideo(
                     '${e.videos![0].filename}',
                     controller: controller,
+                    caption: "${e.description}",
                   );
                 }
               }).toList(),

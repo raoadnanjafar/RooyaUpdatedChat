@@ -461,7 +461,7 @@ class UserData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = new Map<String, dynamic>();//===>{'user_id:'12','username':'Ahmed'}
     data['user_id'] = this.userId;
     data['username'] = this.username;
     data['email'] = this.email;
