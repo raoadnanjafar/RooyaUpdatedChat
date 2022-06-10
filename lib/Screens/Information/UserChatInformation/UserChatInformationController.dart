@@ -6,9 +6,10 @@ import 'package:rooya/Screens/UserChat/Media/GroupInfoModel.dart';
 class UserChatInformationConntroller extends GetxController {
   var infoModel = UserInfoModel().obs;
   var loadData = false.obs;
-  var listofFriends=[].obs;
+  var listofFriends = [].obs;
   getGroupInfo({String? userID}) async {
-    infoModel.value = await ApiUtils.getUserInfo(start: 0, limit: 10,userID: userID);
+    infoModel.value =
+        await ApiUtils.getUserInfo(start: 0, limit: 10, userID: userID);
     loadData.value = true;
   }
 

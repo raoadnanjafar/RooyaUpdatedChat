@@ -11,6 +11,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 import 'package:dio/dio.dart' as dio;
 
 import '../Models/UserChatModel.dart';
+import '../Screens/sliver_class/sliver.dart';
 
 class ChatScreenProvider extends GetxController {
   var listofChat = <Data>[].obs;
@@ -78,6 +79,12 @@ class ChatScreenProvider extends GetxController {
     idsOfUserStories = [];
     for (var i in storyList) {
       idsOfUserStories.add(i.userId);
+    }
+    if (idsOfUserStories.contains(
+        UserDataService.userDataModel!.userData!.userId.toString())) {
+      hasUserStory.value=true;
+      allstoryList=storyList.value;
+      storyIds=idsOfUserStories;
     }
   }
 

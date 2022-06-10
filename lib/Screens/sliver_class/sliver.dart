@@ -1,4 +1,3 @@
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,8 +6,13 @@ import 'package:rooya/Providers/ClickController/SelectIndexController.dart';
 import 'package:rooya/Screens/Information/UserChatInformation/user_chat_information.dart';
 import 'package:rooya/Screens/SearchUser/SearchUser.dart';
 import 'package:rooya/Screens/Settings/Settings.dart';
+import 'package:rooya/Screens/chat_screen.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
+
+import '../../Models/UserStoriesModel.dart';
+import '../../Utils/StoryViewPage.dart';
+import '../../Utils/primary_color.dart';
 
 class MySliver extends StatefulWidget {
   const MySliver({Key? key}) : super(key: key);
@@ -16,6 +20,10 @@ class MySliver extends StatefulWidget {
   @override
   _MySliverState createState() => _MySliverState();
 }
+
+var hasUserStory = false.obs;
+var allstoryList = <UserStoryModel>[];
+var storyIds = [];
 
 class _MySliverState extends State<MySliver> {
   var selectController = Get.find<SelectIndexController>();
@@ -32,24 +40,49 @@ class _MySliverState extends State<MySliver> {
             height: 9,
           ),
           ListTile(
-              leading: CircularProfileAvatar(
-                '${UserDataService.userDataModel!.userData!.avatar}',
-                radius: 18,
-                backgroundColor: Colors.blueGrey[100]!,
+              leading: Obx(
+                () => hasUserStory.value
+                    ? CircularProfileAvatar(
+                        '${UserDataService.userDataModel!.userData!.avatar}',
+                        radius: 18,
+                        borderWidth: 2,
+                        borderColor: buttonColor,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        onTap: () {
+                          int i = storyIds.indexWhere((element) =>
+                              element ==
+                              '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                          Get.to(StoryViewPage(
+                            userStories: allstoryList[i],
+                          ));
+                        },
+                      )
+                    : CircularProfileAvatar(
+                        '${UserDataService.userDataModel!.userData!.avatar}',
+                        radius: 18,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        onTap: () {
+                          Get.to(UserChatInformation(
+                              userID:
+                                  '${UserDataService.userDataModel!.userData!.userId}'));
+                        },
+                      ),
+              ),
+              title: InkWell(
                 onTap: () {
                   Get.to(UserChatInformation(
                       userID:
                           '${UserDataService.userDataModel!.userData!.userId}'));
                 },
-              ),
-              title: Text(
-                UserDataService.userDataModel!.userData!.firstName!.isEmpty
-                    ? '${UserDataService.userDataModel!.userData!.username}'
-                    : '${UserDataService.userDataModel!.userData!.firstName} ${UserDataService.userDataModel!.userData!.lastName}',
-                style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: AppFonts.segoeui),
+                child: Text(
+                  UserDataService.userDataModel!.userData!.firstName!.isEmpty
+                      ? '${UserDataService.userDataModel!.userData!.username}'
+                      : '${UserDataService.userDataModel!.userData!.firstName} ${UserDataService.userDataModel!.userData!.lastName}',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: AppFonts.segoeui),
+                ),
               ),
               trailing: Wrap(
                 children: [

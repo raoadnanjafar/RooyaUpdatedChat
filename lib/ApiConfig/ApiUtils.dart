@@ -25,7 +25,9 @@ final login = 'auth';
 final updateGroupInformation = 'group_chat';
 final userData = 'get-user-data';
 final sendMessage = 'send-message';
-final forwardMessage='forward_message';
+final delete_conversation = 'delete-conversation';
+final block_unblockUser = 'block-user';
+final forwardMessage = 'forward_message';
 final getMessage = 'get_user_messages';
 final friendList = 'get-friends';
 final create_group = 'group_chat';
@@ -442,7 +444,7 @@ class ApiUtils {
     try {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
-     // print('message list is this = $data');
+      // print('message list is this = $data');
       if (data['api_status'] == 200) {
         UserChatModel modellist = UserChatModel.fromJson(data)
           ..messages!.reversed;
@@ -465,6 +467,51 @@ class ApiUtils {
       var responce = await http.post(url, body: map);
       var data = jsonDecode(responce.body);
       print('send message is = $data');
+      if (data['api_status'] != 200) {
+        snackBarFailer('${data['error_text']}');
+      }
+    } catch (e) {
+      print('Exception is = $e');
+    }
+  }
+
+  static Future deleteConversation({Map? map}) async {
+    var url = Uri.parse('$baseUrl$delete_conversation$token');
+    try {
+      var responce = await http.post(url, body: map);
+      var data = jsonDecode(responce.body);
+      print('deleteConversation = $data');
+      if (data['api_status'] != 200) {
+        snackBarFailer('${data['error_text']}');
+      }
+    } catch (e) {
+      print('Exception is = $e');
+    }
+  }
+
+  static Future<bool> leaveGroup({Map? map}) async {
+    var url = Uri.parse('$baseUrl$getGroupChat$token');
+    try {
+      var responce = await http.post(url, body: map);
+      var data = jsonDecode(responce.body);
+      print('leaveGroup = $data');
+      if (data['api_status'] != 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print('Exception is = $e');
+      return false;
+    }
+  }
+
+  static Future blockUnblockUser({Map? map}) async {
+    var url = Uri.parse('$baseUrl$block_unblockUser$token');
+    try {
+      var responce = await http.post(url, body: map);
+      var data = jsonDecode(responce.body);
+      print('blockUnblockUser = $data');
       if (data['api_status'] != 200) {
         snackBarFailer('${data['error_text']}');
       }

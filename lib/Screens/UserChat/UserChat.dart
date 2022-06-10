@@ -17,6 +17,7 @@ import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/BaseURL.dart';
 import 'package:rooya/GlobalWidget/FileUploader.dart';
 import 'package:rooya/GlobalWidget/Photo_View_Class.dart';
+import 'package:rooya/GlobalWidget/SnackBarApp.dart';
 import 'package:rooya/Models/GroupModel.dart';
 import 'package:rooya/Models/UserChatModel.dart';
 import 'package:rooya/Plugins/AudioAnimationSource/record_button.dart';
@@ -30,6 +31,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:intl/intl.dart';
 import 'UserChatProvider.dart';
+import 'package:record/record.dart' as record;
 import 'UserChatWidget/AudioChatUser.dart';
 import 'UserChatWidget/ContactViewUserChat.dart';
 import 'UserChatWidget/DocumentUserChat.dart';
@@ -235,19 +237,28 @@ class _UserChatState extends State<UserChat>
                                       size: 20,
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      Clipboard.setData(ClipboardData(
-                                          text:
-                                              "${getcontroller!.userChat[i].text}"));
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text("Coped"),
-                                              duration: Duration(seconds: 1)));
-                                    },
-                                    icon: Icon(
-                                      Icons.copy,
-                                      size: 20,
+                                  Visibility(
+                                    visible: selectedOneToOneChat.length == 1
+                                        ? true
+                                        : false,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Clipboard.setData(ClipboardData(
+                                            text:
+                                                "${selectedOneToOneChat[0].text}"));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text("Coped"),
+                                                duration:
+                                                    Duration(seconds: 1)));
+                                        selectedOneToOneChat.value =
+                                            <Messages>[];
+                                        setState(() {});
+                                      },
+                                      icon: Icon(
+                                        Icons.copy,
+                                        size: 20,
+                                      ),
                                     ),
                                   ),
                                   IconButton(
@@ -347,6 +358,60 @@ class _UserChatState extends State<UserChat>
                                 ),
                               ),
                             ),
+                            widget.fromGroup!
+                                ? PopupMenuButton(
+                                    child: Icon(Icons.more_vert),
+                                    itemBuilder: (context) {
+                                      return ['Leave Group'].map((e) {
+                                        return PopupMenuItem(
+                                          value: e,
+                                          onTap: () async {
+                                            Map map = {
+                                              'server_key': serverKey,
+                                              'type': 'leave',
+                                              'id': widget.groupID
+                                            };
+                                            bool v = await ApiUtils.leaveGroup(
+                                                map: map);
+                                            if (v) {
+                                              Navigator.of(context).pop();
+                                            } else {
+                                              snackBarFailer(
+                                                  'Admin did not leave the group');
+                                            }
+                                          },
+                                          child: Text('$e'),
+                                        );
+                                      }).toList();
+                                    },
+                                  )
+                                : PopupMenuButton(
+                                    child: Icon(Icons.more_vert),
+                                    itemBuilder: (context) {
+                                      return ['Block'].map((e) {
+                                        return PopupMenuItem(
+                                          value: e,
+                                          onTap: () async {
+                                            print('${{
+                                              'server_key': serverKey,
+                                              'user_id': widget.groupID,
+                                              'block_action': 'block'
+                                            }}');
+                                            Map map = {
+                                              'server_key': serverKey,
+                                              'user_id': widget.groupID,
+                                              'block_action': 'block'
+                                            };
+                                            await ApiUtils.blockUnblockUser(
+                                                map: map);
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('$e'),
+                                        );
+                                      }).toList();
+                                    },
+                                  ),
+                            SizedBox(width: 5),
                           ],
                         ),
                   SizedBox(
@@ -448,7 +513,17 @@ class _UserChatState extends State<UserChat>
                                                                     title: Text(
                                                                         "Reply"),
                                                                     onPressed:
-                                                                        () {},
+                                                                        () {
+                                                                      replyModel
+                                                                              .value =
+                                                                          getcontroller!
+                                                                              .userChat[i];
+                                                                      isActivereply
+                                                                              .value =
+                                                                          true;
+                                                                      setState(
+                                                                          () {});
+                                                                    },
                                                                     trailingIcon: Icon(
                                                                         CupertinoIcons
                                                                             .reply,
@@ -503,7 +578,24 @@ class _UserChatState extends State<UserChat>
                                                                               Colors.red),
                                                                     ),
                                                                     onPressed:
-                                                                        () {},
+                                                                        () {
+                                                                      Map payLoad =
+                                                                          {
+                                                                        'server_key':
+                                                                            serverKey,
+                                                                        'message_id':
+                                                                            '${getcontroller!.userChat[i].id}'
+                                                                      };
+                                                                      ApiUtils.removeMessageApi(
+                                                                          map:
+                                                                              payLoad);
+                                                                      getcontroller!
+                                                                          .userChat
+                                                                          .removeAt(
+                                                                              i);
+                                                                      setState(
+                                                                          () {});
+                                                                    },
                                                                     trailingIcon:
                                                                         Icon(
                                                                       CupertinoIcons
@@ -625,7 +717,10 @@ class _UserChatState extends State<UserChat>
                                                                                       fromGroup: widget.fromGroup,
                                                                                     )
                                                                                   : extension.contains('audio')
-                                                                                      ? AudioChatUser()
+                                                                                      ? AudioChatUser(
+                                                                                          model: getcontroller!.userChat[i],
+                                                                                          fromGroup: widget.fromGroup,
+                                                                                        )
                                                                                       : extension.contains('Doc')
                                                                                           ? DocumentUserChat()
                                                                                           : TextUserChat(
@@ -750,7 +845,14 @@ class _UserChatState extends State<UserChat>
                                                                         title: Text(
                                                                             "Reply"),
                                                                         onPressed:
-                                                                            () {},
+                                                                            () {
+                                                                          replyModel.value =
+                                                                              getcontroller!.userChat[i];
+                                                                          isActivereply.value =
+                                                                              true;
+                                                                          setState(
+                                                                              () {});
+                                                                        },
                                                                         trailingIcon: Icon(
                                                                             CupertinoIcons
                                                                                 .reply,
@@ -897,7 +999,10 @@ class _UserChatState extends State<UserChat>
                                                                                           fromGroup: widget.fromGroup,
                                                                                         )
                                                                                       : extension.contains('audio')
-                                                                                          ? AudioChatUser()
+                                                                                          ? AudioChatUser(
+                                                                                              model: getcontroller!.userChat[i],
+                                                                                              fromGroup: widget.fromGroup,
+                                                                                            )
                                                                                           : extension.contains('Doc')
                                                                                               ? DocumentUserChat()
                                                                                               : extension.contains('.reply')
@@ -1066,17 +1171,26 @@ class _UserChatState extends State<UserChat>
                             children: [
                               selectedOneToOneChat.length > 1
                                   ? SizedBox()
-                                  : Row(
-                                      children: [
-                                        Icon(Icons.undo),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          'Reply',
-                                          style: TextStyle(fontSize: 13),
-                                        )
-                                      ],
+                                  : InkWell(
+                                      onTap: () {
+                                        replyModel.value =
+                                            selectedOneToOneChat[0];
+                                        isActivereply.value = true;
+                                        selectedOneToOneChat.clear();
+                                        setState(() {});
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.undo),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            'Reply',
+                                            style: TextStyle(fontSize: 13),
+                                          )
+                                        ],
+                                      ),
                                     ),
                               InkWell(
                                 onTap: () async {
@@ -1375,29 +1489,42 @@ class _UserChatState extends State<UserChat>
                                                           letterSpacing: 0.5),
                                                     ),
                                                     onTap: () async {
-                                                      // FilePickerResult? result =
-                                                      //     await FilePicker
-                                                      //         .platform
-                                                      //         .pickFiles(
-                                                      //   type: FileType.custom,
-                                                      //   allowedExtensions: [
-                                                      //     'pdf',
-                                                      //     'doc'
-                                                      //   ],
-                                                      // );
-                                                      // if (result!
-                                                      //     .files.isNotEmpty) {
-                                                      //   print(
-                                                      //       'file path is = ${result.files[0].path}');
-                                                      //   getcontroller!
-                                                      //       .sentMessageViaFile(
-                                                      //           groupId: widget
-                                                      //               .groupID,
-                                                      //           filePath:
-                                                      //               '${result.files[0].path}');
-                                                      //   Navigator.of(context)
-                                                      //       .pop();
-                                                      // }
+                                                      FilePickerResult? result =
+                                                          await FilePicker
+                                                              .platform
+                                                              .pickFiles(
+                                                        type: FileType.custom,
+                                                        allowedExtensions: [
+                                                          'pdf',
+                                                          'doc'
+                                                        ],
+                                                      );
+                                                      if (result!
+                                                          .files.isNotEmpty) {
+                                                        print(
+                                                            'file path is = ${result.files[0].path}');
+                                                        Future.delayed(
+                                                            Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                            () async {
+                                                          await sentMessageAsFile(
+                                                                  userID: widget
+                                                                      .groupID,
+                                                                  text: '',
+                                                                  filePath:
+                                                                      '${result.files[0].path}')
+                                                              .then((value) {
+                                                            getcontroller!.getAllMessage(
+                                                                userID: widget
+                                                                    .groupID,
+                                                                fromGroup: widget
+                                                                    .fromGroup);
+                                                          });
+                                                          Navigator.of(context).pop();
+                                                        });
+                                                        setState(() {});
+                                                      }
                                                     },
                                                   ),
                                                   ListTile(
@@ -1575,21 +1702,21 @@ class _UserChatState extends State<UserChat>
                                           ? RecordButton(
                                               controller: animcontroller,
                                               RecordStart: () async {
-                                                // bool result =
-                                                //     await record.Record()
-                                                //         .hasPermission();
-                                                // String path =
-                                                //     await getFilePath();
-                                                // audio_path = path;
-                                                // if (result) {
-                                                //   RecordMp3.instance
-                                                //       .start(path, (type) {});
-                                                //   getcontroller!.recording_start
-                                                //       .value = true;
-                                                // } else {
-                                                //   print('access deny');
-                                                // }
-                                                // setState(() {});
+                                                bool result =
+                                                    await record.Record()
+                                                        .hasPermission();
+                                                String path =
+                                                    await getFilePath();
+                                                audio_path = path;
+                                                if (result) {
+                                                  RecordMp3.instance
+                                                      .start(path, (type) {});
+                                                  getcontroller!.recording_start
+                                                      .value = true;
+                                                } else {
+                                                  print('access deny');
+                                                }
+                                                setState(() {});
                                               },
                                               recordStop: () async {
                                                 RecordMp3.instance.stop();
@@ -1597,15 +1724,23 @@ class _UserChatState extends State<UserChat>
                                                     .value = false;
                                                 Future.delayed(
                                                     Duration(milliseconds: 500),
-                                                    () {
+                                                    () async {
                                                   print(
                                                       'audio path is =${audio_path}');
-                                                  getcontroller!
-                                                      .sentMessageViaFile(
-                                                          groupId:
+                                                  await sentMessageAsFile(
+                                                          userID:
                                                               widget.groupID,
+                                                          text: '',
                                                           filePath:
-                                                              '$audio_path');
+                                                              '$audio_path')
+                                                      .then((value) {
+                                                    getcontroller!
+                                                        .getAllMessage(
+                                                            userID:
+                                                                widget.groupID,
+                                                            fromGroup: widget
+                                                                .fromGroup);
+                                                  });
                                                 });
                                                 setState(() {});
                                               },
