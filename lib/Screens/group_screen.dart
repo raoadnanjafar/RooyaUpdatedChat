@@ -267,7 +267,6 @@ class _GroupScreenState extends State<GroupScreen> {
                                   setState(() {
 
                                   });
-
                                 },
                                 backgroundColor: Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,
