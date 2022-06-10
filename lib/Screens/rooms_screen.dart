@@ -24,6 +24,7 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 import 'package:geocoding/geocoding.dart';
+import '../GlobalWidget/FileUploader.dart';
 import 'Rooms/FindChatRooms.dart';
 import 'UserChat/UserChat.dart';
 
@@ -266,7 +267,19 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             dismissible: DismissiblePane(onDismissed: () {}),
                             children: [
                               SlidableAction(
-                                onPressed: doNothing,
+                                onPressed: (v){
+                                  deleteGroup(groupId: controller.listofChat[index].groupId).then((value) {
+                                    if(value==true){
+                                      controller.listofChat.removeAt(index);
+                                      controller.getGroupList();
+                                    }else{
+                                      snackBarFailer('you did not delete this room because you are not Admin of the Group');
+                                    }
+                                  });
+                                  setState(() {
+
+                                  });
+                                },
                                 backgroundColor: Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,
                                 icon: Icons.delete,

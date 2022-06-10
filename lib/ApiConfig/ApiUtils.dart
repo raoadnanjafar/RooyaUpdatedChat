@@ -17,6 +17,7 @@ import 'package:rooya/Screens/UserChat/Media/GroupInfoModel.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 
 final getChat = 'get_chats';
+final updateUserData = 'update-user-data';
 final getroomListChat = 'group_chat';
 final allStories = 'get-user-stories';
 final getRoom = 'group_chat';

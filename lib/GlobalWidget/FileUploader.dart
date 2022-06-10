@@ -129,7 +129,7 @@ Future sentGroupNameFile(
   }
 }
 
-Future deleteGroup(
+Future<bool> deleteGroup(
     {String? groupId}) async {
   Map<String, dynamic> data = {
     'server_key': serverKey,
@@ -141,7 +141,26 @@ Future deleteGroup(
     final response = await Dio().post('$baseUrl$updateGroupInformation$token',
         options: Options(headers: header), data: formData);
     print('sendFileMessage responce data is = ${response.data}');
+    if(response.data['api_status']==200){
+      return true;
+    }else{
+      return false;
+    }
+  } catch (e) {
+    print('Exception is = $e');
+  }
+  return false;
+}
+
+Future updateUserCoverInformation(
+    {Map<String,dynamic>? map}) async {
+  FormData formData = new FormData.fromMap(map!);
+  try {
+    final response = await Dio().post('$baseUrl$updateUserData$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
   } catch (e) {
     print('Exception is = $e');
   }
 }
+

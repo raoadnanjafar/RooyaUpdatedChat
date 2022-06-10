@@ -254,17 +254,25 @@ class _GroupScreenState extends State<GroupScreen> {
                             motion: const ScrollMotion(),
                             dismissible: DismissiblePane(onDismissed: () {}),
                             children: [
-                              InkWell(
-                                onTap:()async{
-                                  //await deleteGroup(groupId: GroupMo)
-                        },
-                                child: SlidableAction(
-                                  onPressed: doNothing,
-                                  backgroundColor: Color(0xFFFE4A49),
-                                  foregroundColor: Colors.white,
-                                  icon: Icons.delete,
-                                  label: 'Delete',
-                                ),
+                              SlidableAction(
+                                onPressed: (value){
+                                  deleteGroup(groupId: controller.listofChat[index].groupId).then((value) {
+                                    if(value==true){
+                                      controller.listofChat.removeAt(index);
+                                      controller.getGroupList();
+                                    }else{
+                                      snackBarFailer('you did not delete the group because you are not Admin of this Group');
+                                    }
+                                  });
+                                  setState(() {
+
+                                  });
+
+                                },
+                                backgroundColor: Color(0xFFFE4A49),
+                                foregroundColor: Colors.white,
+                                icon: Icons.delete,
+                                label: 'Delete',
                               ),
                               SlidableAction(
                                 onPressed: doNothing,
