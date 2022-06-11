@@ -67,9 +67,14 @@ class _SendSmsViewState extends State<SendSmsView> {
                                     file: File('${widget.path}'),
                                     doneFile: (File file) async {
                                       await sentMessageAsFile(
-                                          userID: widget.userID,
-                                          text: captionController.text,
-                                          filePath: file.path);
+                                              userID: widget.userID,
+                                              text: captionController.text,
+                                              filePath: file.path)
+                                          .then((value) {
+                                        loading.value = false;
+                                        Get.back(result: 'fetch');
+                                      });
+                                      loading.value = false;
                                     },
                                   ),
                           ),

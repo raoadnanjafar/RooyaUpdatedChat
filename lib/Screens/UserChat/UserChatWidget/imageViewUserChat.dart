@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,8 +42,10 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                     ? Column(
                         children: [
                           Text(
-                            '${widget.model!.userData!.firstName}'.isEmpty? '${widget.model!.userData!.username}':'${widget.model!.userData!.firstName}' +
-                                ' ${widget.model!.userData!.lastName}',
+                            '${widget.model!.userData!.firstName}'.isEmpty
+                                ? '${widget.model!.userData!.username}'
+                                : '${widget.model!.userData!.firstName}' +
+                                    ' ${widget.model!.userData!.lastName}',
                             style: TextStyle(
                                 color: Colors.deepPurple,
                                 fontWeight: FontWeight.bold,
@@ -117,7 +120,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
           ),
         ),
         onTap: () {
-          Get.to(Photo_View_Class(
+          context.pushTransparentRoute(Photo_View_Class(
             url: "${widget.model!.media}",
           ));
         },
@@ -137,7 +140,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
-             crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   // height: height * 0.32,
@@ -153,9 +156,11 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                             child: Center(child: CircularProgressIndicator()),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: buttonColor, width: 1)),
+                                border:
+                                    Border.all(color: buttonColor, width: 1)),
                           ),
-                          errorWidget: (context, url, error) => Icon(Icons.error),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
                         ),
                       ],
                     ),
@@ -225,7 +230,9 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
           ),
         ),
         onTap: () {
-          Get.to(Photo_View_Class(url: "${widget.model!.media}"));
+          context.pushTransparentRoute(Photo_View_Class(
+            url: "${widget.model!.media}",
+          ));
         },
       );
     }

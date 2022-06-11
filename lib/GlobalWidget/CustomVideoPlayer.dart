@@ -1,4 +1,5 @@
 import 'package:better_player/better_player.dart';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,33 +43,40 @@ class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Container(
-            height: Get.height,
-            width: Get.width,
-            child: BetterPlayer(
-              controller: betterPlayerController!,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Get.back();
-                },
+    return DismissiblePage(
+      onDismissed: () {
+        Navigator.of(context).pop();
+      },
+      direction: DismissiblePageDismissDirection.multi,
+      isFullScreen: false,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            Container(
+              height: Get.height,
+              width: Get.width,
+              child: BetterPlayer(
+                controller: betterPlayerController!,
               ),
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

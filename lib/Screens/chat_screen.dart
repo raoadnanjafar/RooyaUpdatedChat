@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -417,41 +418,46 @@ class _ChatScreenState extends State<ChatScreen>
                                         leading: controller.idsOfUserStories
                                                 .contains(
                                                     '${controller.listofChat[index].userId}')
-                                            ? CircularProfileAvatar(
-                                                '',
-                                                radius: 28,
-                                                borderWidth: 2,
-                                                borderColor: buttonColor,
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      "${controller.listofChat[index].avatar!}",
-                                                  placeholder: (context, url) =>
-                                                      CircularProgressIndicator(),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                  fit: BoxFit.cover,
+                                            ? Hero(
+                                                tag: 'Unique tag2',
+                                                child: CircularProfileAvatar(
+                                                  '',
+                                                  radius: 28,
+                                                  borderWidth: 2,
+                                                  borderColor: buttonColor,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        "${controller.listofChat[index].avatar!}",
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        CircularProgressIndicator(),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  onTap:
+                                                      listOfSelectedMember
+                                                              .isNotEmpty
+                                                          ? null
+                                                          : () {
+                                                              if (listOfSelectedMember
+                                                                  .isEmpty) {
+                                                                int i = controller
+                                                                    .idsOfUserStories
+                                                                    .indexWhere((element) =>
+                                                                        element ==
+                                                                        '${controller.listofChat[index].userId}');
+                                                                context.pushTransparentRoute(
+                                                                    StoryViewPage(
+                                                                  userStories:
+                                                                      controller
+                                                                          .storyList[i],
+                                                                ));
+                                                              }
+                                                            },
+                                                  imageFit: BoxFit.cover,
                                                 ),
-                                                onTap: listOfSelectedMember
-                                                        .isNotEmpty
-                                                    ? null
-                                                    : () {
-                                                        if (listOfSelectedMember
-                                                            .isEmpty) {
-                                                          int i = controller
-                                                              .idsOfUserStories
-                                                              .indexWhere(
-                                                                  (element) =>
-                                                                      element ==
-                                                                      '${controller.listofChat[index].userId}');
-                                                          Get.to(StoryViewPage(
-                                                            userStories:
-                                                                controller
-                                                                    .storyList[i],
-                                                          ));
-                                                        }
-                                                      },
-                                                imageFit: BoxFit.cover,
                                               )
                                             : CircularProfileAvatar(
                                                 '',
