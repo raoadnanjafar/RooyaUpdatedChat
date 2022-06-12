@@ -30,6 +30,7 @@ import 'package:rooya/Utils/text_filed/app_font.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import 'UserChatProvider.dart';
 import 'package:record/record.dart' as record;
 import 'UserChatWidget/AudioChatUser.dart';
@@ -1521,7 +1522,8 @@ class _UserChatState extends State<UserChat>
                                                                 fromGroup: widget
                                                                     .fromGroup);
                                                           });
-                                                          Navigator.of(context).pop();
+                                                          Navigator.of(context)
+                                                              .pop();
                                                         });
                                                         setState(() {});
                                                       }
@@ -1702,6 +1704,7 @@ class _UserChatState extends State<UserChat>
                                           ? RecordButton(
                                               controller: animcontroller,
                                               RecordStart: () async {
+                                                audio_path = '';
                                                 bool result =
                                                     await record.Record()
                                                         .hasPermission();
@@ -1734,6 +1737,7 @@ class _UserChatState extends State<UserChat>
                                                           filePath:
                                                               '$audio_path')
                                                       .then((value) {
+                                                    File(audio_path).delete();
                                                     getcontroller!
                                                         .getAllMessage(
                                                             userID:
@@ -1814,16 +1818,15 @@ class _UserChatState extends State<UserChat>
     );
   }
 
-  int i = 0;
-
   Future<String> getFilePath() async {
+    String key = Uuid().v4();
     Directory storageDirectory = await getApplicationDocumentsDirectory();
     String sdPath = storageDirectory.path + "/record";
     var d = Directory(sdPath);
     if (!d.existsSync()) {
       d.createSync(recursive: true);
     }
-    return sdPath + "/test_${i++}.mp3";
+    return sdPath + "/test_${key}.mp3";
   }
 }
 

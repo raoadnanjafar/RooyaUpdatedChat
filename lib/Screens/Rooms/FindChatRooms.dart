@@ -51,7 +51,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
       'type': 'get_all',
       'lat': '$lat',
       'lng': '$lng',
-      'variant': 'room'
+      'variant': 'room',
+      'distance': '${current_per.toInt()}'
     });
     setState(() {});
   }
@@ -88,7 +89,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                         'privacy': 'get_all',
                         'lat': '$lat',
                         'lng': '$lng',
-                        'variant': 'room'
+                        'variant': 'room',
+                        'distance': '${current_per.toInt()}'
                       });
                       setState(() {});
                     },
@@ -133,7 +135,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                         'privacy': 'public',
                         'lat': '$lat',
                         'lng': '$lng',
-                        'variant': 'room'
+                        'variant': 'room',
+                        'distance': '${current_per.toInt()}'
                       });
                       setState(() {});
                     },
@@ -178,7 +181,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                         'privacy': 'private',
                         'lat': '$lat',
                         'lng': '$lng',
-                        'variant': 'room'
+                        'variant': 'room',
+                        'distance': '${current_per.toInt()}'
                       });
                       setState(() {});
                     },
@@ -258,7 +262,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                         'type': 'get_all',
                         'lat': '$lat',
                         'lng': '$lng',
-                        'variant': 'room'
+                        'variant': 'room',
+                        'distance': '${current_per.toInt()}'
                       });
                     } else {
                       await controller.getGroupList(mapData: {
@@ -268,7 +273,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                             selectedFilter == 'private' ? 'private' : 'public',
                         'lat': '$lat',
                         'lng': '$lng',
-                        'variant': 'room'
+                        'variant': 'room',
+                        'distance': '${current_per.toInt()}'
                       });
                     }
                     setState(() {});

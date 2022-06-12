@@ -216,12 +216,7 @@ class _RecordButtonState extends State<RecordButton> {
               setState(() {
                 showBottomIcon=false;
               });
-              // var filePath = await Record().stop();
-              // AudioState.files.add(filePath!);
-              // Globals.audioListKey.currentState!
-              //     .insertItem(AudioState.files.length - 1);
               widget.recordStop!.call();
-              // debugPrint(filePath);
               setState(() {
                 isLocked = false;
               });

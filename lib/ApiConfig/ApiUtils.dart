@@ -278,7 +278,6 @@ class ApiUtils {
     try {
       var responce = await await http.post(url, body: mapData);
       var data = jsonDecode(responce.body);
-      print('stories data = $data');
       if (data['api_status'] == 200) {
         List list = data['stories'];
         List<UserStoryModel> modellist =
