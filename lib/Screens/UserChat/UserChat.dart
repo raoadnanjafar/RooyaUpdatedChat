@@ -31,6 +31,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import '../../GlobalWidget/ConfirmationDialog.dart';
 import 'UserChatProvider.dart';
 import 'package:record/record.dart' as record;
 import 'UserChatWidget/AudioChatUser.dart';
@@ -263,21 +264,29 @@ class _UserChatState extends State<UserChat>
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {
-                                      for (var i = 0;
-                                          i < selectedOneToOneChat.length;
-                                          i++) {
-                                        Map payLoad = {
-                                          'server_key': serverKey,
-                                          'message_id':
-                                              '${selectedOneToOneChat[i].id}'
-                                        };
-                                        ApiUtils.removeMessageApi(map: payLoad);
-                                        getcontroller!.userChat
-                                            .remove(selectedOneToOneChat[i]);
-                                      }
-                                      selectedOneToOneChat.clear();
-                                      setState(() {});
+                                    onPressed: () async {
+                                      await showAlertDialog(
+                                          context: context,
+                                          cancel: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          done: () {
+                                            for (var i = 0;
+                                                i < selectedOneToOneChat.length;
+                                                i++) {
+                                              Map payLoad = {
+                                                'server_key': serverKey,
+                                                'message_id':
+                                                    '${selectedOneToOneChat[i].id}'
+                                              };
+                                              ApiUtils.removeMessageApi(
+                                                  map: payLoad);
+                                              getcontroller!.userChat.remove(
+                                                  selectedOneToOneChat[i]);
+                                            }
+                                            selectedOneToOneChat.clear();
+                                            setState(() {});
+                                          });
                                     },
                                     icon: Icon(
                                       CupertinoIcons.delete,
@@ -367,19 +376,29 @@ class _UserChatState extends State<UserChat>
                                         return PopupMenuItem(
                                           value: e,
                                           onTap: () async {
-                                            Map map = {
-                                              'server_key': serverKey,
-                                              'type': 'leave',
-                                              'id': widget.groupID
-                                            };
-                                            bool v = await ApiUtils.leaveGroup(
-                                                map: map);
-                                            if (v) {
-                                              Navigator.of(context).pop();
-                                            } else {
-                                              snackBarFailer(
-                                                  'Admin did not leave the group');
-                                            }
+                                            await showAlertDialog(
+                                                context: context,
+                                                cancel: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                done: () async {
+                                                  Map map = {
+                                                    'server_key': serverKey,
+                                                    'type': 'leave',
+                                                    'id': widget.groupID
+                                                  };
+                                                  bool v =
+                                                      await ApiUtils.leaveGroup(
+                                                          map: map);
+                                                  if (v) {
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                  } else {
+                                                    snackBarFailer(
+                                                        'Admin did not leave the group');
+                                                  }
+                                                });
+                                            setState(() {});
                                           },
                                           child: Text('$e'),
                                         );
@@ -393,19 +412,24 @@ class _UserChatState extends State<UserChat>
                                         return PopupMenuItem(
                                           value: e,
                                           onTap: () async {
-                                            print('${{
-                                              'server_key': serverKey,
-                                              'user_id': widget.groupID,
-                                              'block_action': 'block'
-                                            }}');
-                                            Map map = {
-                                              'server_key': serverKey,
-                                              'user_id': widget.groupID,
-                                              'block_action': 'block'
-                                            };
-                                            await ApiUtils.blockUnblockUser(
-                                                map: map);
-                                            Navigator.of(context).pop();
+                                            await showAlertDialog(
+                                                context: context,
+                                                cancel: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                done: () async {
+                                                  Map map = {
+                                                    'server_key': serverKey,
+                                                    'user_id': widget.groupID,
+                                                    'block_action': 'block'
+                                                  };
+                                                  await ApiUtils
+                                                      .blockUnblockUser(
+                                                          map: map);
+                                                  Navigator.of(context).pop();
+                                                  Navigator.of(context).pop();
+                                                });
+                                            setState(() {});
                                           },
                                           child: Text('$e'),
                                         );
@@ -579,21 +603,26 @@ class _UserChatState extends State<UserChat>
                                                                               Colors.red),
                                                                     ),
                                                                     onPressed:
-                                                                        () {
-                                                                      Map payLoad =
-                                                                          {
-                                                                        'server_key':
-                                                                            serverKey,
-                                                                        'message_id':
-                                                                            '${getcontroller!.userChat[i].id}'
-                                                                      };
-                                                                      ApiUtils.removeMessageApi(
-                                                                          map:
-                                                                              payLoad);
-                                                                      getcontroller!
-                                                                          .userChat
-                                                                          .removeAt(
-                                                                              i);
+                                                                        () async {
+                                                                      await showAlertDialog(
+                                                                          context:
+                                                                              context,
+                                                                          cancel:
+                                                                              () {
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                          done:
+                                                                              () async {
+                                                                            Map payLoad =
+                                                                                {
+                                                                              'server_key': serverKey,
+                                                                              'message_id': '${getcontroller!.userChat[i].id}'
+                                                                            };
+                                                                            ApiUtils.removeMessageApi(map: payLoad);
+                                                                            getcontroller!.userChat.removeAt(i);
+                                                                            setState(() {});
+                                                                            Navigator.of(context).pop();
+                                                                          });
                                                                       setState(
                                                                           () {});
                                                                     },
@@ -722,8 +751,11 @@ class _UserChatState extends State<UserChat>
                                                                                           model: getcontroller!.userChat[i],
                                                                                           fromGroup: widget.fromGroup,
                                                                                         )
-                                                                                      : extension.contains('Doc')
-                                                                                          ? DocumentUserChat()
+                                                                                      : extension.contains('file')
+                                                                                          ? DocumentUserChat(
+                                                                                              model: getcontroller!.userChat[i],
+                                                                                              fromGroup: widget.fromGroup,
+                                                                                            )
                                                                                           : TextUserChat(
                                                                                               model: getcontroller!.userChat[i],
                                                                                               fromGroup: widget.fromGroup,
@@ -906,19 +938,22 @@ class _UserChatState extends State<UserChat>
                                                                               TextStyle(color: Colors.red),
                                                                         ),
                                                                         onPressed:
-                                                                            () {
-                                                                          Map payLoad =
-                                                                              {
-                                                                            'server_key':
-                                                                                serverKey,
-                                                                            'message_id':
-                                                                                '${getcontroller!.userChat[i].id}'
-                                                                          };
-                                                                          ApiUtils.removeMessageApi(
-                                                                              map: payLoad);
-                                                                          getcontroller!
-                                                                              .userChat
-                                                                              .removeAt(i);
+                                                                            () async {
+                                                                          await showAlertDialog(
+                                                                              context: context,
+                                                                              cancel: () {
+                                                                                Navigator.of(context).pop();
+                                                                              },
+                                                                              done: () async {
+                                                                                Map payLoad = {
+                                                                                  'server_key': serverKey,
+                                                                                  'message_id': '${getcontroller!.userChat[i].id}'
+                                                                                };
+                                                                                ApiUtils.removeMessageApi(map: payLoad);
+                                                                                getcontroller!.userChat.removeAt(i);
+                                                                                setState(() {});
+                                                                                Navigator.of(context).pop();
+                                                                              });
                                                                           setState(
                                                                               () {});
                                                                         },
@@ -1004,8 +1039,11 @@ class _UserChatState extends State<UserChat>
                                                                                               model: getcontroller!.userChat[i],
                                                                                               fromGroup: widget.fromGroup,
                                                                                             )
-                                                                                          : extension.contains('Doc')
-                                                                                              ? DocumentUserChat()
+                                                                                          : extension.contains('file')
+                                                                                              ? DocumentUserChat(
+                                                                                                  model: getcontroller!.userChat[i],
+                                                                                                  fromGroup: widget.fromGroup,
+                                                                                                )
                                                                                               : extension.contains('.reply')
                                                                                                   ? ReplyUserChat()
                                                                                                   : TextUserChat(

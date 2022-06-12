@@ -22,6 +22,7 @@ import 'package:rooya/Utils/StoryViewPage.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
+import '../GlobalWidget/ConfirmationDialog.dart';
 import '../GlobalWidget/FileUploader.dart';
 import '../Models/OneTwoOneOuterModel.dart';
 import 'SearchUser/NewUserSearchPage.dart';
@@ -118,59 +119,31 @@ class _ChatScreenState extends State<ChatScreen>
                                 ),
                                 IconButton(
                                   onPressed: () async {
-                                    showDialog(
+                                    await showAlertDialog(
                                         context: context,
-                                        builder: (BuildContext context) {
-                                          return CupertinoAlertDialog(
-                                            title: Text("Alert"),
-                                            actions: [
-                                              CupertinoDialogAction(
-                                                  onPressed: () {
-                                                    listOfSelectedMember
-                                                        .clear();
-                                                    setState(() {});
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text("Cancel")),
-                                              CupertinoDialogAction(
-                                                  onPressed: () {
-                                                    // for (var i = 0;
-                                                    //     i <
-                                                    //         listOfSelectedMember
-                                                    //             .length;
-                                                    //     i++) {
-                                                    //   Map payLoad = {
-                                                    //     'g_id':
-                                                    //         listOfSelectedMember[
-                                                    //                 i]
-                                                    //             .groupId
-                                                    //             .toString(),
-                                                    //     'userId':
-                                                    //         listOfSelectedMember[
-                                                    //                 i]
-                                                    //             .senderId
-                                                    //             .toString()
-                                                    //   };
-                                                    //   print(
-                                                    //       'Delete payLoad = $payLoad');
-                                                    //   ApiUtils.removeGroupApi(
-                                                    //       map: payLoad);
-                                                    //   controller.listofMember
-                                                    //       .remove(
-                                                    //           listOfSelectedMember[
-                                                    //               i]);
-                                                    // }
-                                                    // listOfSelectedMember
-                                                    //     .clear();
-                                                    // setState(() {});
-                                                    // Navigator.of(context).pop();
-                                                  },
-                                                  child: Text("Ok")),
-                                            ],
-                                            content: Text(
-                                                "You want to delete the chat?"),
-                                          );
+                                        cancel: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        done: () {
+                                          for (var i = 0;
+                                              i < listOfSelectedMember.length;
+                                              i++) {
+                                            Map payLoad = {
+                                              'server_key': serverKey,
+                                              'userId': listOfSelectedMember[i]
+                                                  .userId
+                                                  .toString()
+                                            };
+                                            ApiUtils.deleteConversation(
+                                                map: payLoad);
+                                            controller.listofChat.remove(
+                                                listOfSelectedMember[i]);
+                                          }
+                                          listOfSelectedMember.clear();
+                                          setState(() {});
+                                          Navigator.of(context).pop();
                                         });
+                                    setState(() {});
                                   },
                                   icon: Icon(
                                     CupertinoIcons.delete,
@@ -259,16 +232,24 @@ class _ChatScreenState extends State<ChatScreen>
                             children: [
                               SlidableAction(
                                 onPressed: (c) async {
-                                  Map map = {
-                                    'server_key': serverKey,
-                                    'user_id':
-                                        '${controller.listofChat[index].userId}'
-                                  };
-                                  ApiUtils.deleteConversation(map: map)
-                                      .then((value) {
-                                    controller.getChatList();
-                                  });
-                                  controller.listofChat.removeAt(index);
+                                  await showAlertDialog(
+                                      context: context,
+                                      cancel: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      done: () {
+                                        Map map = {
+                                          'server_key': serverKey,
+                                          'user_id':
+                                              '${controller.listofChat[index].userId}'
+                                        };
+                                        ApiUtils.deleteConversation(map: map)
+                                            .then((value) {
+                                          controller.getChatList();
+                                        });
+                                        controller.listofChat.removeAt(index);
+                                        Navigator.of(context).pop();
+                                      });
                                   setState(() {});
                                 },
                                 backgroundColor: Color(0xFFFE4A49),

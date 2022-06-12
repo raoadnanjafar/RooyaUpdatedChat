@@ -127,7 +127,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
     'assets/svg/sliderimg.svg',
     'assets/svg/sliderimg.svg',
     'assets/svg/sliderimg.svg',
-
   ];
 
   List nameList1 = [
@@ -154,7 +153,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
     'Admin',
   ];
 
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -166,9 +164,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
           SliverToBoxAdapter(
             child: ListTile(
               title: InkWell(
-                        onTap: (){
-                          Get.to(Settings());
-                        },
+                onTap: () {
+                  Get.to(Settings());
+                },
                 child: Text(
                   'Friends',
                   style: TextStyle(
@@ -179,7 +177,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                 ),
               ),
               trailing: InkWell(
-                onTap: (){
+                onTap: () {
                   return createAlertDialoge(context);
                 },
                 child: Icon(
@@ -192,174 +190,168 @@ class _FriendsScreenState extends State<FriendsScreen> {
           ),
           SliverList(
               delegate:
-              SliverChildBuilderDelegate((BuildContext context, int index) {
-                return Column(
-                  children: [
-                    Slidable(
-                      endActionPane: ActionPane(
-                        motion: ScrollMotion(),
-                        children: [
-                          ClipOval(
-                            child: Container(
-                              height: 50,
-                              width: 50,
-                              child: Center(
-                                child: SlidableAction(
-                                  // An action can be bigger than the others.
-                                  backgroundColor: Color(0xFF7BC043),
-                                  foregroundColor: Colors.white,
-                                  icon: CupertinoIcons.speaker_2_fill,
-                                  onPressed: (index) {
-                                    // ScaffoldMessenger.of(context)
-                                    //     .showSnackBar(snackBar);
-                                  },
-                                ),
-                              ),
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
+            return Column(
+              children: [
+                Slidable(
+                  endActionPane: ActionPane(
+                    motion: ScrollMotion(),
+                    children: [
+                      ClipOval(
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          child: Center(
+                            child: SlidableAction(
+                              // An action can be bigger than the others.
+                              backgroundColor: Color(0xFF7BC043),
+                              foregroundColor: Colors.white,
+                              icon: CupertinoIcons.speaker_2_fill,
+                              onPressed: (index) {
+                                // ScaffoldMessenger.of(context)
+                                //     .showSnackBar(snackBar);
+                              },
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: ClipOval(
-                              child: Container(
-                                height: 50,
-                                width: 50,
-                                child: Center(
-                                  child: SlidableAction(
-                                    onPressed: (index) {
-
-                                    },
-                                    backgroundColor: CupertinoColors.destructiveRed,
-                                    foregroundColor: Colors.white,
-                                    icon: CupertinoIcons.delete,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      startActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        dismissible: DismissiblePane(
-                          key: GlobalKey(),
-                          onDismissed: () {
-                            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          },
                         ),
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: ClipOval(
-                              child: Container(
-                                height: 50,
-                                width: 50,
-                                child: Center(
-                                  child: SlidableAction(
-                                    onPressed: (index) {
-
-                                    },
-                                    backgroundColor: CupertinoColors.link,
-                                    foregroundColor: Colors.white,
-                                    icon: CupertinoIcons.italic,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: ClipOval(
-                              child: Container(
-                                height: 50,
-                                width: 50,
-                                child: Center(
-                                  child: SlidableAction(
-                                    onPressed: (index) {
-
-                                    },
-                                    backgroundColor: Color(0xFF21B7CA),
-                                    foregroundColor: Colors.white,
-                                    icon: CupertinoIcons.pin_fill,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            leading: CircularProfileAvatar(
-                              '',
-                              radius: 28,
-                              child: SvgPicture.asset(
-                                imageList[index],
-                                fit: BoxFit.fill,
+                      Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: ClipOval(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: Center(
+                              child: SlidableAction(
+                                onPressed: (index) {},
+                                backgroundColor: CupertinoColors.destructiveRed,
+                                foregroundColor: Colors.white,
+                                icon: CupertinoIcons.delete,
                               ),
                             ),
-                            title: Text(
-                              nameList[index],
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  startActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    dismissible: DismissiblePane(
+                      key: GlobalKey(),
+                      onDismissed: () {
+                        // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      },
+                    ),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: ClipOval(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: Center(
+                              child: SlidableAction(
+                                onPressed: (index) {},
+                                backgroundColor: CupertinoColors.link,
+                                foregroundColor: Colors.white,
+                                icon: CupertinoIcons.italic,
+                              ),
                             ),
-                            subtitle: Text(
-                              textList[index],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: ClipOval(
+                          child: Container(
+                            height: 50,
+                            width: 50,
+                            child: Center(
+                              child: SlidableAction(
+                                onPressed: (index) {},
+                                backgroundColor: Color(0xFF21B7CA),
+                                foregroundColor: Colors.white,
+                                icon: CupertinoIcons.pin_fill,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: CircularProfileAvatar(
+                          '',
+                          radius: 28,
+                          child: SvgPicture.asset(
+                            imageList[index],
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        title: Text(
+                          nameList[index],
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontFamily: AppFonts.segoeui,
+                              fontSize: 16),
+                        ),
+                        subtitle: Text(
+                          textList[index],
+                          style: TextStyle(
+                              color: Color(0XFF373737),
+                              fontFamily: AppFonts.segoeui,
+                              fontSize: 12),
+                        ),
+                        trailing: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: height * 0.060,
+                                width: width * 0.060,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.green),
+                                child: Center(
+                                  child: Text(
+                                    notificationList[index],
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontFamily: AppFonts.segoeui),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              timeList[index],
                               style: TextStyle(
                                   color: Color(0XFF373737),
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 12),
-                            ),
-                            trailing: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: height * 0.060,
-                                    width: width * 0.060,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.green),
-                                    child: Center(
-                                      child: Text(
-                                        notificationList[index],
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10,
-                                            fontFamily: AppFonts.segoeui),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  timeList[index],
-                                  style: TextStyle(
-                                      color: Color(0XFF373737),
-                                      fontSize: 10,
-                                      fontFamily: AppFonts.segoeui),
-                                )
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 1,
-                            color: Colors.black12,
-                            margin: EdgeInsets.only(
-                                left: width * 0.23,
-                                right: width * 0.040,
-                                bottom: height * 0.018),
-                          ),
-                        ],
+                                  fontSize: 10,
+                                  fontFamily: AppFonts.segoeui),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }, childCount: imageList.length))
+                      Container(
+                        height: 1,
+                        color: Colors.black12,
+                        margin: EdgeInsets.only(
+                            left: width * 0.23,
+                            right: width * 0.040,
+                            bottom: height * 0.018),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }, childCount: imageList.length))
         ],
       ),
       floatingActionButton: CustomButton(),
@@ -378,7 +370,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   width: 400,
                   //color: Colors.green,
                   child: Column(children: [
-                    Text('Create Group',style: TextStyle(color: Colors.green,fontSize: 20),),
+                    Text(
+                      'Create Group',
+                      style: TextStyle(color: Colors.green, fontSize: 20),
+                    ),
                     SizedBox(
                       height: 12,
                     ),
@@ -389,7 +384,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       child: TextField(
                         decoration: InputDecoration(
                             hintText: 'Write Group Name',
-                            hintStyle: TextStyle(fontSize: 13,fontFamily: AppFonts.segoeui),
+                            hintStyle: TextStyle(
+                                fontSize: 13, fontFamily: AppFonts.segoeui),
                             contentPadding: EdgeInsets.only(left: 8),
                             border: InputBorder.none),
                       ),
@@ -410,8 +406,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
                           isDense: true,
                           border: InputBorder.none,
                           hintText: 'Search Member ...',
-                          hintStyle:
-                          TextStyle(fontSize: 12, color: Colors.black,fontFamily: AppFonts.segoeui),
+                          hintStyle: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontFamily: AppFonts.segoeui),
                           suffixIcon: Icon(
                             Icons.search,
                             size: 20,
@@ -439,11 +437,18 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   fit: BoxFit.fill,
                                 ),
                               ),
-                              title: Text(nameList1[index],style: TextStyle(fontFamily: AppFonts.segoeui),),
+                              title: Text(
+                                nameList1[index],
+                                style: TextStyle(fontFamily: AppFonts.segoeui),
+                              ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(textList1[index],style: TextStyle(fontFamily: AppFonts.segoeui),),
+                                  Text(
+                                    textList1[index],
+                                    style:
+                                        TextStyle(fontFamily: AppFonts.segoeui),
+                                  ),
                                 ],
                               ),
                               trailing: Row(
@@ -454,14 +459,16 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                     width: 70,
                                     child: Center(
                                         child: Text(
-                                          acceptButtonList1[index],
-                                          style: TextStyle(color: Colors.green,fontFamily: AppFonts.segoeui),
-                                        )),
+                                      acceptButtonList1[index],
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontFamily: AppFonts.segoeui),
+                                    )),
                                     decoration: BoxDecoration(
-                                      //color: Colors.grey,
+                                        //color: Colors.grey,
                                         border: Border.all(color: Colors.green),
                                         borderRadius:
-                                        BorderRadius.circular(20)),
+                                            BorderRadius.circular(20)),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(left: 5),
@@ -473,9 +480,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                           shape: BoxShape.circle),
                                       child: Center(
                                           child: Icon(
-                                            Icons.close,
-                                            color: Colors.white,
-                                          )),
+                                        Icons.close,
+                                        color: Colors.white,
+                                      )),
                                     ),
                                   ),
                                 ],
@@ -497,7 +504,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       child: Center(
                         child: Text(
                           'CREATE',
-                          style: TextStyle(color: Colors.white, fontSize: 15,fontFamily: AppFonts.segoeui),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontFamily: AppFonts.segoeui),
                         ),
                       ),
                       decoration: BoxDecoration(
@@ -508,5 +518,4 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   ])));
         });
   }
-
 }

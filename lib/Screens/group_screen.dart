@@ -24,6 +24,7 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 
+import '../GlobalWidget/ConfirmationDialog.dart';
 import 'UserChat/UserChat.dart';
 
 bool startfirstTimeGroup = false;
@@ -116,59 +117,34 @@ class _GroupScreenState extends State<GroupScreen> {
                                 ),
                                 IconButton(
                                   onPressed: () async {
-                                    showDialog(
+                                    await showAlertDialog(
                                         context: context,
-                                        builder: (BuildContext context) {
-                                          return CupertinoAlertDialog(
-                                            title: Text("Alert"),
-                                            actions: [
-                                              CupertinoDialogAction(
-                                                  onPressed: () {
-                                                    listOfSelectedMember
-                                                        .clear();
-                                                    setState(() {});
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text("Cancel")),
-                                              CupertinoDialogAction(
-                                                  onPressed: () {
-                                                    // for (var i = 0;
-                                                    //     i <
-                                                    //         listOfSelectedMember
-                                                    //             .length;
-                                                    //     i++) {
-                                                    //   Map payLoad = {
-                                                    //     'g_id':
-                                                    //         listOfSelectedMember[
-                                                    //                 i]
-                                                    //             .groupId
-                                                    //             .toString(),
-                                                    //     'userId':
-                                                    //         listOfSelectedMember[
-                                                    //                 i]
-                                                    //             .senderId
-                                                    //             .toString()
-                                                    //   };
-                                                    //   print(
-                                                    //       'Delete payLoad = $payLoad');
-                                                    //   ApiUtils.removeGroupApi(
-                                                    //       map: payLoad);
-                                                    //   controller.listofMember
-                                                    //       .remove(
-                                                    //           listOfSelectedMember[
-                                                    //               i]);
-                                                    // }
-                                                    // listOfSelectedMember
-                                                    //     .clear();
-                                                    // setState(() {});
-                                                    // Navigator.of(context).pop();
-                                                  },
-                                                  child: Text("Ok")),
-                                            ],
-                                            content: Text(
-                                                "You want to delete the chat?"),
-                                          );
+                                        cancel: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        done: () {
+                                          for (var i = 0;
+                                              i < listOfSelectedMember.length;
+                                              i++) {
+                                            deleteGroup(
+                                                groupId: listOfSelectedMember[i]
+                                                    .groupId)
+                                                .then((value) {
+                                              if (value == true) {
+                                                controller.listofChat.remove(
+                                                    listOfSelectedMember[i]);
+                                              } else {
+                                                snackBarFailer(
+                                                    'you did not delete the group because you are not Admin of this Group');
+                                              }
+                                            });
+                                          }
+                                          listOfSelectedMember.clear();
+                                          setState(() {});
+                                          controller.getGroupList();
+                                          Navigator.of(context).pop();
                                         });
+                                    setState(() {});
                                   },
                                   icon: Icon(
                                     CupertinoIcons.delete,
@@ -255,18 +231,29 @@ class _GroupScreenState extends State<GroupScreen> {
                             dismissible: DismissiblePane(onDismissed: () {}),
                             children: [
                               SlidableAction(
-                                onPressed: (value){
-                                  deleteGroup(groupId: controller.listofChat[index].groupId).then((value) {
-                                    if(value==true){
-                                      controller.listofChat.removeAt(index);
-                                      controller.getGroupList();
-                                    }else{
-                                      snackBarFailer('you did not delete the group because you are not Admin of this Group');
-                                    }
-                                  });
-                                  setState(() {
-
-                                  });
+                                onPressed: (value) async {
+                                  await showAlertDialog(
+                                      context: context,
+                                      cancel: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      done: () {
+                                        deleteGroup(
+                                                groupId: controller
+                                                    .listofChat[index].groupId)
+                                            .then((value) {
+                                          if (value == true) {
+                                            controller.listofChat
+                                                .removeAt(index);
+                                            controller.getGroupList();
+                                          } else {
+                                            snackBarFailer(
+                                                'you did not delete the group because you are not Admin of this Group');
+                                          }
+                                        });
+                                        Navigator.of(context).pop();
+                                      });
+                                  setState(() {});
                                 },
                                 backgroundColor: Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,
@@ -355,51 +342,51 @@ class _GroupScreenState extends State<GroupScreen> {
                                       setState(() {});
                                     });
                                   } else {
-                                    // if (!listOfSelectedMember.contains(
-                                    //     controller.listofMember[index])) {
-                                    //   listOfSelectedMember
-                                    //       .add(controller.listofMember[index]);
-                                    // } else {
-                                    //   listOfSelectedMember.remove(
-                                    //       controller.listofMember[index]);
-                                    // }
-                                    // setState(() {});
+                                    if (!listOfSelectedMember.contains(
+                                        controller.listofChat[index])) {
+                                      listOfSelectedMember
+                                          .add(controller.listofChat[index]);
+                                    } else {
+                                      listOfSelectedMember
+                                          .remove(controller.listofChat[index]);
+                                    }
+                                    setState(() {});
                                   }
                                 },
                                 onLongPress: () {
-                                  // if (!listOfSelectedMember
-                                  //     .contains(controller.listofMember[index])) {
-                                  //   listOfSelectedMember
-                                  //       .add(controller.listofMember[index]);
-                                  // } else {
-                                  //   listOfSelectedMember
-                                  //       .remove(controller.listofMember[index]);
-                                  // }
-                                  // setState(() {});
+                                  if (!listOfSelectedMember
+                                      .contains(controller.listofChat[index])) {
+                                    listOfSelectedMember
+                                        .add(controller.listofChat[index]);
+                                  } else {
+                                    listOfSelectedMember
+                                        .remove(controller.listofChat[index]);
+                                  }
+                                  setState(() {});
                                 },
                                 child: Row(
                                   children: [
-                                    // listOfSelectedMember.isNotEmpty
-                                    //     ? !listOfSelectedMember.contains(
-                                    //             controller.listofMember[index])
-                                    //         ? Container(
-                                    //             height: 20,
-                                    //             width: 20,
-                                    //             decoration: BoxDecoration(
-                                    //                 shape: BoxShape.circle,
-                                    //                 border: Border.all(
-                                    //                     width: 1,
-                                    //                     color: buttonColor)),
-                                    //           )
-                                    //         : Container(
-                                    //             height: 20,
-                                    //             width: 20,
-                                    //             child: Icon(
-                                    //               Icons.check_circle,
-                                    //               color: buttonColor,
-                                    //             ),
-                                    //           )
-                                    //     : SizedBox(),
+                                    listOfSelectedMember.isNotEmpty
+                                        ? !listOfSelectedMember.contains(
+                                                controller.listofChat[index])
+                                            ? Container(
+                                                height: 20,
+                                                width: 20,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: buttonColor)),
+                                              )
+                                            : Container(
+                                                height: 20,
+                                                width: 20,
+                                                child: Icon(
+                                                  Icons.check_circle,
+                                                  color: buttonColor,
+                                                ),
+                                              )
+                                        : SizedBox(),
                                     Expanded(
                                       child: ListTile(
                                         leading: CircularProfileAvatar(
@@ -516,8 +503,6 @@ class _GroupScreenState extends State<GroupScreen> {
                                               height: 5,
                                             ),
                                             Text(
-                                              //'${timeago.format(DateTime.parse("${controller.listofMember[index].lastActive}"), locale: 'en_short')} ago',
-                                              //"${controller.listofChat.value.data![index].lastMessage!.timeText}",
                                               date == ''
                                                   ? ''
                                                   : '${dateFormat.format(date)}',

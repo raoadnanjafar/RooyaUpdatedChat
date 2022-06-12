@@ -24,6 +24,7 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 import 'package:geocoding/geocoding.dart';
+import '../GlobalWidget/ConfirmationDialog.dart';
 import '../GlobalWidget/FileUploader.dart';
 import 'Rooms/FindChatRooms.dart';
 import 'UserChat/UserChat.dart';
@@ -129,59 +130,35 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                 ),
                                 IconButton(
                                   onPressed: () async {
-                                    showDialog(
+                                    await showAlertDialog(
                                         context: context,
-                                        builder: (BuildContext context) {
-                                          return CupertinoAlertDialog(
-                                            title: Text("Alert"),
-                                            actions: [
-                                              CupertinoDialogAction(
-                                                  onPressed: () {
-                                                    listOfSelectedMember
-                                                        .clear();
-                                                    setState(() {});
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text("Cancel")),
-                                              CupertinoDialogAction(
-                                                  onPressed: () {
-                                                    // for (var i = 0;
-                                                    //     i <
-                                                    //         listOfSelectedMember
-                                                    //             .length;
-                                                    //     i++) {
-                                                    //   Map payLoad = {
-                                                    //     'g_id':
-                                                    //         listOfSelectedMember[
-                                                    //                 i]
-                                                    //             .groupId
-                                                    //             .toString(),
-                                                    //     'userId':
-                                                    //         listOfSelectedMember[
-                                                    //                 i]
-                                                    //             .senderId
-                                                    //             .toString()
-                                                    //   };
-                                                    //   print(
-                                                    //       'Delete payLoad = $payLoad');
-                                                    //   ApiUtils.removeGroupApi(
-                                                    //       map: payLoad);
-                                                    //   controller.listofMember
-                                                    //       .remove(
-                                                    //           listOfSelectedMember[
-                                                    //               i]);
-                                                    // }
-                                                    // listOfSelectedMember
-                                                    //     .clear();
-                                                    // setState(() {});
-                                                    // Navigator.of(context).pop();
-                                                  },
-                                                  child: Text("Ok")),
-                                            ],
-                                            content: Text(
-                                                "You want to delete the chat?"),
-                                          );
+                                        cancel: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        done: () {
+                                          for (var i = 0;
+                                              i < listOfSelectedMember.length;
+                                              i++) {
+                                            deleteGroup(
+                                                    groupId:
+                                                        listOfSelectedMember[i]
+                                                            .groupId)
+                                                .then((value) {
+                                              if (value == true) {
+                                                controller.listofChat.remove(
+                                                    listOfSelectedMember[i]);
+                                              } else {
+                                                snackBarFailer(
+                                                    'you did not delete the group because you are not Admin of this Room');
+                                              }
+                                            });
+                                          }
+                                          listOfSelectedMember.clear();
+                                          setState(() {});
+                                          controller.getGroupList();
+                                          Navigator.of(context).pop();
                                         });
+                                    setState(() {});
                                   },
                                   icon: Icon(
                                     CupertinoIcons.delete,
@@ -267,18 +244,29 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             dismissible: DismissiblePane(onDismissed: () {}),
                             children: [
                               SlidableAction(
-                                onPressed: (v){
-                                  deleteGroup(groupId: controller.listofChat[index].groupId).then((value) {
-                                    if(value==true){
-                                      controller.listofChat.removeAt(index);
-                                      controller.getGroupList();
-                                    }else{
-                                      snackBarFailer('you did not delete this room because you are not Admin of the Group');
-                                    }
-                                  });
-                                  setState(() {
-
-                                  });
+                                onPressed: (v) async {
+                                  await showAlertDialog(
+                                      context: context,
+                                      cancel: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      done: () {
+                                        deleteGroup(
+                                                groupId: controller
+                                                    .listofChat[index].groupId)
+                                            .then((value) {
+                                          if (value == true) {
+                                            controller.listofChat
+                                                .removeAt(index);
+                                            controller.getGroupList();
+                                          } else {
+                                            snackBarFailer(
+                                                'you did not delete the group because you are not Admin of this Room');
+                                          }
+                                        });
+                                        Navigator.of(context).pop();
+                                      });
+                                  setState(() {});
                                 },
                                 backgroundColor: Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,
