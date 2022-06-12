@@ -186,7 +186,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             return createAlertDialoge(context);
                           },
                           child: Text(
-                            'Chats',
+                            'Rooms',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,

@@ -16,9 +16,12 @@ import 'package:rooya/Screens/SearchUser/SearchUserModel.dart';
 import 'package:rooya/Screens/UserChat/Media/GroupInfoModel.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 
+import '../Models/StoryViewsModel.dart';
+
 final getChat = 'get_chats';
 final updateUserData = 'update-user-data';
 final getroomListChat = 'group_chat';
+final storyViewsPerson = 'get_story_views';
 final allStories = 'get-user-stories';
 final getRoom = 'group_chat';
 final getGroupChat = 'group_chat';
@@ -229,7 +232,7 @@ class ApiUtils {
       {int? limit, int? start, Map? mapData}) async {
     var url = Uri.parse('$baseUrl$getChat$token');
     try {
-      var responce = await await http.post(url, body: mapData);
+      var responce =  await http.post(url, body: mapData);
       var data = jsonDecode(responce.body);
       // print('group data is = $data');
       if (data['api_status'] == 200) {
@@ -248,6 +251,28 @@ class ApiUtils {
       print('Exception is = $e');
     }
     return [];
+  }
+
+  static Future<storyViewModel> storyView(
+      { Map? mapData}) async {
+    var url = Uri.parse('$baseUrl$storyViewsPerson$token');
+    try {
+      var responce = await await http.post(url, body: mapData);
+      var data = jsonDecode(responce.body);
+      // print('group data is = $data');
+      if (data['api_status'] == 200) {
+        storyViewModel modellistt =storyViewModel.fromJson(data);
+        return modellistt;
+      } else {
+        if (data['api_status'] != 200) {
+          snackBarFailer('${data['error_text']}');
+        }
+        return storyViewModel(users: [],);
+      }
+    } catch (e) {
+      print('Exception is = $e');
+    }
+    return storyViewModel(users: []);
   }
 
   static Future<List<GroupModel>> getAllRoomData({Map? mapData}) async {

@@ -1,4 +1,30 @@
-class UserStoryModel {
+class storyViewModel {
+  int? apiStatus;
+  List<Users>? users=[];
+
+  storyViewModel({this.apiStatus, this.users});
+
+  storyViewModel.fromJson(Map<String, dynamic> json) {
+    apiStatus = json['api_status'];
+    if (json['users'] != null) {
+      users = <Users>[];
+      json['users'].forEach((v) {
+        users!.add(new Users.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['api_status'] = this.apiStatus;
+    if (this.users != null) {
+      data['users'] = this.users!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Users {
   String? userId;
   String? username;
   String? email;
@@ -24,6 +50,10 @@ class UserStoryModel {
   String? youtube;
   String? vk;
   String? instagram;
+  String? qq;
+  String? wechat;
+  String? discord;
+  String? mailru;
   String? okru;
   String? language;
   String? ipAddress;
@@ -62,6 +92,7 @@ class UserStoryModel {
   String? timezone;
   String? referrer;
   String? refUserId;
+  String? refLevel;
   String? balance;
   String? paypalEmail;
   String? notificationsSound;
@@ -85,6 +116,7 @@ class UserStoryModel {
   String? pointDayExpire;
   String? lastFollowId;
   String? shareMyData;
+  String? lastLoginData;
   String? twoFactor;
   String? newEmail;
   String? twoFactorVerified;
@@ -97,7 +129,11 @@ class UserStoryModel {
   String? weatherUnit;
   String? paystackRef;
   String? codeSent;
+  String? stripeSessionId;
   String? timeCodeSent;
+  String? permission;
+  String? skills;
+  String? languages;
   String? currentlyWorking;
   String? banned;
   String? bannedReason;
@@ -114,6 +150,7 @@ class UserStoryModel {
   String? name;
   APINotificationSettings? aPINotificationSettings;
   String? isNotifyStopped;
+  String? mutualFriendsData;
   String? lastseenUnixTime;
   String? lastseenStatus;
   bool? isReported;
@@ -123,9 +160,10 @@ class UserStoryModel {
   String? isProvidingService;
   String? providingService;
   String? openToWorkData;
-  List<Stories>? stories =[];
+  List<Null>? formatedLangs;
+  String? offsetId;
 
-  UserStoryModel(
+  Users(
       {this.userId,
         this.username,
         this.email,
@@ -151,6 +189,10 @@ class UserStoryModel {
         this.youtube,
         this.vk,
         this.instagram,
+        this.qq,
+        this.wechat,
+        this.discord,
+        this.mailru,
         this.okru,
         this.language,
         this.ipAddress,
@@ -189,6 +231,7 @@ class UserStoryModel {
         this.timezone,
         this.referrer,
         this.refUserId,
+        this.refLevel,
         this.balance,
         this.paypalEmail,
         this.notificationsSound,
@@ -212,6 +255,7 @@ class UserStoryModel {
         this.pointDayExpire,
         this.lastFollowId,
         this.shareMyData,
+        this.lastLoginData,
         this.twoFactor,
         this.newEmail,
         this.twoFactorVerified,
@@ -224,7 +268,11 @@ class UserStoryModel {
         this.weatherUnit,
         this.paystackRef,
         this.codeSent,
+        this.stripeSessionId,
         this.timeCodeSent,
+        this.permission,
+        this.skills,
+        this.languages,
         this.currentlyWorking,
         this.banned,
         this.bannedReason,
@@ -241,6 +289,7 @@ class UserStoryModel {
         this.name,
         this.aPINotificationSettings,
         this.isNotifyStopped,
+        this.mutualFriendsData,
         this.lastseenUnixTime,
         this.lastseenStatus,
         this.isReported,
@@ -250,9 +299,10 @@ class UserStoryModel {
         this.isProvidingService,
         this.providingService,
         this.openToWorkData,
-        this.stories});
+        this.formatedLangs,
+        this.offsetId});
 
-  UserStoryModel.fromJson(Map<String, dynamic> json) {
+  Users.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'].toString();
     username = json['username'].toString();
     email = json['email'].toString();
@@ -278,6 +328,10 @@ class UserStoryModel {
     youtube = json['youtube'].toString();
     vk = json['vk'].toString();
     instagram = json['instagram'].toString();
+    qq = json['qq'].toString();
+    wechat = json['wechat'].toString();
+    discord = json['discord'].toString();
+    mailru = json['mailru'].toString();
     okru = json['okru'].toString();
     language = json['language'].toString();
     ipAddress = json['ip_address'].toString();
@@ -316,6 +370,7 @@ class UserStoryModel {
     timezone = json['timezone'].toString();
     referrer = json['referrer'].toString();
     refUserId = json['ref_user_id'].toString();
+    refLevel = json['ref_level'].toString();
     balance = json['balance'].toString();
     paypalEmail = json['paypal_email'].toString();
     notificationsSound = json['notifications_sound'].toString();
@@ -331,8 +386,8 @@ class UserStoryModel {
     lastLocationUpdate = json['last_location_update'].toString();
     shareMyLocation = json['share_my_location'].toString();
     lastDataUpdate = json['last_data_update'].toString();
-    details =
-    json['details'] != null ? new Details.fromJson(json['details']) : null;
+    // details =
+    // json['details'] != null ? new Details.fromJson(json['details']) : null;
     lastAvatarMod = json['last_avatar_mod'].toString();
     lastCoverMod = json['last_cover_mod'].toString();
     points = json['points'].toString();
@@ -340,6 +395,7 @@ class UserStoryModel {
     pointDayExpire = json['point_day_expire'].toString();
     lastFollowId = json['last_follow_id'].toString();
     shareMyData = json['share_my_data'].toString();
+    lastLoginData = json['last_login_data'].toString();
     twoFactor = json['two_factor'].toString();
     newEmail = json['new_email'].toString();
     twoFactorVerified = json['two_factor_verified'].toString();
@@ -352,7 +408,11 @@ class UserStoryModel {
     weatherUnit = json['weather_unit'].toString();
     paystackRef = json['paystack_ref'].toString();
     codeSent = json['code_sent'].toString();
+    stripeSessionId = json['StripeSessionId'].toString();
     timeCodeSent = json['time_code_sent'].toString();
+    permission = json['permission'].toString();
+    skills = json['skills'].toString();
+    languages = json['languages'].toString();
     currentlyWorking = json['currently_working'].toString();
     banned = json['banned'].toString();
     bannedReason = json['banned_reason'].toString();
@@ -367,11 +427,12 @@ class UserStoryModel {
     userPlatform = json['user_platform'].toString();
     url = json['url'].toString();
     name = json['name'].toString();
-    aPINotificationSettings = json['API_notification_settings'] != null
-        ? new APINotificationSettings.fromJson(
-        json['API_notification_settings'])
-        : null;
+    // aPINotificationSettings = json['API_notification_settings'] != null
+    //     ? new APINotificationSettings.fromJson(
+    //     json['API_notification_settings'])
+    //     : null;
     isNotifyStopped = json['is_notify_stopped'].toString();
+    mutualFriendsData = json['mutual_friends_data'].toString();
     lastseenUnixTime = json['lastseen_unix_time'].toString();
     lastseenStatus = json['lastseen_status'].toString();
     isReported = json['is_reported'];
@@ -381,12 +442,13 @@ class UserStoryModel {
     isProvidingService = json['is_providing_service'].toString();
     providingService = json['providing_service'].toString();
     openToWorkData = json['open_to_work_data'].toString();
-    if (json['stories'] != null) {
-      stories = <Stories>[];
-      json['stories'].forEach((v) {
-        stories!.add(new Stories.fromJson(v));
-      });
-    }
+    // if (json['formated_langs'] != null) {
+    //   formatedLangs = <Null>[];
+    //   json['formated_langs'].forEach((v) {
+    //     formatedLangs!.add(new Null.fromJson(v));
+    //   });
+    // }
+    offsetId = json['offset_id'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -416,6 +478,10 @@ class UserStoryModel {
     data['youtube'] = this.youtube;
     data['vk'] = this.vk;
     data['instagram'] = this.instagram;
+    data['qq'] = this.qq;
+    data['wechat'] = this.wechat;
+    data['discord'] = this.discord;
+    data['mailru'] = this.mailru;
     data['okru'] = this.okru;
     data['language'] = this.language;
     data['ip_address'] = this.ipAddress;
@@ -454,6 +520,7 @@ class UserStoryModel {
     data['timezone'] = this.timezone;
     data['referrer'] = this.referrer;
     data['ref_user_id'] = this.refUserId;
+    data['ref_level'] = this.refLevel;
     data['balance'] = this.balance;
     data['paypal_email'] = this.paypalEmail;
     data['notifications_sound'] = this.notificationsSound;
@@ -479,6 +546,7 @@ class UserStoryModel {
     data['point_day_expire'] = this.pointDayExpire;
     data['last_follow_id'] = this.lastFollowId;
     data['share_my_data'] = this.shareMyData;
+    data['last_login_data'] = this.lastLoginData;
     data['two_factor'] = this.twoFactor;
     data['new_email'] = this.newEmail;
     data['two_factor_verified'] = this.twoFactorVerified;
@@ -491,7 +559,11 @@ class UserStoryModel {
     data['weather_unit'] = this.weatherUnit;
     data['paystack_ref'] = this.paystackRef;
     data['code_sent'] = this.codeSent;
+    data['StripeSessionId'] = this.stripeSessionId;
     data['time_code_sent'] = this.timeCodeSent;
+    data['permission'] = this.permission;
+    data['skills'] = this.skills;
+    data['languages'] = this.languages;
     data['currently_working'] = this.currentlyWorking;
     data['banned'] = this.banned;
     data['banned_reason'] = this.bannedReason;
@@ -511,6 +583,7 @@ class UserStoryModel {
           this.aPINotificationSettings!.toJson();
     }
     data['is_notify_stopped'] = this.isNotifyStopped;
+    data['mutual_friends_data'] = this.mutualFriendsData;
     data['lastseen_unix_time'] = this.lastseenUnixTime;
     data['lastseen_status'] = this.lastseenStatus;
     data['is_reported'] = this.isReported;
@@ -520,9 +593,11 @@ class UserStoryModel {
     data['is_providing_service'] = this.isProvidingService;
     data['providing_service'] = this.providingService;
     data['open_to_work_data'] = this.openToWorkData;
-    if (this.stories != null) {
-      data['stories'] = this.stories!.map((v) => v.toJson()).toList();
-    }
+    // if (this.formatedLangs != null) {
+    //   data['formated_langs'] =
+    //       this.formatedLangs!.map((v) => v.toJson()).toList();
+    // }
+    data['offset_id'] = this.offsetId;
     return data;
   }
 }
@@ -534,7 +609,7 @@ class Details {
   String? followersCount;
   String? groupsCount;
   String? likesCount;
-  String? mutualFriendsCount;
+  int? mutualFriendsCount;
 
   Details(
       {this.postCount,
@@ -546,13 +621,13 @@ class Details {
         this.mutualFriendsCount});
 
   Details.fromJson(Map<String, dynamic> json) {
-    postCount = json['post_count'].toString();
-    albumCount = json['album_count'].toString();
-    followingCount = json['following_count'].toString();
-    followersCount = json['followers_count'].toString();
-    groupsCount = json['groups_count'].toString();
-    likesCount = json['likes_count'].toString();
-    mutualFriendsCount = json['mutual_friends_count'].toString();
+    postCount = json['post_count'];
+    albumCount = json['album_count'];
+    followingCount = json['following_count'];
+    followersCount = json['followers_count'];
+    groupsCount = json['groups_count'];
+    likesCount = json['likes_count'];
+    mutualFriendsCount = json['mutual_friends_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -569,18 +644,18 @@ class Details {
 }
 
 class APINotificationSettings {
-  String? eLiked;
-  String? eShared;
-  String? eWondered;
-  String? eCommented;
-  String? eFollowed;
-  String? eAccepted;
-  String? eMentioned;
-  String? eJoinedGroup;
-  String? eLikedPage;
-  String? eVisited;
-  String? eProfileWallPost;
-  String? eMemory;
+  int? eLiked;
+  int? eShared;
+  int? eWondered;
+  int? eCommented;
+  int? eFollowed;
+  int? eAccepted;
+  int? eMentioned;
+  int? eJoinedGroup;
+  int? eLikedPage;
+  int? eVisited;
+  int? eProfileWallPost;
+  int? eMemory;
 
   APINotificationSettings(
       {this.eLiked,
@@ -597,18 +672,18 @@ class APINotificationSettings {
         this.eMemory});
 
   APINotificationSettings.fromJson(Map<String, dynamic> json) {
-    eLiked = json['e_liked'].toString();
-    eShared = json['e_shared'].toString();
-    eWondered = json['e_wondered'].toString();
-    eCommented = json['e_commented'].toString();
-    eFollowed = json['e_followed'].toString();
-    eAccepted = json['e_accepted'].toString();
-    eMentioned = json['e_mentioned'].toString();
-    eJoinedGroup = json['e_joined_group'].toString();
-    eLikedPage = json['e_liked_page'].toString();
-    eVisited = json['e_visited'].toString();
-    eProfileWallPost = json['e_profile_wall_post'].toString();
-    eMemory = json['e_memory'].toString();
+    eLiked = json['e_liked'];
+    eShared = json['e_shared'];
+    eWondered = json['e_wondered'];
+    eCommented = json['e_commented'];
+    eFollowed = json['e_followed'];
+    eAccepted = json['e_accepted'];
+    eMentioned = json['e_mentioned'];
+    eJoinedGroup = json['e_joined_group'];
+    eLikedPage = json['e_liked_page'];
+    eVisited = json['e_visited'];
+    eProfileWallPost = json['e_profile_wall_post'];
+    eMemory = json['e_memory'];
   }
 
   Map<String, dynamic> toJson() {
@@ -625,150 +700,6 @@ class APINotificationSettings {
     data['e_visited'] = this.eVisited;
     data['e_profile_wall_post'] = this.eProfileWallPost;
     data['e_memory'] = this.eMemory;
-    return data;
-  }
-}
-
-class Stories {
-  String? id;
-  String? userId;
-  String? title;
-  String? description;
-  String? posted;
-  String? expire;
-  String? thumbnail;
-  String? eventId;
-  List<Videos>? videos = [];
-  bool? isOwner;
-  Reaction? reaction;
-  String? isViewed;
-  String? timeText;
-  String? viewCount;
-  List<Null>? images;
-
-  Stories(
-      {this.id,
-        this.userId,
-        this.title,
-        this.description,
-        this.posted,
-        this.expire,
-        this.thumbnail,
-        this.eventId,
-        this.videos,
-        this.isOwner,
-        this.reaction,
-        this.isViewed,
-        this.timeText,
-        this.viewCount,
-        this.images});
-
-  Stories.fromJson(Map<String, dynamic> json) {
-    id = json['id'].toString();
-    userId = json['user_id'].toString();
-    title = json['title'].toString();
-    description = json['description'].toString();
-    posted = json['posted'].toString();
-    expire = json['expire'].toString();
-    thumbnail = json['thumbnail'].toString();
-    eventId = json['event_id'].toString();
-    if (json['videos'] != null) {
-      videos = <Videos>[];
-      json['videos'].forEach((v) {
-        videos!.add(new Videos.fromJson(v));
-      });
-    }
-    isOwner = json['is_owner'];
-    reaction = json['reaction'] != null
-        ? new Reaction.fromJson(json['reaction'])
-        : null;
-    isViewed = json['is_viewed'].toString();
-    timeText = json['time_text'].toString();
-    viewCount = json['view_count'].toString();
-    // if (json['images'] != null) {
-    //   images = <Null>[];
-    //   json['images'].forEach((v) {
-    //     images!.add(new Null.fromJson(v));
-    //   });
-    // }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_id'] = this.userId;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['posted'] = this.posted;
-    data['expire'] = this.expire;
-    data['thumbnail'] = this.thumbnail;
-    data['event_id'] = this.eventId;
-    if (this.videos != null) {
-      data['videos'] = this.videos!.map((v) => v.toJson()).toList();
-    }
-    data['is_owner'] = this.isOwner;
-    if (this.reaction != null) {
-      data['reaction'] = this.reaction!.toJson();
-    }
-    data['is_viewed'] = this.isViewed;
-    data['time_text'] = this.timeText;
-    data['view_count'] = this.viewCount;
-    // if (this.images != null) {
-    //   data['images'] = this.images!.map((v) => v.toJson()).toList();
-    // }
-    return data;
-  }
-}
-
-class Videos {
-  String? id;
-  String? storyId;
-  String? type;
-  String? filename;
-  String? expire;
-  int? totalTime;
-
-  Videos({this.id, this.storyId, this.type, this.filename, this.expire, this.totalTime});
-
-  Videos.fromJson(Map<String, dynamic> json) {
-    id = json['id'].toString();
-    storyId = json['story_id'].toString();
-    type = json['type'].toString();
-    filename = json['filename'].toString();
-    expire = json['expire'].toString();
-    totalTime = json['total_seconds'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['story_id'] = this.storyId;
-    data['type'] = this.type;
-    data['filename'] = this.filename;
-    data['expire'] = this.expire;
-    data['total_seconds'] = this.totalTime;
-    return data;
-  }
-}
-
-class Reaction {
-  bool? isReacted;
-  String? type;
-  String? count;
-
-  Reaction({this.isReacted, this.type, this.count});
-
-  Reaction.fromJson(Map<String, dynamic> json) {
-    isReacted = json['is_reacted'];
-    type = json['type'].toString();
-    count = json['count'].toString();
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['is_reacted'] = this.isReacted;
-    data['type'] = this.type;
-    data['count'] = this.count;
     return data;
   }
 }
