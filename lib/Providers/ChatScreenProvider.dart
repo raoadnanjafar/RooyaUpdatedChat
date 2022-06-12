@@ -16,7 +16,7 @@ import '../Screens/sliver_class/sliver.dart';
 class ChatScreenProvider extends GetxController {
   var listofChat = <Data>[].obs;
   var loadChat = false.obs;
-  getChatList() async {
+  Future getChatList() async {
     OneToOneChatOuterModel v = await ApiUtils.getGroup(
         limit: 100,
         start: 0,
