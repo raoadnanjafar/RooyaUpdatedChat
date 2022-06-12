@@ -1,17 +1,27 @@
+import 'dart:math';
+
 import 'package:dismissible_page/dismissible_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/Models/UserStoriesModel.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:video_player/video_player.dart';
 
+import '../GlobalWidget/FileUploader.dart';
+import '../Models/StoryView.dart';
+import '../Models/UserChatModel.dart';
+import '../Providers/ClickController/SelectIndexController.dart';
+import '../Screens/Information/GroupInformation/GroupInformationProvider.dart';
+
 class StoryViewPage extends StatefulWidget {
   final UserStoryModel? userStories;
   final bool? isAdmin;
 
-  const StoryViewPage({Key? key, this.userStories, this.isAdmin = false})
+  const StoryViewPage({Key? key, this.userStories, this.isAdmin = false,})
       : super(key: key);
 
   @override
@@ -20,7 +30,7 @@ class StoryViewPage extends StatefulWidget {
 
 class _StoryViewPageState extends State<StoryViewPage> {
   final StoryController controller = StoryController();
-
+  bool? storyLoaded;
   @override
   Widget build(BuildContext context) {
     return DismissiblePage(
@@ -59,6 +69,7 @@ class _StoryViewPageState extends State<StoryViewPage> {
                       '${e.videos![0].filename}',
                       controller: controller,
                       caption: "${e.description}",
+                      duration: Duration(seconds: e.videos![0].totalTime!),
                     );
                   }
                 }).toList(),
@@ -67,6 +78,7 @@ class _StoryViewPageState extends State<StoryViewPage> {
                 },
                 onComplete: () {
                   print("Completed a cycle");
+                  Navigator.pop(context);
                 },
                 progressPosition: ProgressPosition.top,
                 repeat: false,
@@ -76,7 +88,7 @@ class _StoryViewPageState extends State<StoryViewPage> {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 40,left: 10),
                 child: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios,
@@ -87,10 +99,45 @@ class _StoryViewPageState extends State<StoryViewPage> {
                   },
                 ),
               ),
-            )
+            ),
+            Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40,right: 10),
+                child: Visibility(
+                  visible: widget.isAdmin == true
+                      ? true
+                      : false,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.remove_red_eye,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      if (storyLoaded = true) {
+                        controller.pause();
+                      }
+                      storyPreview();
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+  Future storyPreview(){
+    return showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300,
+          color: Colors.greenAccent,
+          child: Views(userId: '124',)
+        );
+      },
     );
   }
 }

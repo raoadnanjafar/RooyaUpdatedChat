@@ -43,24 +43,21 @@ class _MySliverState extends State<MySliver> {
           ListTile(
               leading: Obx(
                 () => hasUserStory.value
-                    ? Hero(
-                      tag: 'Unique tag',
-                      child: CircularProfileAvatar(
-                          '${UserDataService.userDataModel!.userData!.avatar}',
-                          radius: 18,
-                          borderWidth: 2,
-                          borderColor: buttonColor,
-                          backgroundColor: Colors.blueGrey[100]!,
-                          onTap: () {
-                            int i = storyIds.indexWhere((element) =>
-                                element ==
-                                '${UserDataService.userDataModel!.userData!.userId.toString()}');
-                            context.pushTransparentRoute(StoryViewPage(
-                              userStories: allstoryList[i],isAdmin: true,
-                            ));
-                          },
-                        ),
-                    )
+                    ? CircularProfileAvatar(
+                        '${UserDataService.userDataModel!.userData!.avatar}',
+                        radius: 18,
+                        borderWidth: 2,
+                        borderColor: buttonColor,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        onTap: () {
+                          int i = storyIds.indexWhere((element) =>
+                              element ==
+                              '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                          context.pushTransparentRoute(StoryViewPage(
+                            userStories: allstoryList[i],isAdmin: true,
+                          ));
+                        },
+                      )
                     : CircularProfileAvatar(
                         '${UserDataService.userDataModel!.userData!.avatar}',
                         radius: 18,

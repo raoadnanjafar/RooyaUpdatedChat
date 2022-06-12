@@ -196,7 +196,7 @@ class _GroupScreenState extends State<GroupScreen> {
                             return createAlertDialoge(context);
                           },
                           child: Text(
-                            'Chats',
+                            'Groups',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,

@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SliverPersistentHeader(
                           floating: true,
-                          pinned: true,
+                          //pinned: true,
                           delegate: MyDelegate(Container(
                             height: 100,
                             color: Colors.white,

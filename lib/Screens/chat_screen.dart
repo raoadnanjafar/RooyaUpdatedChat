@@ -52,21 +52,25 @@ class _ChatScreenState extends State<ChatScreen>
           OneToOneChatOuterModel.fromJson(jsonDecode(storage.read('chat_list')))
               .data!;
     }
-    controller.getChatList();
+    controller.getChatList().then((value)async{
+      await getStoryData();
+      setState(() {
+
+      });
+    });
     controller.connectToSocket();
     if (!streamController.hasListener) {
       streamController.stream.listen((event) {
         setState(() {});
       });
     }
-    getStoryData();
     streamSubscription = sendSmsStreamcontroller.stream.listen((event) {
       setState(() {});
     });
     super.initState();
   }
 
-  getStoryData() async {
+  Future getStoryData() async {
     await controller.getStoryList();
   }
 
@@ -418,47 +422,44 @@ class _ChatScreenState extends State<ChatScreen>
                                         leading: controller.idsOfUserStories
                                                 .contains(
                                                     '${controller.listofChat[index].userId}')
-                                            ? Hero(
-                                                tag: 'Unique tag2',
-                                                child: CircularProfileAvatar(
-                                                  '',
-                                                  radius: 28,
-                                                  borderWidth: 2,
-                                                  borderColor: buttonColor,
-                                                  child: CachedNetworkImage(
-                                                    imageUrl:
-                                                        "${controller.listofChat[index].avatar!}",
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        CircularProgressIndicator(),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Icon(Icons.error),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  onTap:
-                                                      listOfSelectedMember
-                                                              .isNotEmpty
-                                                          ? null
-                                                          : () {
-                                                              if (listOfSelectedMember
-                                                                  .isEmpty) {
-                                                                int i = controller
-                                                                    .idsOfUserStories
-                                                                    .indexWhere((element) =>
-                                                                        element ==
-                                                                        '${controller.listofChat[index].userId}');
-                                                                context.pushTransparentRoute(
-                                                                    StoryViewPage(
-                                                                  userStories:
-                                                                      controller
-                                                                          .storyList[i],
-                                                                ));
-                                                              }
-                                                            },
-                                                  imageFit: BoxFit.cover,
-                                                ),
-                                              )
+                                            ? CircularProfileAvatar(
+                                              '',
+                                              radius: 28,
+                                              borderWidth: 2,
+                                              borderColor: buttonColor,
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    "${controller.listofChat[index].avatar!}",
+                                                placeholder: (context,
+                                                        url) =>
+                                                    CircularProgressIndicator(),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              onTap:
+                                                  listOfSelectedMember
+                                                          .isNotEmpty
+                                                      ? null
+                                                      : () {
+                                                          if (listOfSelectedMember
+                                                              .isEmpty) {
+                                                            int i = controller
+                                                                .idsOfUserStories
+                                                                .indexWhere((element) =>
+                                                                    element ==
+                                                                    '${controller.listofChat[index].userId}');
+                                                            context.pushTransparentRoute(
+                                                                StoryViewPage(
+                                                              userStories:
+                                                                  controller
+                                                                      .storyList[i],
+                                                            ));
+                                                          }
+                                                        },
+                                              imageFit: BoxFit.cover,
+                                            )
                                             : CircularProfileAvatar(
                                                 '',
                                                 radius: 28,
