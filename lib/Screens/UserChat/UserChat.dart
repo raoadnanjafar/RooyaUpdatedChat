@@ -1524,18 +1524,30 @@ class _UserChatState extends State<UserChat>
                                                         Navigator.of(context)
                                                             .pop();
                                                         Get.to(SendSmsView(
-                                                          userID:
-                                                              widget.groupID,
-                                                          path:
-                                                              '${result.files[0].path}',
-                                                          extention:
-                                                              '${result.files[0].path}'
-                                                                      .contains(
-                                                                          '.mp4')
-                                                                  ? 'video'
-                                                                  : 'image',
-                                                        ))!
+                                                                userID: widget
+                                                                    .groupID,
+                                                                path:
+                                                                    '${result.files[0].path}',
+                                                                extention: '${result.files[0].path}'
+                                                                        .contains(
+                                                                            '.mp4')
+                                                                    ? 'video'
+                                                                    : 'image',
+                                                                replyId: isActivereply
+                                                                        .value
+                                                                    ? replyModel
+                                                                        .value
+                                                                        .id
+                                                                    : ''))!
                                                             .then((value) {
+                                                          replyModel.value =
+                                                              selectedOneToOneChat[
+                                                                  0];
+                                                          isActivereply.value =
+                                                              true;
+                                                          selectedOneToOneChat
+                                                              .clear();
+                                                          setState(() {});
                                                           getcontroller!
                                                               .getAllMessage(
                                                                   userID: widget
@@ -1582,8 +1594,22 @@ class _UserChatState extends State<UserChat>
                                                                       .groupID,
                                                                   text: '',
                                                                   filePath:
-                                                                      '${result.files[0].path}')
+                                                                      '${result.files[0].path}',
+                                                                  replyid: isActivereply
+                                                                          .value
+                                                                      ? replyModel
+                                                                          .value
+                                                                          .id
+                                                                      : '')
                                                               .then((value) {
+                                                            replyModel.value =
+                                                                selectedOneToOneChat[
+                                                                    0];
+                                                            isActivereply
+                                                                .value = true;
+                                                            selectedOneToOneChat
+                                                                .clear();
+                                                            setState(() {});
                                                             getcontroller!.getAllMessage(
                                                                 userID: widget
                                                                     .groupID,

@@ -66,19 +66,37 @@ Future<String> uploadFile(String path) async {
 }
 
 Future sentMessageAsFile(
-    {String? filePath, String? userID, String? text}) async {
+    {String? filePath,
+    String? userID,
+    String? text,
+    String? replyid = ''}) async {
   var file = File(filePath!);
   String fileName = file.path.split('/').last;
-  Map<String, dynamic> data = {
-    'server_key': serverKey,
-    'user_id': '$userID',
-    'text': '$text',
-    'message_hash_id': '44444444',
-    'file': await dio.MultipartFile.fromFile(
-      '${file.path}',
-      filename: '$fileName',
-    )
-  };
+  Map<String, dynamic> data;
+  if (replyid == '') {
+    data = {
+      'server_key': serverKey,
+      'user_id': '$userID',
+      'text': '$text',
+      'message_hash_id': '44444444',
+      'file': await dio.MultipartFile.fromFile(
+        '${file.path}',
+        filename: '$fileName',
+      )
+    };
+  } else {
+    data = {
+      'server_key': serverKey,
+      'user_id': '$userID',
+      'text': '$text',
+      'message_hash_id': '44444444',
+      'file': await dio.MultipartFile.fromFile(
+        '${file.path}',
+        filename: '$fileName',
+      ),
+      'reply_id': replyid
+    };
+  }
   FormData formData = new FormData.fromMap(data);
   try {
     final response = await Dio().post('$baseUrl$sendMessage$token',
@@ -89,8 +107,7 @@ Future sentMessageAsFile(
   }
 }
 
-Future sentGroupImageFile(
-    {String? filePath,String? groupId}) async {
+Future sentGroupImageFile({String? filePath, String? groupId}) async {
   var file = File(filePath!);
   String fileName = file.path.split('/').last;
   Map<String, dynamic> data = {
@@ -112,8 +129,7 @@ Future sentGroupImageFile(
   }
 }
 
-Future sentGroupNameFile(
-    {String? groupId,String? groupName}) async {
+Future sentGroupNameFile({String? groupId, String? groupName}) async {
   Map<String, dynamic> data = {
     'server_key': serverKey,
     'id': groupId,
@@ -130,8 +146,7 @@ Future sentGroupNameFile(
   }
 }
 
-Future<bool> deleteGroup(
-    {String? groupId}) async {
+Future<bool> deleteGroup({String? groupId}) async {
   Map<String, dynamic> data = {
     'server_key': serverKey,
     'id': groupId,
@@ -142,9 +157,9 @@ Future<bool> deleteGroup(
     final response = await Dio().post('$baseUrl$updateGroupInformation$token',
         options: Options(headers: header), data: formData);
     print('sendFileMessage responce data is = ${response.data}');
-    if(response.data['api_status']==200){
+    if (response.data['api_status'] == 200) {
       return true;
-    }else{
+    } else {
       return false;
     }
   } catch (e) {
@@ -153,8 +168,7 @@ Future<bool> deleteGroup(
   return false;
 }
 
-Future updateUserCoverInformation(
-    {Map<String,dynamic>? map}) async {
+Future updateUserCoverInformation({Map<String, dynamic>? map}) async {
   FormData formData = new FormData.fromMap(map!);
   try {
     final response = await Dio().post('$baseUrl$updateUserData$token',
@@ -165,16 +179,16 @@ Future updateUserCoverInformation(
   }
 }
 
-Future createnewGroup({Map<String,dynamic>? map}) async {
-   FormData formData = new FormData.fromMap(map!);
-   try {
-     final response = await Dio().post('$baseUrl$create_group$token',
-         options: Options(headers: header), data: formData);
-     print('sendFileMessage responce data is = ${response.data}');
-     if (response.data['api_status'] != 200) {
-       snackBarFailer('${response.data['errors']['error_text']}');
-     }
-   } catch (e) {
-     print('Exception is = $e');
-   }
+Future createnewGroup({Map<String, dynamic>? map}) async {
+  FormData formData = new FormData.fromMap(map!);
+  try {
+    final response = await Dio().post('$baseUrl$create_group$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
+    if (response.data['api_status'] != 200) {
+      snackBarFailer('${response.data['errors']['error_text']}');
+    }
+  } catch (e) {
+    print('Exception is = $e');
+  }
 }

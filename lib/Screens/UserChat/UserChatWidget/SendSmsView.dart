@@ -12,12 +12,14 @@ class SendSmsView extends StatefulWidget {
   final String? userID;
   final String? path;
   final String? extention;
+  final String? replyId;
 
   const SendSmsView({
     Key? key,
     this.userID,
     this.path,
     this.extention,
+    this.replyId = '',
   }) : super(key: key);
 
   @override
@@ -55,7 +57,8 @@ class _SendSmsViewState extends State<SendSmsView> {
                                       await sentMessageAsFile(
                                               userID: widget.userID,
                                               text: captionController.text,
-                                              filePath: file.path)
+                                              filePath: file.path,
+                                              replyid: widget.replyId)
                                           .then((value) {
                                         loading.value = false;
                                         Get.back(result: 'fetch');
@@ -69,7 +72,8 @@ class _SendSmsViewState extends State<SendSmsView> {
                                       await sentMessageAsFile(
                                               userID: widget.userID,
                                               text: captionController.text,
-                                              filePath: file.path)
+                                              filePath: file.path,
+                                              replyid: widget.replyId)
                                           .then((value) {
                                         loading.value = false;
                                         Get.back(result: 'fetch');
