@@ -24,8 +24,7 @@ class TextUserChat extends StatefulWidget {
 class _TextUserChatState extends State<TextUserChat> {
   @override
   Widget build(BuildContext context) {
-    var date = DateTime.fromMillisecondsSinceEpoch(
-        int.parse("${widget.model!.time}") * 1000);
+    var date = DateTime.fromMillisecondsSinceEpoch(int.parse("${widget.model!.time}") * 1000);
     if (widget.model!.position != 'right') {
       if (widget.model!.replyId == '0') {
         return Row(
@@ -37,8 +36,7 @@ class _TextUserChatState extends State<TextUserChat> {
                 '',
                 onTap: () {
                   if (widget.model!.userData == null) {
-                    Get.to(UserChatInformation(
-                        userID: widget.model!.messageUser!.userId));
+                    Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
                   } else {
                     Get.to(UserChatInformation(
                       userID: widget.model!.userData!.userId.toString(),
@@ -53,16 +51,14 @@ class _TextUserChatState extends State<TextUserChat> {
                           ? ''
                           : '${widget.model!.userData!.avatar}'
                       : '${widget.model!.messageUser!.avatar}',
-                  placeholder: (context, url) =>
-                      Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => CachedNetworkImage(
                     imageUrl: widget.fromGroup!
                         ? widget.model!.userData == null
                             ? ''
                             : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
                         : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
-                    placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
+                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) => Icon(Icons.person),
                     fit: BoxFit.cover,
                   ),
@@ -76,9 +72,7 @@ class _TextUserChatState extends State<TextUserChat> {
             ),
             Container(
               padding: EdgeInsets.all(width / 30),
-              decoration: BoxDecoration(
-                  color: Color(0xffF3F3F3),
-                  borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
                   widget.fromGroup!
@@ -87,13 +81,8 @@ class _TextUserChatState extends State<TextUserChat> {
                             Text(
                               widget.model!.userData!.firstName!.isEmpty
                                   ? '${widget.model!.userData!.username}'
-                                  : '${widget.model!.userData!.firstName}' +
-                                      ' ${widget.model!.userData!.lastName}',
-                              style: TextStyle(
-                                  color: Colors.deepPurple,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 12),
+                                  : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                              style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
                             ),
                             SizedBox(
                               height: height / 100,
@@ -108,11 +97,7 @@ class _TextUserChatState extends State<TextUserChat> {
                       //  decrypString(
                       //      encript: '${widget.model!.text}',
                       //      pass: widget.model!.time),
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w300,
-                          fontFamily: AppFonts.segoeui,
-                          fontSize: 14),
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
                     ),
                   ),
                   SizedBox(
@@ -150,8 +135,7 @@ class _TextUserChatState extends State<TextUserChat> {
                 '',
                 onTap: () {
                   if (widget.model!.userData == null) {
-                    Get.to(UserChatInformation(
-                        userID: widget.model!.messageUser!.userId));
+                    Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
                   } else {
                     Get.to(UserChatInformation(
                       userID: widget.model!.userData!.userId.toString(),
@@ -166,16 +150,14 @@ class _TextUserChatState extends State<TextUserChat> {
                           ? ''
                           : '${widget.model!.userData!.avatar}'
                       : '${widget.model!.messageUser!.avatar}',
-                  placeholder: (context, url) =>
-                      Center(child: CircularProgressIndicator()),
+                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => CachedNetworkImage(
                     imageUrl: widget.fromGroup!
                         ? widget.model!.userData == null
                             ? ''
                             : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
                         : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
-                    placeholder: (context, url) =>
-                        Center(child: CircularProgressIndicator()),
+                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) => Icon(Icons.person),
                     fit: BoxFit.cover,
                   ),
@@ -189,9 +171,7 @@ class _TextUserChatState extends State<TextUserChat> {
             ),
             Container(
               padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
-              decoration: BoxDecoration(
-                  color: Color(0xffF3F3F3),
-                  borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
                   widget.fromGroup!
@@ -200,13 +180,8 @@ class _TextUserChatState extends State<TextUserChat> {
                             Text(
                               widget.model!.userData!.firstName!.isEmpty
                                   ? '${widget.model!.userData!.username}'
-                                  : '${widget.model!.userData!.firstName}' +
-                                      ' ${widget.model!.userData!.lastName}',
-                              style: TextStyle(
-                                  color: Colors.deepPurple,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 12),
+                                  : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                              style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
                             ),
                             SizedBox(
                               height: height / 100,
@@ -216,21 +191,14 @@ class _TextUserChatState extends State<TextUserChat> {
                       : SizedBox(),
                   Container(
                     height: height * 0.070,
-                    decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(5)),
-                    margin: EdgeInsets.only(
-                        left: width * 0.010,
-                        right: width * 0.010,
-                        top: height * 0.0050),
+                    decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                    margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
                     child: Row(children: [
                       Container(
                         height: height * 0.070,
                         width: 4,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              bottomLeft: Radius.circular(30)),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
                           color: Colors.deepPurple,
                         ),
                       ),
@@ -243,27 +211,20 @@ class _TextUserChatState extends State<TextUserChat> {
                             '',
                             radius: 10,
                             child: CachedNetworkImage(
-                              imageUrl:
-                                  "${widget.model!.reply!.messageUser!.avatar}",
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
+                              imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
+                              placeholder: (context, url) => CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
                               fit: BoxFit.cover,
                             ),
                             imageFit: BoxFit.cover,
                           ),
                           ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: width / 1.5,minWidth: 30),
+                            constraints: BoxConstraints(maxWidth: width / 1.5, minWidth: 30),
                             child: Text(
                               '${widget.model!.reply!.text}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 14),
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
                             ),
                           ),
                         ],
@@ -271,8 +232,7 @@ class _TextUserChatState extends State<TextUserChat> {
                     ]),
                   ),
                   ConstrainedBox(
-                    constraints:
-                        BoxConstraints(maxWidth: width / 1.5),
+                    constraints: BoxConstraints(maxWidth: width / 1.5),
                     child: Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: Text(
@@ -280,11 +240,7 @@ class _TextUserChatState extends State<TextUserChat> {
                         //  decrypString(
                         //      encript: '${widget.model!.text}',
                         //      pass: widget.model!.time),
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w300,
-                            fontFamily: AppFonts.segoeui,
-                            fontSize: 14),
+                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
                       ),
                     ),
                   ),
@@ -317,8 +273,7 @@ class _TextUserChatState extends State<TextUserChat> {
     } else {
       if (widget.model!.replyId == '0') {
         return Container(
-          padding: EdgeInsets.symmetric(
-              vertical: height * 0.010, horizontal: width * 0.030),
+          padding: EdgeInsets.symmetric(vertical: height * 0.010, horizontal: width * 0.030),
           decoration: BoxDecoration(
               color: widget.model!.seen != '0'
                   ? returnColorFromString(seenBackColor)
@@ -388,6 +343,544 @@ class _TextUserChatState extends State<TextUserChat> {
           ),
         );
       } else {
+        if (widget.model!.reply!.type == 'image') {
+          return Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    color: widget.model!.seen != '0'
+                        ? returnColorFromString(seenBackColor)
+                        : widget.model!.delivered != '0'
+                            ? returnColorFromString(receiveBackColor)
+                            : returnColorFromString(sentBackColor),
+                    borderRadius: BorderRadius.circular(8)),
+                child: Column(
+                  children: [
+                    Container(
+                      height: height * 0.070,
+                      decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                      margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                        Container(
+                          height: height * 0.070,
+                          width: 4,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5),
+                            CircularProfileAvatar(
+                              '',
+                              radius: 10,
+                              child: CachedNetworkImage(
+                                imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
+                                placeholder: (context, url) => CircularProgressIndicator(),
+                                errorWidget: (context, url, error) => Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              ),
+                              imageFit: BoxFit.cover,
+                            ),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: width / 1.5),
+                              child: Text(
+                                '${widget.model!.reply!.type}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(child: SizedBox()),
+                        Container(
+                          width: 50,
+                          child: CachedNetworkImage(
+                            imageUrl: '${widget.model!.reply!.media}',
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Icon(Icons.error_outline_outlined),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ]),
+                    ),
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${widget.model!.text}',
+                            style: TextStyle(
+                                color: widget.model!.seen != '0'
+                                    ? returnColorFromString(seenTextColor)
+                                    : widget.model!.delivered != '0'
+                                        ? returnColorFromString(receiveTextColor)
+                                        : returnColorFromString(sentTextColor),
+                                fontWeight: FontWeight.w300,
+                                fontFamily: AppFonts.segoeui,
+                                fontSize: 14),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(left: width / 50),
+                                child: Text(
+                                  '${dateFormat.format(date)}',
+                                  style: TextStyle(
+                                    color: widget.model!.seen != '0'
+                                        ? returnColorFromString(seenTimeColor)
+                                        : widget.model!.delivered != '0'
+                                            ? returnColorFromString(receiveTimeColor)
+                                            : returnColorFromString(sentTimeColor),
+                                    fontFamily: AppFonts.segoeui,
+                                    fontSize: 9.0,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 3,
+                              ),
+                              widget.model!.seen != '0'
+                                  ? FaIcon(
+                                      FontAwesomeIcons.checkDouble,
+                                      size: 15,
+                                      color: returnColorFromString(seenCheck),
+                                    )
+                                  : widget.model!.delivered != '0'
+                                      ? FaIcon(
+                                          FontAwesomeIcons.checkDouble,
+                                          size: 15,
+                                          color: returnColorFromString(receiveCheck),
+                                        )
+                                      : FaIcon(
+                                          FontAwesomeIcons.check,
+                                          size: 15,
+                                          color: returnColorFromString(sentCheck),
+                                        ),
+                            ],
+                          )
+                        ],
+                      ),
+                      padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
+                    ),
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              ),
+            ],
+          );
+        }
+        else{
+          if (widget.model!.reply!.type == 'file') {
+            return Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: widget.model!.seen != '0'
+                          ? returnColorFromString(seenBackColor)
+                          : widget.model!.delivered != '0'
+                          ? returnColorFromString(receiveBackColor)
+                          : returnColorFromString(sentBackColor),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Column(
+
+                    children: [
+
+                      Container(
+                        //height: height * 0.070,
+                        decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                        margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          Container(
+                            height: height * 0.070,
+                            width: 4,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                              color: Colors.deepPurple,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 5),
+                              CircularProfileAvatar(
+                                '',
+                                radius: 10,
+                                child: CachedNetworkImage(
+                                  imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
+                                  placeholder: (context, url) => CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) => Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                ),
+                                imageFit: BoxFit.cover,
+                              ),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: width / 1.5),
+                                child:
+                                Text(
+                                  '${widget.model!.reply!.media}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                        ]),
+                      ),
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${widget.model!.text}',
+                              style: TextStyle(
+                                  color: widget.model!.seen != '0'
+                                      ? returnColorFromString(seenTextColor)
+                                      : widget.model!.delivered != '0'
+                                      ? returnColorFromString(receiveTextColor)
+                                      : returnColorFromString(sentTextColor),
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 14),
+                            ),
+                            SizedBox(
+                              height: height / 100,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(left: width / 50),
+                                  child: Text(
+                                    '${dateFormat.format(date)}',
+                                    style: TextStyle(
+                                      color: widget.model!.seen != '0'
+                                          ? returnColorFromString(seenTimeColor)
+                                          : widget.model!.delivered != '0'
+                                          ? returnColorFromString(receiveTimeColor)
+                                          : returnColorFromString(sentTimeColor),
+                                      fontFamily: AppFonts.segoeui,
+                                      fontSize: 9.0,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                widget.model!.seen != '0'
+                                    ? FaIcon(
+                                  FontAwesomeIcons.checkDouble,
+                                  size: 15,
+                                  color: returnColorFromString(seenCheck),
+                                )
+                                    : widget.model!.delivered != '0'
+                                    ? FaIcon(
+                                  FontAwesomeIcons.checkDouble,
+                                  size: 15,
+                                  color: returnColorFromString(receiveCheck),
+                                )
+                                    : FaIcon(
+                                  FontAwesomeIcons.check,
+                                  size: 15,
+                                  color: returnColorFromString(sentCheck),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
+                      ),
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+              ],
+            );
+          }
+          else{
+            if (widget.model!.reply!.type == 'video') {
+              return Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: widget.model!.seen != '0'
+                            ? returnColorFromString(seenBackColor)
+                            : widget.model!.delivered != '0'
+                            ? returnColorFromString(receiveBackColor)
+                            : returnColorFromString(sentBackColor),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: height * 0.070,
+                          decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                          margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: height * 0.070,
+                                  width: 4,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                                    color: Colors.deepPurple,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 5),
+                                    CircularProfileAvatar(
+                                      '',
+                                      radius: 10,
+                                      child: CachedNetworkImage(
+                                        imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
+                                        placeholder: (context, url) => CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) => Icon(Icons.error),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      imageFit: BoxFit.cover,
+                                    ),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(maxWidth: width / 1.5),
+                                      child: Text(
+                                        '${widget.model!.reply!.type}',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(child: SizedBox()),
+                                Container(
+                                  width: 50,
+                                  color: Colors.black,
+                                  child: Icon(Icons.pause,color: Colors.white),
+                                ),
+                              ]),
+                        ),
+                        Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${widget.model!.text}',
+                                style: TextStyle(
+                                    color: widget.model!.seen != '0'
+                                        ? returnColorFromString(seenTextColor)
+                                        : widget.model!.delivered != '0'
+                                        ? returnColorFromString(receiveTextColor)
+                                        : returnColorFromString(sentTextColor),
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: AppFonts.segoeui,
+                                    fontSize: 14),
+                              ),
+                              SizedBox(
+                                height: height / 100,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(left: width / 50),
+                                    child: Text(
+                                      '${dateFormat.format(date)}',
+                                      style: TextStyle(
+                                        color: widget.model!.seen != '0'
+                                            ? returnColorFromString(seenTimeColor)
+                                            : widget.model!.delivered != '0'
+                                            ? returnColorFromString(receiveTimeColor)
+                                            : returnColorFromString(sentTimeColor),
+                                        fontFamily: AppFonts.segoeui,
+                                        fontSize: 9.0,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 3,
+                                  ),
+                                  widget.model!.seen != '0'
+                                      ? FaIcon(
+                                    FontAwesomeIcons.checkDouble,
+                                    size: 15,
+                                    color: returnColorFromString(seenCheck),
+                                  )
+                                      : widget.model!.delivered != '0'
+                                      ? FaIcon(
+                                    FontAwesomeIcons.checkDouble,
+                                    size: 15,
+                                    color: returnColorFromString(receiveCheck),
+                                  )
+                                      : FaIcon(
+                                    FontAwesomeIcons.check,
+                                    size: 15,
+                                    color: returnColorFromString(sentCheck),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
+                        ),
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                ],
+              );
+            }
+            else{
+              if (widget.model!.reply!.type == 'audio') {
+                return Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: widget.model!.seen != '0'
+                              ? returnColorFromString(seenBackColor)
+                              : widget.model!.delivered != '0'
+                              ? returnColorFromString(receiveBackColor)
+                              : returnColorFromString(sentBackColor),
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: height * 0.070,
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                            margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: height * 0.070,
+                                    width: 4,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                                      color: Colors.deepPurple,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 5),
+                                      CircularProfileAvatar(
+                                        '',
+                                        radius: 10,
+                                        child: CachedNetworkImage(
+                                          imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
+                                          placeholder: (context, url) => CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) => Icon(Icons.error),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        imageFit: BoxFit.cover,
+                                      ),
+                                      Container(
+                                        //width: 50,
+                                        //color: Colors.black,
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.mic),
+                                            Text('Voice message')
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  //Expanded(child: SizedBox()),
+                                ]),
+                          ),
+                          Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${widget.model!.text}',
+                                  style: TextStyle(
+                                      color: widget.model!.seen != '0'
+                                          ? returnColorFromString(seenTextColor)
+                                          : widget.model!.delivered != '0'
+                                          ? returnColorFromString(receiveTextColor)
+                                          : returnColorFromString(sentTextColor),
+                                      fontWeight: FontWeight.w300,
+                                      fontFamily: AppFonts.segoeui,
+                                      fontSize: 14),
+                                ),
+                                SizedBox(
+                                  height: height / 100,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(left: width / 50),
+                                      child: Text(
+                                        '${dateFormat.format(date)}',
+                                        style: TextStyle(
+                                          color: widget.model!.seen != '0'
+                                              ? returnColorFromString(seenTimeColor)
+                                              : widget.model!.delivered != '0'
+                                              ? returnColorFromString(receiveTimeColor)
+                                              : returnColorFromString(sentTimeColor),
+                                          fontFamily: AppFonts.segoeui,
+                                          fontSize: 9.0,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 3,
+                                    ),
+                                    widget.model!.seen != '0'
+                                        ? FaIcon(
+                                      FontAwesomeIcons.checkDouble,
+                                      size: 15,
+                                      color: returnColorFromString(seenCheck),
+                                    )
+                                        : widget.model!.delivered != '0'
+                                        ? FaIcon(
+                                      FontAwesomeIcons.checkDouble,
+                                      size: 15,
+                                      color: returnColorFromString(receiveCheck),
+                                    )
+                                        : FaIcon(
+                                      FontAwesomeIcons.check,
+                                      size: 15,
+                                      color: returnColorFromString(sentCheck),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
+                          ),
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    ),
+                  ],
+                );
+              }
+            }
+          }
+        }
+
+
         return Column(
           children: [
             Container(
@@ -402,21 +895,14 @@ class _TextUserChatState extends State<TextUserChat> {
                 children: [
                   Container(
                     height: height * 0.070,
-                    decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(5)),
-                    margin: EdgeInsets.only(
-                        left: width * 0.010,
-                        right: width * 0.010,
-                        top: height * 0.0050),
+                    decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                    margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
                     child: Row(children: [
                       Container(
                         height: height * 0.070,
                         width: 4,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              bottomLeft: Radius.circular(30)),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
                           color: Colors.deepPurple,
                         ),
                       ),
@@ -429,12 +915,9 @@ class _TextUserChatState extends State<TextUserChat> {
                             '',
                             radius: 10,
                             child: CachedNetworkImage(
-                              imageUrl:
-                                  "${widget.model!.reply!.messageUser!.avatar}",
-                              placeholder: (context, url) =>
-                                  CircularProgressIndicator(),
-                              errorWidget: (context, url, error) =>
-                                  Icon(Icons.error),
+                              imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
+                              placeholder: (context, url) => CircularProgressIndicator(),
+                              errorWidget: (context, url, error) => Icon(Icons.error),
                               fit: BoxFit.cover,
                             ),
                             imageFit: BoxFit.cover,
@@ -445,11 +928,7 @@ class _TextUserChatState extends State<TextUserChat> {
                               '${widget.model!.reply!.text}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 14),
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
                             ),
                           ),
                         ],
@@ -486,10 +965,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                   color: widget.model!.seen != '0'
                                       ? returnColorFromString(seenTimeColor)
                                       : widget.model!.delivered != '0'
-                                          ? returnColorFromString(
-                                              receiveTimeColor)
-                                          : returnColorFromString(
-                                              sentTimeColor),
+                                          ? returnColorFromString(receiveTimeColor)
+                                          : returnColorFromString(sentTimeColor),
                                   fontFamily: AppFonts.segoeui,
                                   fontSize: 9.0,
                                 ),
@@ -508,8 +985,7 @@ class _TextUserChatState extends State<TextUserChat> {
                                     ? FaIcon(
                                         FontAwesomeIcons.checkDouble,
                                         size: 15,
-                                        color:
-                                            returnColorFromString(receiveCheck),
+                                        color: returnColorFromString(receiveCheck),
                                       )
                                     : FaIcon(
                                         FontAwesomeIcons.check,
@@ -520,11 +996,7 @@ class _TextUserChatState extends State<TextUserChat> {
                         )
                       ],
                     ),
-                    padding: EdgeInsets.only(
-                        left: width * 0.030,
-                        bottom: height * 0.010,
-                        right: width * 0.030,
-                        top: height * 0.0050),
+                    padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                   ),
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
