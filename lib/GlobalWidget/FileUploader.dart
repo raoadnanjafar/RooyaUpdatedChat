@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/BaseURL.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:rooya/GlobalWidget/SnackBarApp.dart';
 
 Future sendFileMessage(Map<String, dynamic> mapdata) async {
   FormData formData = new FormData.fromMap(mapdata);
@@ -164,4 +165,16 @@ Future updateUserCoverInformation(
   }
 }
 
-
+Future createnewGroup({Map<String,dynamic>? map}) async {
+   FormData formData = new FormData.fromMap(map!);
+   try {
+     final response = await Dio().post('$baseUrl$create_group$token',
+         options: Options(headers: header), data: formData);
+     print('sendFileMessage responce data is = ${response.data}');
+     if (response.data['api_status'] != 200) {
+       snackBarFailer('${response.data['errors']['error_text']}');
+     }
+   } catch (e) {
+     print('Exception is = $e');
+   }
+}

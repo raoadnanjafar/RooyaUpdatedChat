@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:dio/dio.dart' as dio;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/BaseURL.dart';
@@ -127,8 +129,9 @@ class _GroupScreenState extends State<GroupScreen> {
                                               i < listOfSelectedMember.length;
                                               i++) {
                                             deleteGroup(
-                                                groupId: listOfSelectedMember[i]
-                                                    .groupId)
+                                                    groupId:
+                                                        listOfSelectedMember[i]
+                                                            .groupId)
                                                 .then((value) {
                                               if (value == true) {
                                                 controller.listofChat.remove(
@@ -554,11 +557,12 @@ class _GroupScreenState extends State<GroupScreen> {
       // floatingActionButton: CustomButton(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          createGroup(context, controller.friendList.value, (Map smap) async {
+          createGroup(context, controller.friendList.value,
+              (Map<String, dynamic> smap) async {
             setState(() {
               isloading = true;
             });
-            await ApiUtils.createGroup(map: smap);
+            await createnewGroup(map: smap);
             setState(() {
               isloading = false;
             });
@@ -573,10 +577,11 @@ class _GroupScreenState extends State<GroupScreen> {
     );
   }
 
-  createGroup(
-      BuildContext context, List<Following> friendList, Function(Map) mapData) {
+  createGroup(BuildContext context, List<Following> friendList,
+      Function(Map<String, dynamic>) mapData) {
     var listofmap = [];
     TextEditingController groupNameController = TextEditingController();
+    PickedFile? pickedFile;
     return showDialog(
         context: context,
         builder: (context) {
@@ -585,13 +590,36 @@ class _GroupScreenState extends State<GroupScreen> {
               content: StatefulBuilder(
                 builder: (context, setState) {
                   return Container(
-                      height: 500,
+                      height: 600,
                       width: 400,
                       //color: Colors.green,
                       child: Column(children: [
                         Text(
                           'Create Group',
                           style: TextStyle(color: Colors.green, fontSize: 16),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        CircularProfileAvatar(
+                          '',
+                          radius: 35,
+                          borderWidth: 2,
+                          borderColor: buttonColor,
+                          child: pickedFile == null
+                              ? Center(
+                                  child: Icon(Icons.person, size: 35),
+                                )
+                              : Image.file(File(pickedFile!.path),
+                                  fit: BoxFit.cover),
+                          onTap: () async {
+                            final ImagePicker _picker = ImagePicker();
+                            pickedFile = await _picker.getImage(
+                              source: ImageSource.gallery,
+                            );
+                            setState(() {});
+                          },
+                          imageFit: BoxFit.cover,
                         ),
                         SizedBox(
                           height: 12,
@@ -641,119 +669,123 @@ class _GroupScreenState extends State<GroupScreen> {
                         SizedBox(
                           height: 12,
                         ),
-                        Container(
-                          height: 300,
-                          color: Colors.white,
-                          child: friendList.isEmpty
-                              ? Center(
-                                  child: Text('Empty list'),
-                                )
-                              : ListView.builder(
-                                  itemCount: friendList.length,
-                                  itemBuilder: (context, i) => Column(
-                                    children: [
-                                      ListTile(
-                                        leading: CircularProfileAvatar(
-                                          '',
-                                          radius: 23,
-                                          child: Image.network(
-                                            '${friendList[i].avatar}',
-                                            fit: BoxFit.cover,
+                        Expanded(
+                          child: Container(
+                            color: Colors.white,
+                            child: friendList.isEmpty
+                                ? Center(
+                                    child: Text('Empty list'),
+                                  )
+                                : ListView.builder(
+                                    itemCount: friendList.length,
+                                    itemBuilder: (context, i) => Column(
+                                      children: [
+                                        ListTile(
+                                          leading: CircularProfileAvatar(
+                                            '',
+                                            radius: 23,
+                                            child: Image.network(
+                                              '${friendList[i].avatar}',
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
-                                        ),
-                                        title: Text(
-                                          '${friendList[i].firstName}'.isEmpty
-                                              ? '${'${friendList[i].username}'}'
-                                              : '${friendList[i].firstName} ${friendList[i].lastName}',
-                                          style: TextStyle(
-                                              fontFamily: AppFonts.segoeui,
-                                              fontSize: 13),
-                                        ),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            InkWell(
-                                              child: Container(
-                                                height: 25,
-                                                width: 60,
-                                                child: Center(
-                                                    child: Text(
-                                                  !listofmap.contains(
-                                                          friendList[i]
-                                                              .userId
-                                                              .toString())
-                                                      ? 'Add'
-                                                      : 'Cancel',
-                                                  style: TextStyle(
+                                          title: Text(
+                                            '${friendList[i].firstName}'.isEmpty
+                                                ? '${'${friendList[i].username}'}'
+                                                : '${friendList[i].firstName} ${friendList[i].lastName}',
+                                            style: TextStyle(
+                                                fontFamily: AppFonts.segoeui,
+                                                fontSize: 13),
+                                          ),
+                                          trailing: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              InkWell(
+                                                child: Container(
+                                                  height: 25,
+                                                  width: 60,
+                                                  child: Center(
+                                                      child: Text(
+                                                    !listofmap.contains(
+                                                            friendList[i]
+                                                                .userId
+                                                                .toString())
+                                                        ? 'Add'
+                                                        : 'Cancel',
+                                                    style: TextStyle(
+                                                        color: !listofmap.contains(
+                                                                friendList[i]
+                                                                    .userId
+                                                                    .toString())
+                                                            ? Colors.green
+                                                            : Colors.white,
+                                                        fontFamily:
+                                                            AppFonts.segoeui,
+                                                        fontSize: 11),
+                                                  )),
+                                                  decoration: BoxDecoration(
                                                       color: !listofmap.contains(
                                                               friendList[i]
                                                                   .userId
                                                                   .toString())
-                                                          ? Colors.green
-                                                          : Colors.white,
-                                                      fontFamily:
-                                                          AppFonts.segoeui,
-                                                      fontSize: 11),
-                                                )),
-                                                decoration: BoxDecoration(
-                                                    color: !listofmap.contains(
+                                                          ? Colors.transparent
+                                                          : Colors.green,
+                                                      border: Border.all(
+                                                          color: Colors.green,
+                                                          width: 1),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20)),
+                                                ),
+                                                onTap: () {
+                                                  listofmap.add(friendList[i]
+                                                      .userId
+                                                      .toString()
+                                                      .trim());
+                                                  setState(() {});
+                                                },
+                                              ),
+                                              !listofmap.contains(friendList[i]
+                                                      .userId
+                                                      .toString())
+                                                  ? SizedBox(
+                                                      height: 25,
+                                                      width: 25,
+                                                    )
+                                                  : InkWell(
+                                                      onTap: () {
+                                                        listofmap.remove(
                                                             friendList[i]
                                                                 .userId
-                                                                .toString())
-                                                        ? Colors.transparent
-                                                        : Colors.green,
-                                                    border: Border.all(
-                                                        color: Colors.green,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                              ),
-                                              onTap: () {
-                                                listofmap.add(friendList[i]
-                                                    .userId
-                                                    .toString()
-                                                    .trim());
-                                                setState(() {});
-                                              },
-                                            ),
-                                            !listofmap.contains(friendList[i]
-                                                    .userId
-                                                    .toString())
-                                                ? SizedBox(
-                                                    height: 25,
-                                                    width: 25,
-                                                  )
-                                                : InkWell(
-                                                    onTap: () {
-                                                      listofmap.remove(
-                                                          friendList[i]
-                                                              .userId
-                                                              .toString());
-                                                      setState(() {});
-                                                    },
-                                                    child: Container(
-                                                      height: 22,
-                                                      width: 22,
-                                                      margin: EdgeInsets.all(3),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.red,
-                                                          shape:
-                                                              BoxShape.circle),
-                                                      child: Center(
-                                                          child: Icon(
-                                                        Icons.close,
-                                                        size: 15,
-                                                        color: Colors.white,
-                                                      )),
+                                                                .toString());
+                                                        setState(() {});
+                                                      },
+                                                      child: Container(
+                                                        height: 22,
+                                                        width: 22,
+                                                        margin:
+                                                            EdgeInsets.all(3),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                color:
+                                                                    Colors.red,
+                                                                shape: BoxShape
+                                                                    .circle),
+                                                        child: Center(
+                                                            child: Icon(
+                                                          Icons.close,
+                                                          size: 15,
+                                                          color: Colors.white,
+                                                        )),
+                                                      ),
                                                     ),
-                                                  ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
+                          ),
                         ),
                         SizedBox(
                           height: 18,
@@ -772,22 +804,30 @@ class _GroupScreenState extends State<GroupScreen> {
                               print('Nameeeeeeeee$ids ');
                             }
                             print('Nameeeeeeeee ');
-                            mapData.call({
-                              'server_key': serverKey,
-                              'type': 'create',
-                              'group_name':
-                                  '${groupNameController.text.trim()}',
-                              'parts': ids
-                            });
-
+                            if (pickedFile != null) {
+                              String fileName =
+                                  pickedFile!.path.split('/').last;
+                              mapData.call({
+                                'server_key': serverKey,
+                                'type': 'create',
+                                'group_name':
+                                    '${groupNameController.text.trim()}',
+                                'parts': ids,
+                                'avatar': await dio.MultipartFile.fromFile(
+                                  '${pickedFile!.path}',
+                                  filename: '$fileName',
+                                ),
+                              });
+                            } else {
+                              mapData.call({
+                                'server_key': serverKey,
+                                'type': 'create',
+                                'group_name':
+                                    '${groupNameController.text.trim()}',
+                                'parts': ids,
+                              });
+                            }
                             Navigator.of(context).pop();
-                            //   } else {
-                            //     snackBarFailer('Please Add Group name First');
-                            //   }
-                            // } else {
-                            //   snackBarFailer(
-                            //       'Please select group member first');
-                            // }
                           },
                           child: Container(
                             height: 40,

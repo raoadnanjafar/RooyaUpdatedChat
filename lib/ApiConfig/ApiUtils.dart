@@ -141,7 +141,7 @@ class ApiUtils {
       var data = jsonDecode(responce.body);
       print('RemoveAdminpost is = $data');
       if (data['api_status'] != 200) {
-        snackBarFailer('${data['error_text']}');
+        snackBarFailer('${data['errors']['error_text']}');
       }
     } catch (e) {
       print('Exception is = $e');
@@ -218,7 +218,7 @@ class ApiUtils {
         return modellist;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return OneToOneChatOuterModel(apiStatus: 400);
       }
@@ -243,7 +243,7 @@ class ApiUtils {
         return modellist;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return [];
       }
@@ -265,7 +265,7 @@ class ApiUtils {
         return modellistt;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return storyViewModel(users: [],);
       }
@@ -288,7 +288,7 @@ class ApiUtils {
         return modellist;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return [];
       }
@@ -310,7 +310,7 @@ class ApiUtils {
         return modellist;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return [];
       }
@@ -330,7 +330,7 @@ class ApiUtils {
         return true;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return false;
       }
@@ -355,7 +355,7 @@ class ApiUtils {
         return modellist;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return [];
       }
@@ -381,7 +381,7 @@ class ApiUtils {
         return model;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         log('group info Data not fine');
         return UserInfoModel();
@@ -392,20 +392,6 @@ class ApiUtils {
     return UserInfoModel();
   }
 
-  static createGroup({Map? map}) async {
-    var url = Uri.parse('$baseUrl$create_group$token');
-    try {
-      var responce = await http.post(url, body: map);
-      var data = jsonDecode(responce.body);
-      print('createGroupByMember = $data');
-      if (data['api_status'] != 200) {
-        snackBarFailer('${data['error_text']}');
-      }
-    } catch (e) {
-      print('Exception is = $e');
-    }
-  }
-
   static addGroupMember({Map? map}) async {
     var url = Uri.parse('$baseUrl$addMemberToGroup$token');
     try {
@@ -413,7 +399,7 @@ class ApiUtils {
       var data = jsonDecode(responce.body);
       print('addGroupMember = $data');
       if (data['api_status'] != 200) {
-        snackBarFailer('${data['error_text']}');
+        snackBarFailer('${data['errors']['error_text']}');
       }
     } catch (e) {
       print('Exception is = $e');
@@ -453,7 +439,7 @@ class ApiUtils {
         return modellist.data!.following!;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return [];
       }
@@ -476,7 +462,7 @@ class ApiUtils {
         return modellist.messages!;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return UserChatModel(apiStatus: 400, messages: []).messages!;
       }
@@ -493,7 +479,7 @@ class ApiUtils {
       var data = jsonDecode(responce.body);
       print('send message is = $data');
       if (data['api_status'] != 200) {
-        snackBarFailer('${data['error_text']}');
+        snackBarFailer('${data['errors']['error_text']}');
       }
     } catch (e) {
       print('Exception is = $e');
@@ -507,7 +493,7 @@ class ApiUtils {
       var data = jsonDecode(responce.body);
       print('deleteConversation = $data');
       if (data['api_status'] != 200) {
-        snackBarFailer('${data['error_text']}');
+        snackBarFailer('${data['errors']['error_text']}');
       }
     } catch (e) {
       print('Exception is = $e');
@@ -538,7 +524,7 @@ class ApiUtils {
       var data = jsonDecode(responce.body);
       print('blockUnblockUser = $data');
       if (data['api_status'] != 200) {
-        snackBarFailer('${data['error_text']}');
+        snackBarFailer('${data['errors']['error_text']}');
       }
     } catch (e) {
       print('Exception is = $e');
@@ -558,7 +544,7 @@ class ApiUtils {
         return modellist.data!.messages!;
       } else {
         if (data['api_status'] != 200) {
-          snackBarFailer('${data['error_text']}');
+          snackBarFailer('${data['errors']['error_text']}');
         }
         return UserChatModel(apiStatus: 400, messages: []).messages!;
       }

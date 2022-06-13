@@ -209,240 +209,271 @@ class _UserChatState extends State<UserChat>
               width: width,
               child: Column(
                 children: [
-                 Material(child:  selectedOneToOneChat.isNotEmpty
-                     ? Container(
-                   decoration: BoxDecoration(color: primaryColor),
-                   child: Row(
-                     children: [
-                       IconButton(
-                           onPressed: () {
-                             selectedOneToOneChat.value = <Messages>[];
-                             setState(() {});
-                           },
-                           icon: Icon(Icons.clear)),
-                       Text('${selectedOneToOneChat.length}'),
-                       Expanded(
-                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.end,
-                             children: [
-                               IconButton(
-                                 onPressed: () {},
-                                 icon: Icon(
-                                   Icons.edit,
-                                   size: 20,
-                                 ),
-                               ),
-                               IconButton(
-                                 onPressed: () {},
-                                 icon: Icon(
-                                   Icons.redo,
-                                   size: 20,
-                                 ),
-                               ),
-                               Visibility(
-                                 visible: selectedOneToOneChat.length == 1
-                                     ? true
-                                     : false,
-                                 child: IconButton(
-                                   onPressed: () {
-                                     Clipboard.setData(ClipboardData(
-                                         text:
-                                         "${selectedOneToOneChat[0].text}"));
-                                     ScaffoldMessenger.of(context)
-                                         .showSnackBar(SnackBar(
-                                         content: Text("Coped"),
-                                         duration:
-                                         Duration(seconds: 1)));
-                                     selectedOneToOneChat.value =
-                                     <Messages>[];
-                                     setState(() {});
-                                   },
-                                   icon: Icon(
-                                     Icons.copy,
-                                     size: 20,
-                                   ),
-                                 ),
-                               ),
-                               IconButton(
-                                 onPressed: () async {
-                                   await showAlertDialog(
-                                       context: context,
-                                       cancel: () {
-                                         Navigator.of(context).pop();
-                                       },
-                                       done: () {
-                                         for (var i = 0;
-                                         i < selectedOneToOneChat.length;
-                                         i++) {
-                                           Map payLoad = {
-                                             'server_key': serverKey,
-                                             'message_id':
-                                             '${selectedOneToOneChat[i].id}'
-                                           };
-                                           ApiUtils.removeMessageApi(
-                                               map: payLoad);
-                                           getcontroller!.userChat.remove(
-                                               selectedOneToOneChat[i]);
-                                         }
-                                         selectedOneToOneChat.clear();
-                                         setState(() {});
-                                       });
-                                 },
-                                 icon: Icon(
-                                   CupertinoIcons.delete,
-                                   size: 20,
-                                 ),
-                               ),
-                               SizedBox(
-                                 width: 5,
-                               )
-                             ],
-                           ))
-                     ],
-                   ),
-                 )
-                     : Row(
-                   children: [
-                     IconButton(
-                       icon: Icon(
-                         Icons.arrow_back,
-                         color: Colors.black,
-                       ),
-                       onPressed: () {
-                         Get.back();
-                       },
-                     ),
-                     CircularProfileAvatar(
-                       '${widget.profilePic}',
-                       borderColor: Colors.black26,
-                       borderWidth: 0.5,
-                       onTap: () {
-                         Get.to(Photo_View_Class(
-                           url: '${widget.profilePic}',
-                         ));
-                       },
-                       radius: height / 40,
-                     ),
-                     SizedBox(
-                       width: 10,
-                     ),
-                     Expanded(
-                       child: InkWell(
-                         onTap: () {
-                           if (!widget.fromGroup!) {
-                             Get.to(UserChatInformation(
-                                 userID: widget.groupID));
-                           } else {
-                             Get.to(GroupInformation(
-                               groupModel: widget.groupModel,
-                               groupID: '',
-                             ));
-                           }
-                         },
-                         child: Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                           children: [
-                             Text(
-                               '${widget.name}',
-                               style: TextStyle(
-                                   fontSize: 14, color: Colors.black),
-                             ),
-                             Obx(
-                                   () => getcontroller!.isReciverTyping.value
-                                   ? Text(
-                                 'Typing ...',
-                                 style: TextStyle(
-                                     fontSize: 9,
-                                     color: Colors.black26),
-                               )
-                                   : getcontroller!.isOnline.value
-                                   ? Text(
-                                 'Online',
-                                 style: TextStyle(
-                                     fontSize: 9,
-                                     color: Colors.black26),
-                               )
-                                   : SizedBox(),
-                             )
-                           ],
-                         ),
-                       ),
-                     ),
-                     widget.fromGroup!
-                         ? PopupMenuButton(
-                       child: Icon(Icons.more_vert),
-                       itemBuilder: (context) {
-                         return ['Leave Group'].map((e) {
-                           return PopupMenuItem(
-                             value: e,
-                             onTap: () async {
-                               await showAlertDialog(
-                                   context: context,
-                                   content:
-                                   'You want to leave the Group?',
-                                   cancel: () {
-                                     Navigator.of(context).pop();
-                                   },
-                                   done: () async {
-                                     Map map = {
-                                       'server_key': serverKey,
-                                       'type': 'leave',
-                                       'id': widget.groupID
-                                     };
-                                     bool v =
-                                     await ApiUtils.leaveGroup(
-                                         map: map);
-                                     if (v) {
-                                       Navigator.of(context).pop();
-                                       Navigator.of(context).pop();
-                                     } else {
-                                       snackBarFailer(
-                                           'Admin did not leave the group');
-                                     }
-                                   });
-                               setState(() {});
-                             },
-                             child: Text('$e'),
-                           );
-                         }).toList();
-                       },
-                     )
-                         : PopupMenuButton(
-                       child: Icon(Icons.more_vert),
-                       itemBuilder: (context) {
-                         return ['Block'].map((e) {
-                           return PopupMenuItem(
-                             value: e,
-                             onTap: () async {
-                               await showAlertDialog(
-                                   context: context,
-                                   content:
-                                   'You want to block the User?',
-                                   cancel: () {
-                                     Navigator.of(context).pop();
-                                   },
-                                   done: () async {
-                                     Map map = {
-                                       'server_key': serverKey,
-                                       'user_id': widget.groupID,
-                                       'block_action': 'block'
-                                     };
-                                     await ApiUtils
-                                         .blockUnblockUser(
-                                         map: map);
-                                     Navigator.of(context).pop();
-                                     Navigator.of(context).pop();
-                                   });
-                               setState(() {});
-                             },
-                             child: Text('$e'),
-                           );
-                         }).toList();
-                       },
-                     ),
-                     SizedBox(width: 5),
-                   ],
-                 ),elevation:1 ),
+                  Material(
+                      child: selectedOneToOneChat.isNotEmpty
+                          ? Container(
+                              decoration: BoxDecoration(color: primaryColor),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        selectedOneToOneChat.value =
+                                            <Messages>[];
+                                        setState(() {});
+                                      },
+                                      icon: Icon(Icons.clear)),
+                                  Text('${selectedOneToOneChat.length}'),
+                                  Expanded(
+                                      child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.edit,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.redo,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible:
+                                            selectedOneToOneChat.length == 1
+                                                ? true
+                                                : false,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            Clipboard.setData(ClipboardData(
+                                                text:
+                                                    "${selectedOneToOneChat[0].text}"));
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    content: Text("Coped"),
+                                                    duration:
+                                                        Duration(seconds: 1)));
+                                            selectedOneToOneChat.value =
+                                                <Messages>[];
+                                            setState(() {});
+                                          },
+                                          icon: Icon(
+                                            Icons.copy,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () async {
+                                          await showAlertDialog(
+                                              context: context,
+                                              cancel: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              done: () {
+                                                for (var i = 0;
+                                                    i <
+                                                        selectedOneToOneChat
+                                                            .length;
+                                                    i++) {
+                                                  Map payLoad = {
+                                                    'server_key': serverKey,
+                                                    'message_id':
+                                                        '${selectedOneToOneChat[i].id}'
+                                                  };
+                                                  ApiUtils.removeMessageApi(
+                                                      map: payLoad);
+                                                  getcontroller!.userChat
+                                                      .remove(
+                                                          selectedOneToOneChat[
+                                                              i]);
+                                                }
+                                                selectedOneToOneChat.clear();
+                                                setState(() {});
+                                              });
+                                        },
+                                        icon: Icon(
+                                          CupertinoIcons.delete,
+                                          size: 20,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      )
+                                    ],
+                                  ))
+                                ],
+                              ),
+                            )
+                          : Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                ),
+                                CircularProfileAvatar(
+                                  '${widget.profilePic}',
+                                  borderColor: Colors.black26,
+                                  borderWidth: 0.5,
+                                  onTap: () {
+                                    Get.to(Photo_View_Class(
+                                      url: '${widget.profilePic}',
+                                    ));
+                                  },
+                                  radius: height / 40,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (!widget.fromGroup!) {
+                                        Get.to(UserChatInformation(
+                                            userID: widget.groupID));
+                                      } else {
+                                        Get.to(GroupInformation(
+                                          groupModel: widget.groupModel,
+                                          groupID: '',
+                                        ));
+                                      }
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${widget.name}',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black),
+                                        ),
+                                        Obx(
+                                          () => getcontroller!
+                                                  .isReciverTyping.value
+                                              ? Text(
+                                                  'Typing ...',
+                                                  style: TextStyle(
+                                                      fontSize: 9,
+                                                      color: Colors.black26),
+                                                )
+                                              : getcontroller!.isOnline.value
+                                                  ? Text(
+                                                      'Online',
+                                                      style: TextStyle(
+                                                          fontSize: 9,
+                                                          color:
+                                                              Colors.black26),
+                                                    )
+                                                  : SizedBox(),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                widget.fromGroup!
+                                    ? PopupMenuButton(
+                                        child: Icon(Icons.more_vert),
+                                        itemBuilder: (context) {
+                                          return ['Leave Group'].map((e) {
+                                            return PopupMenuItem(
+                                              value: e,
+                                              onTap: () async {
+                                                Future.delayed(
+                                                    Duration(seconds: 0),
+                                                    () async {
+                                                  await showAlertDialog(
+                                                      context: context,
+                                                      content:
+                                                          'You want to leave the it?',
+                                                      cancel: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      done: () async {
+                                                        Map map = {
+                                                          'server_key':
+                                                              serverKey,
+                                                          'type': 'leave',
+                                                          'id': widget.groupID
+                                                        };
+                                                        bool v = await ApiUtils
+                                                            .leaveGroup(
+                                                                map: map);
+                                                        if (v) {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        } else {
+                                                          snackBarFailer(
+                                                              'Admin did not leave the group');
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        }
+                                                      });
+                                                  setState(() {});
+                                                });
+                                              },
+                                              child: Text('$e'),
+                                            );
+                                          }).toList();
+                                        },
+                                      )
+                                    : PopupMenuButton(
+                                        child: Icon(Icons.more_vert),
+                                        itemBuilder: (context) {
+                                          return ['Block'].map((e) {
+                                            return PopupMenuItem(
+                                              value: e,
+                                              onTap: () async {
+                                                Future.delayed(Duration(),
+                                                    () async {
+                                                  await showAlertDialog(
+                                                      context: context,
+                                                      content:
+                                                          'You want to block the User?',
+                                                      cancel: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      done: () async {
+                                                        Map map = {
+                                                          'server_key':
+                                                              serverKey,
+                                                          'user_id':
+                                                              widget.groupID,
+                                                          'block_action':
+                                                              'block'
+                                                        };
+                                                        await ApiUtils
+                                                            .blockUnblockUser(
+                                                                map: map);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                  setState(() {});
+                                                });
+                                              },
+                                              child: Text('$e'),
+                                            );
+                                          }).toList();
+                                        },
+                                      ),
+                                SizedBox(width: 5),
+                              ],
+                            ),
+                      elevation: 1),
                   Expanded(
                       child: Obx(() => Container(
                             child: ListView.builder(
@@ -1046,9 +1077,9 @@ class _UserChatState extends State<UserChat>
                                                                                                   fromGroup: widget.fromGroup,
                                                                                                 )
                                                                                               : TextUserChat(
-                                                                                                      model: getcontroller!.userChat[i],
-                                                                                                      fromGroup: widget.fromGroup,
-                                                                                                    ),
+                                                                                                  model: getcontroller!.userChat[i],
+                                                                                                  fromGroup: widget.fromGroup,
+                                                                                                ),
                                                                       SizedBox(
                                                                         height: height /
                                                                             200,

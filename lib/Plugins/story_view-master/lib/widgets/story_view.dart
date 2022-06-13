@@ -404,10 +404,11 @@ class StoryView extends StatefulWidget {
 
   // Controls the playback of the stories
   final StoryController controller;
-
+  final Function(int)? currentIndex;
   StoryView({
     required this.storyItems,
     required this.controller,
+    required this.currentIndex,
     this.onComplete,
     this.onStoryShow,
     this.progressPosition = ProgressPosition.top,
@@ -631,9 +632,13 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   vertical: 8,
                 ),
                 child: PageBar(
-                  widget.storyItems
-                      .map((it) => PageData(it!.duration, it.shown))
-                      .toList(),
+                  widget.storyItems.map((it) {
+                    int index=widget.storyItems.indexOf(it);
+                    if(it!.shown){
+                      widget.currentIndex!.call(index);
+                    }
+                    return PageData(it.duration, it.shown);
+                  }).toList(),
                   this._currentAnimation,
                   key: UniqueKey(),
                   indicatorHeight: widget.inline
@@ -726,7 +731,6 @@ class PageBar extends StatefulWidget {
   final List<PageData> pages;
   final Animation<double>? animation;
   final IndicatorHeight indicatorHeight;
-
   PageBar(
     this.pages,
     this.animation, {

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,8 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/BaseURL.dart';
@@ -597,11 +600,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                 heroTag: "btn2",
                 onPressed: () async {
                   createGroup(context, controller.friendList.value,
-                      (Map smap) async {
+                      (Map<String, dynamic> smap) async {
                     setState(() {
                       isloading = true;
                     });
-                    await ApiUtils.createGroup(map: smap);
+                    await createnewGroup(map: smap);
                     setState(() {
                       isloading = false;
                     });
@@ -621,8 +624,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
   }
 
   bool public = true;
-  createGroup(
-      BuildContext context, List<Following> friendList, Function(Map) mapData) {
+  createGroup(BuildContext context, List<Following> friendList,
+      Function(Map<String, dynamic>) mapData) {
     public = true;
     var listofmap = [];
     TextEditingController groupNameController = TextEditingController();
@@ -631,6 +634,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     double? lat;
     double? lng;
     String address;
+    PickedFile? pickedFile;
     return showDialog(
         context: context,
         builder: (context) {
@@ -639,13 +643,36 @@ class _RoomsScreenState extends State<RoomsScreen> {
               content: StatefulBuilder(
                 builder: (context, setState) {
                   return Container(
-                      height: 500,
+                      height: 600,
                       width: 400,
                       //color: Colors.green,
                       child: Column(children: [
                         Text(
                           'Create Room',
                           style: TextStyle(color: Colors.green, fontSize: 16),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        CircularProfileAvatar(
+                          '',
+                          radius: 35,
+                          borderWidth: 2,
+                          borderColor: buttonColor,
+                          child: pickedFile == null
+                              ? Center(
+                                  child: Icon(Icons.person, size: 35),
+                                )
+                              : Image.file(File(pickedFile!.path),
+                                  fit: BoxFit.cover),
+                          onTap: () async {
+                            final ImagePicker _picker = ImagePicker();
+                            pickedFile = await _picker.getImage(
+                              source: ImageSource.gallery,
+                            );
+                            setState(() {});
+                          },
+                          imageFit: BoxFit.cover,
                         ),
                         SizedBox(
                           height: 12,
@@ -667,7 +694,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: 12,
+                          height: 10,
+                        ),
+                        Text(
+                          'Search your place otherwise Room will created with current location',
+                          style: TextStyle(
+                              fontFamily: AppFonts.segoeui, fontSize: 12),
+                        ),
+                        SizedBox(
+                          height: 10,
                         ),
                         Container(
                           height: 45,
@@ -960,32 +995,74 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                   ids = ids + '$i,';
                                 }
                               }
-                              if (public) {
-                                mapData.call({
-                                  'server_key': serverKey,
-                                  'type': 'create',
-                                  'group_name':
-                                      '${groupNameController.text.trim()}',
-                                  'parts': ids,
-                                  'variant': 'room',
-                                  'privacy': 'public',
-                                  'lat': lat.toString(),
-                                  'lng': lng.toString()
-                                });
+                              if (pickedFile != null) {
+                                String fileName =
+                                    pickedFile!.path.split('/').last;
+                                if (public) {
+                                  mapData.call({
+                                    'server_key': serverKey,
+                                    'type': 'create',
+                                    'group_name':
+                                        '${groupNameController.text.trim()}',
+                                    'parts': ids,
+                                    'variant': 'room',
+                                    'privacy': 'public',
+                                    'lat': lat.toString(),
+                                    'lng': lng.toString(),
+                                    'avatar': await dio.MultipartFile.fromFile(
+                                      '${pickedFile!.path}',
+                                      filename: '$fileName',
+                                    ),
+                                  });
+                                } else {
+                                  mapData.call({
+                                    'server_key': serverKey,
+                                    'type': 'create',
+                                    'group_name':
+                                        '${groupNameController.text.trim()}',
+                                    'parts': ids,
+                                    'variant': 'room',
+                                    'privacy': 'private',
+                                    'password': passwordController.text
+                                        .trim()
+                                        .toString(),
+                                    'lat': lat.toString(),
+                                    'lng': lng.toString(),
+                                    'avatar': await dio.MultipartFile.fromFile(
+                                      '${pickedFile!.path}',
+                                      filename: '$fileName',
+                                    ),
+                                  });
+                                }
                               } else {
-                                mapData.call({
-                                  'server_key': serverKey,
-                                  'type': 'create',
-                                  'group_name':
-                                      '${groupNameController.text.trim()}',
-                                  'parts': ids,
-                                  'variant': 'room',
-                                  'privacy': 'private',
-                                  'password':
-                                      passwordController.text.trim().toString(),
-                                  'lat': lat.toString(),
-                                  'lng': lng.toString()
-                                });
+                                if (public) {
+                                  mapData.call({
+                                    'server_key': serverKey,
+                                    'type': 'create',
+                                    'group_name':
+                                        '${groupNameController.text.trim()}',
+                                    'parts': ids,
+                                    'variant': 'room',
+                                    'privacy': 'public',
+                                    'lat': lat.toString(),
+                                    'lng': lng.toString()
+                                  });
+                                } else {
+                                  mapData.call({
+                                    'server_key': serverKey,
+                                    'type': 'create',
+                                    'group_name':
+                                        '${groupNameController.text.trim()}',
+                                    'parts': ids,
+                                    'variant': 'room',
+                                    'privacy': 'private',
+                                    'password': passwordController.text
+                                        .trim()
+                                        .toString(),
+                                    'lat': lat.toString(),
+                                    'lng': lng.toString()
+                                  });
+                                }
                               }
                               Navigator.of(context).pop();
                             } else {
