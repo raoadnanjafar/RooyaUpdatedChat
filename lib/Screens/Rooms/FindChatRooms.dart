@@ -233,6 +233,23 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                         current_per = value;
                       });
                     },
+                    onChangeEnd: (value) async {
+                      setState(() {
+                        current_per = value;
+                      });
+                      controller.loadChat.value = false;
+                      await controller.getGroupList(mapData: {
+                        'server_key': serverKey,
+                        'type': 'get_all',
+                        'privacy': 'private',
+                        'lat': '$lat',
+                        'lng': '$lng',
+                        'variant': 'room',
+                        'distance': '${current_per.toInt()}'
+                      });
+                      controller.loadChat.value = true;
+                      setState(() {});
+                    },
                   ),
                 ),
                 Text('${current_per.toInt()} km')

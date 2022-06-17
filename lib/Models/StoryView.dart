@@ -6,6 +6,7 @@ import 'package:rooya/Utils/text_filed/app_font.dart';
 import '../GlobalWidget/FileUploader.dart';
 import '../Screens/Information/GroupInformation/GroupInformationProvider.dart';
 import '../Screens/chat_screen.dart';
+import '../Utils/UserDataService.dart';
 import 'StoryViewsModel.dart';
 
 class Views extends StatefulWidget {
@@ -32,6 +33,7 @@ class _ViewsState extends State<Views> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: Obx(
         () => !storyViewController.loadData.value
             ? Center(
@@ -44,39 +46,49 @@ class _ViewsState extends State<Views> {
                       'Views ${storyViewController.listofStory.value.users!.length}',
                       style: TextStyle(
                           fontSize: 15,
-                          color: Colors.black,
+                          color: Colors.white,
                           fontFamily: AppFonts.segoeui,
                           fontWeight: FontWeight.bold)),
                   Expanded(
                     child: ListView.builder(
                       itemCount:
                           storyViewController.listofStory.value.users!.length,
-                      itemBuilder: (context, index) => ListTile(
-                        leading: CircularProfileAvatar(
-                          '',
-                          radius: 25,
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                '${storyViewController.listofStory.value.users![index].avatar}',
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                      itemBuilder: (context, index) {
+                        var date = DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                '${storyViewController.listofStory.value.users![index].storySeenTime}') *
+                            1000);
+                        return ListTile(
+                          leading: CircularProfileAvatar(
+                            '',
+                            radius: 25,
+                            child: CachedNetworkImage(
+                              imageUrl:
+                                  '${storyViewController.listofStory.value.users![index].avatar}',
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            ),
                           ),
-                        ),
-                        title: Text(
-                            '${storyViewController.listofStory.value.users![index].firstName}'
-                                    .isEmpty
-                                ? '${storyViewController.listofStory.value.users![index].username}'
-                                : '${storyViewController.listofStory.value.users![index].firstName} ' +
-                                    '${storyViewController.listofStory.value.users![index].lastName}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: AppFonts.segoeui,
-                            )),
-                        trailing: Text('${storyViewController.listofStory.value.users![index].storySeenTime}'),
-                      ),
+                          title: Text(
+                              '${storyViewController.listofStory.value.users![index].firstName}'
+                                      .isEmpty
+                                  ? '${storyViewController.listofStory.value.users![index].username}'
+                                  : '${storyViewController.listofStory.value.users![index].firstName} ' +
+                                      '${storyViewController.listofStory.value.users![index].lastName}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: AppFonts.segoeui,
+                              )),
+                          trailing: Text('${dateFormat.format(date)}',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontFamily: AppFonts.segoeui,
+                              )),
+                        );
+                      },
                     ),
                   ),
                 ],

@@ -255,18 +255,17 @@ class ApiUtils {
 
   static Future<storyViewModel> storyView(
       { Map? mapData}) async {
+    print('$mapData');
     var url = Uri.parse('$baseUrl$storyViewsPerson$token');
     try {
       var responce = await await http.post(url, body: mapData);
       var data = jsonDecode(responce.body);
       // print('group data is = $data');
+      print('$data');
       if (data['api_status'] == 200) {
         storyViewModel modellistt =storyViewModel.fromJson(data);
         return modellistt;
       } else {
-        if (data['api_status'] != 200) {
-          snackBarFailer('${data['errors']['error_text']}');
-        }
         return storyViewModel(users: [],);
       }
     } catch (e) {

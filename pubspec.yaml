@@ -64,7 +64,7 @@ dependencies:
   video_player: ^2.2.11
   visibility_detector: ^0.2.2
   #focused_menu: ^1.0.5
-  swipe_to: ^0.1.0-nullsafety.1
+  swipe_to: ^1.0.2
   google_maps_flutter: ^2.0.6
   geolocator: ^8.0.5
   permission_handler: ^9.2.0

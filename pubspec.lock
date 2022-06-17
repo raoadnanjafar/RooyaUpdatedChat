@@ -1154,7 +1154,7 @@ packages:
       name: swipe_to
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.0-nullsafety.1"
+    version: "1.0.2"
   syncfusion_flutter_core:
     dependency: transitive
     description:
