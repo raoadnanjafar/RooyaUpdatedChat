@@ -162,9 +162,11 @@ class Users {
   String? openToWorkData;
   List<Null>? formatedLangs;
   String? offsetId;
+  int? storySeenTime;
 
   Users(
       {this.userId,
+        this.storySeenTime,
         this.username,
         this.email,
         this.firstName,
@@ -304,6 +306,7 @@ class Users {
 
   Users.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'].toString();
+    storySeenTime = json['story_seen_time'];
     username = json['username'].toString();
     email = json['email'].toString();
     firstName = json['first_name'].toString();
@@ -454,6 +457,7 @@ class Users {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['user_id'] = this.userId;
+    data['story_seen_time'] = this.storySeenTime;
     data['username'] = this.username;
     data['email'] = this.email;
     data['first_name'] = this.firstName;

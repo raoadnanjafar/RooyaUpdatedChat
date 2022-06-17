@@ -1540,9 +1540,6 @@ class _UserChatState extends State<UserChat>
                                                                         .id
                                                                     : ''))!
                                                             .then((value) {
-                                                          replyModel.value =
-                                                              selectedOneToOneChat[
-                                                                  0];
                                                           isActivereply.value =
                                                               true;
                                                           selectedOneToOneChat
@@ -1602,9 +1599,6 @@ class _UserChatState extends State<UserChat>
                                                                           .id
                                                                       : '')
                                                               .then((value) {
-                                                            replyModel.value =
-                                                                selectedOneToOneChat[
-                                                                    0];
                                                             isActivereply
                                                                 .value = true;
                                                             selectedOneToOneChat
@@ -1825,6 +1819,7 @@ class _UserChatState extends State<UserChat>
                                                   print(
                                                       'audio path is =${audio_path}');
                                                   await sentMessageAsFile(
+                                                    replyid: isActivereply.value == true ? replyModel.value.id : '',
                                                           userID:
                                                               widget.groupID,
                                                           text: '',

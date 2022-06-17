@@ -10,7 +10,7 @@ import 'package:rooya/Models/UserStoriesModel.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'package:video_player/video_player.dart';
-
+import 'dart:io' show Platform;
 import '../ApiConfig/BaseURL.dart';
 import '../GlobalWidget/FileUploader.dart';
 import '../Models/StoryView.dart';
@@ -110,7 +110,19 @@ class _StoryViewPageState extends State<StoryViewPage> {
             ),
             Align(
               alignment: Alignment.topLeft,
-              child: Padding(
+              child: Platform.isIOS ? Padding(
+                padding: const EdgeInsets.only(top: 55, left: 10),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Get.back();
+                  },
+                ),
+              ) :
+              Padding(
                 padding: const EdgeInsets.only(top: 40, left: 10),
                 child: IconButton(
                   icon: Icon(
@@ -125,10 +137,10 @@ class _StoryViewPageState extends State<StoryViewPage> {
             ),
             Align(
               alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 40, right: 10),
-                child: Visibility(
-                  visible: widget.isAdmin == true ? true : false,
+              child: Visibility(
+                visible: widget.isAdmin == true ? true : false,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
                   child: IconButton(
                     icon: Icon(
                       Icons.remove_red_eye,

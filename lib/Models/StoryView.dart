@@ -75,6 +75,7 @@ class _ViewsState extends State<Views> {
                               color: Colors.black,
                               fontFamily: AppFonts.segoeui,
                             )),
+                        trailing: Text('${storyViewController.listofStory.value.users![index].storySeenTime}'),
                       ),
                     ),
                   ),

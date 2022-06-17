@@ -33,10 +33,12 @@ class ReplyModel {
   String? fav;
   String? timeText;
   String? position;
+  String? thumb;
   String? type;
 
   ReplyModel(
       {this.id,
+        this.thumb,
       this.fromId,
       this.groupId,
       this.pageId,
@@ -75,6 +77,7 @@ class ReplyModel {
 
   ReplyModel.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
+    thumb = json['videoThumb'].toString();
     fromId = json['from_id'].toString();
     groupId = json['group_id'].toString();
     pageId = json['page_id'].toString();
@@ -118,6 +121,7 @@ class ReplyModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['videoThumb'] = this.thumb;
     data['from_id'] = this.fromId;
     data['group_id'] = this.groupId;
     data['page_id'] = this.pageId;

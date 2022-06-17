@@ -126,6 +126,586 @@ class _TextUserChatState extends State<TextUserChat> {
           ],
         );
       } else {
+        if(widget.model!.reply!.type == 'video'){
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: CircularProfileAvatar(
+                  '',
+                  onTap: () {
+                    if (widget.model!.userData == null) {
+                      Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
+                    } else {
+                      Get.to(UserChatInformation(
+                        userID: widget.model!.userData!.userId.toString(),
+                      ));
+                    }
+                  },
+                  radius: 15,
+                  backgroundColor: Colors.blueGrey[100]!,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.fromGroup!
+                        ? widget.model!.userData == null
+                        ? ''
+                        : '${widget.model!.userData!.avatar}'
+                        : '${widget.model!.messageUser!.avatar}',
+                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => CachedNetworkImage(
+                      imageUrl: widget.fromGroup!
+                          ? widget.model!.userData == null
+                          ? ''
+                          : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                          : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => Icon(Icons.person),
+                      fit: BoxFit.cover,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
+                  imageFit: BoxFit.cover,
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Container(
+               // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
+                decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
+                child: Column(
+                  children: [
+                    widget.fromGroup!
+                        ? Column(
+                      children: [
+                        Text(
+                          widget.model!.userData!.firstName!.isEmpty
+                              ? '${widget.model!.userData!.username}'
+                              : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                          style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
+                        ),
+                        SizedBox(
+                          height: height / 100,
+                        ),
+                      ],
+                    )
+                        : SizedBox(),
+                    Container(
+                      height: height * 0.070,
+                      decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                      margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                      child: Row(children: [
+                        Container(
+                          height: height * 0.070,
+                          width: 4,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 5),
+                            Text('${widget.model!.messageUser!.fName}' +
+                                '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: width / 1.5),
+                              child: Text(
+                                '${widget.model!.reply!.type}   ',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(5)),
+
+                          child: Center(
+                            child: Stack(
+                              children: [
+                                Image.network('https://xd.rooya.com/${widget.model!.reply!.thumb}',fit: BoxFit.fill),
+                                Positioned(
+                                    top: 12,
+                                    child: Icon(Icons.play_circle_filled,color: Colors.white,)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ]),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: width / 1.5),
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          '${widget.model!.text}',
+                          //  decrypString(
+                          //      encript: '${widget.model!.text}',
+                          //      pass: widget.model!.time),
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height / 100,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: width / 50),
+                          child: Text(
+                            '${dateFormat.format(date)}',
+                            style: TextStyle(
+                              color: Colors.black26,
+                              fontFamily: AppFonts.segoeui,
+                              fontSize: 9.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+              ),
+            ],
+          );
+        }else{
+          if (widget.model!.reply!.type == 'image') {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: CircularProfileAvatar(
+                    '',
+                    onTap: () {
+                      if (widget.model!.userData == null) {
+                        Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
+                      } else {
+                        Get.to(UserChatInformation(
+                          userID: widget.model!.userData!.userId.toString(),
+                        ));
+                      }
+                    },
+                    radius: 15,
+                    backgroundColor: Colors.blueGrey[100]!,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.fromGroup!
+                          ? widget.model!.userData == null
+                          ? ''
+                          : '${widget.model!.userData!.avatar}'
+                          : '${widget.model!.messageUser!.avatar}',
+                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => CachedNetworkImage(
+                        imageUrl: widget.fromGroup!
+                            ? widget.model!.userData == null
+                            ? ''
+                            : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                            : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
+                        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => Icon(Icons.person),
+                        fit: BoxFit.cover,
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                    imageFit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
+                  decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
+                  child: Column(
+                    children: [
+                      widget.fromGroup!
+                          ? Column(
+                        children: [
+                          Text(
+                            widget.model!.userData!.firstName!.isEmpty
+                                ? '${widget.model!.userData!.username}'
+                                : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                            style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                        ],
+                      )
+                          : SizedBox(),
+                      Container(
+                        height: height * 0.070,
+                        decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                        margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                        child: Row(children: [
+                          Container(
+                            height: height * 0.070,
+                            width: 4,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                              color: Colors.deepPurple,
+                            ),
+                          ),
+                          SizedBox(width: 5),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 5),
+                              Text('${widget.model!.messageUser!.fName}' +
+                                  '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: width / 1.5),
+                                child: Text(
+                                  '${widget.model!.reply!.type}   ',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              child: CachedNetworkImage(
+                                imageUrl: '${widget.model!.reply!.media}',
+                                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) => Icon(Icons.error_outline_outlined),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: width / 1.5),
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text(
+                            '${widget.model!.text}',
+                            //  decrypString(
+                            //      encript: '${widget.model!.text}',
+                            //      pass: widget.model!.time),
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: height / 100,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(left: width / 50),
+                            child: Text(
+                              '${dateFormat.format(date)}',
+                              style: TextStyle(
+                                color: Colors.black26,
+                                fontFamily: AppFonts.segoeui,
+                                fontSize: 9.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ),
+              ],
+            );
+          }else{
+            if (widget.model!.reply!.type == 'file') {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: CircularProfileAvatar(
+                      '',
+                      onTap: () {
+                        if (widget.model!.userData == null) {
+                          Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
+                        } else {
+                          Get.to(UserChatInformation(
+                            userID: widget.model!.userData!.userId.toString(),
+                          ));
+                        }
+                      },
+                      radius: 15,
+                      backgroundColor: Colors.blueGrey[100]!,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.fromGroup!
+                            ? widget.model!.userData == null
+                            ? ''
+                            : '${widget.model!.userData!.avatar}'
+                            : '${widget.model!.messageUser!.avatar}',
+                        placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => CachedNetworkImage(
+                          imageUrl: widget.fromGroup!
+                              ? widget.model!.userData == null
+                              ? ''
+                              : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                              : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
+                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => Icon(Icons.person),
+                          fit: BoxFit.cover,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                      imageFit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
+                    decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
+                    child: Column(
+                      children: [
+                        widget.fromGroup!
+                            ? Column(
+                          children: [
+                            Text(
+                              widget.model!.userData!.firstName!.isEmpty
+                                  ? '${widget.model!.userData!.username}'
+                                  : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                              style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
+                            ),
+                            SizedBox(
+                              height: height / 100,
+                            ),
+                          ],
+                        )
+                            : SizedBox(),
+                        Container(
+                          height: height * 0.070,
+                          decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                          margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                          child: Row(children: [
+                            Container(
+                              height: height * 0.070,
+                              width: 4,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                                color: Colors.deepPurple,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 5),
+                                Text('${widget.model!.messageUser!.fName}' +
+                                    '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                                Row(
+                                  children: [
+                                    Icon(Icons.attach_file),
+                                    SizedBox(width: 5,),
+                                    Text(
+                                      '${widget.model!.reply!.type}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ]),
+                        ),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: width / 1.5),
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 5),
+                            child: Text(
+                              '${widget.model!.text}',
+                              //  decrypString(
+                              //      encript: '${widget.model!.text}',
+                              //      pass: widget.model!.time),
+                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height / 100,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: width / 50),
+                              child: Text(
+                                '${dateFormat.format(date)}',
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 9.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                ],
+              );
+            }else{
+              if (widget.model!.reply!.type == 'audio') {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: CircularProfileAvatar(
+                        '',
+                        onTap: () {
+                          if (widget.model!.userData == null) {
+                            Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
+                          } else {
+                            Get.to(UserChatInformation(
+                              userID: widget.model!.userData!.userId.toString(),
+                            ));
+                          }
+                        },
+                        radius: 15,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        child: CachedNetworkImage(
+                          imageUrl: widget.fromGroup!
+                              ? widget.model!.userData == null
+                              ? ''
+                              : '${widget.model!.userData!.avatar}'
+                              : '${widget.model!.messageUser!.avatar}',
+                          placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => CachedNetworkImage(
+                            imageUrl: widget.fromGroup!
+                                ? widget.model!.userData == null
+                                ? ''
+                                : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                                : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
+                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) => Icon(Icons.person),
+                            fit: BoxFit.cover,
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                        imageFit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Container(
+                      // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
+                      decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
+                      child: Column(
+                        children: [
+                          widget.fromGroup!
+                              ? Column(
+                            children: [
+                              Text(
+                                widget.model!.userData!.firstName!.isEmpty
+                                    ? '${widget.model!.userData!.username}'
+                                    : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                                style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
+                              ),
+                              SizedBox(
+                                height: height / 100,
+                              ),
+                            ],
+                          )
+                              : SizedBox(),
+                          Container(
+                            height: height * 0.070,
+                            decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
+                            margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
+                            child: Row(children: [
+                              Container(
+                                height: height * 0.070,
+                                width: 4,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                                  color: Colors.deepPurple,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 5),
+                                  Text('${widget.model!.messageUser!.fName}' +
+                                      '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                                  Container(
+                                    //width: 50,
+                                    //color: Colors.black,
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.mic),
+                                        Text('Voice message')
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                          ),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: width / 1.5),
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 5),
+                              child: Text(
+                                '${widget.model!.text}',
+                                //  decrypString(
+                                //      encript: '${widget.model!.text}',
+                                //      pass: widget.model!.time),
+                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(left: width / 50),
+                                child: Text(
+                                  '${dateFormat.format(date)}',
+                                  style: TextStyle(
+                                    color: Colors.black26,
+                                    fontFamily: AppFonts.segoeui,
+                                    fontSize: 9.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    ),
+                  ],
+                );
+              }
+            }
+          }
+        }
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -170,7 +750,7 @@ class _TextUserChatState extends State<TextUserChat> {
               width: 5,
             ),
             Container(
-              padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
+             // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
               decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
@@ -207,17 +787,8 @@ class _TextUserChatState extends State<TextUserChat> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 5),
-                          CircularProfileAvatar(
-                            '',
-                            radius: 10,
-                            child: CachedNetworkImage(
-                              imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
-                              placeholder: (context, url) => CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
-                              fit: BoxFit.cover,
-                            ),
-                            imageFit: BoxFit.cover,
-                          ),
+                          Text('${widget.model!.messageUser!.fName}' +
+                              '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                           ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: width / 1.5, minWidth: 30),
                             child: Text(
@@ -270,6 +841,7 @@ class _TextUserChatState extends State<TextUserChat> {
           ],
         );
       }
+      /// for user site.
     } else {
       if (widget.model!.replyId == '0') {
         return Container(
@@ -376,21 +948,12 @@ class _TextUserChatState extends State<TextUserChat> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 5),
-                            CircularProfileAvatar(
-                              '',
-                              radius: 10,
-                              child: CachedNetworkImage(
-                                imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
-                                placeholder: (context, url) => CircularProgressIndicator(),
-                                errorWidget: (context, url, error) => Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              ),
-                              imageFit: BoxFit.cover,
-                            ),
+                            Text('${widget.model!.messageUser!.fName}' +
+                                '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                             ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: width / 1.5),
                               child: Text(
-                                '${widget.model!.reply!.type}',
+                                '${widget.model!.reply!.type}   ',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
@@ -399,13 +962,17 @@ class _TextUserChatState extends State<TextUserChat> {
                           ],
                         ),
                         Expanded(child: SizedBox()),
-                        Container(
-                          width: 50,
-                          child: CachedNetworkImage(
-                            imageUrl: '${widget.model!.reply!.media}',
-                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                            errorWidget: (context, url, error) => Icon(Icons.error_outline_outlined),
-                            fit: BoxFit.cover,
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            child: CachedNetworkImage(
+                              imageUrl: '${widget.model!.reply!.media}',
+                              placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => Icon(Icons.error_outline_outlined),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ]),
@@ -516,30 +1083,22 @@ class _TextUserChatState extends State<TextUserChat> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 5),
-                              CircularProfileAvatar(
-                                '',
-                                radius: 10,
-                                child: CachedNetworkImage(
-                                  imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
-                                  placeholder: (context, url) => CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) => Icon(Icons.error),
-                                  fit: BoxFit.cover,
-                                ),
-                                imageFit: BoxFit.cover,
-                              ),
-                              ConstrainedBox(
-                                constraints: BoxConstraints(maxWidth: width / 1.5),
-                                child:
-                                Text(
-                                  '${widget.model!.reply!.media}',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
-                                ),
+                              Text('${widget.model!.messageUser!.fName}' +
+                                  '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                              Row(
+                                children: [
+                                  Icon(Icons.attach_file),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    '${widget.model!.reply!.type}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 16),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-
                         ]),
                       ),
                       Container(
@@ -646,21 +1205,12 @@ class _TextUserChatState extends State<TextUserChat> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(height: 5),
-                                    CircularProfileAvatar(
-                                      '',
-                                      radius: 10,
-                                      child: CachedNetworkImage(
-                                        imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
-                                        placeholder: (context, url) => CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) => Icon(Icons.error),
-                                        fit: BoxFit.cover,
-                                      ),
-                                      imageFit: BoxFit.cover,
-                                    ),
+                                    Text('${widget.model!.messageUser!.fName}' +
+                                        '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                     ConstrainedBox(
                                       constraints: BoxConstraints(maxWidth: width / 1.5),
                                       child: Text(
-                                        '${widget.model!.reply!.type}',
+                                        '${widget.model!.reply!.type}   ',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
@@ -671,8 +1221,19 @@ class _TextUserChatState extends State<TextUserChat> {
                                 Expanded(child: SizedBox()),
                                 Container(
                                   width: 50,
-                                  color: Colors.black,
-                                  child: Icon(Icons.pause,color: Colors.white),
+                                  height: 50,
+                                  decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(5)),
+
+                                  child: Center(
+                                    child: Stack(
+                                      children: [
+                                        Image.network('https://xd.rooya.com/${widget.model!.reply!.thumb}',fit: BoxFit.fill),
+                                        Positioned(
+                                            top: 12,
+                                            child: Icon(Icons.play_circle_filled,color: Colors.white,)),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ]),
                         ),
@@ -780,17 +1341,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 5),
-                                      CircularProfileAvatar(
-                                        '',
-                                        radius: 10,
-                                        child: CachedNetworkImage(
-                                          imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
-                                          placeholder: (context, url) => CircularProgressIndicator(),
-                                          errorWidget: (context, url, error) => Icon(Icons.error),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        imageFit: BoxFit.cover,
-                                      ),
+                                      Text('${widget.model!.messageUser!.fName}' +
+                                          '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                       Container(
                                         //width: 50,
                                         //color: Colors.black,
@@ -803,7 +1355,6 @@ class _TextUserChatState extends State<TextUserChat> {
                                       ),
                                     ],
                                   ),
-                                  //Expanded(child: SizedBox()),
                                 ]),
                           ),
                           Container(
@@ -911,17 +1462,8 @@ class _TextUserChatState extends State<TextUserChat> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 5),
-                          CircularProfileAvatar(
-                            '',
-                            radius: 10,
-                            child: CachedNetworkImage(
-                              imageUrl: "${widget.model!.reply!.messageUser!.avatar}",
-                              placeholder: (context, url) => CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => Icon(Icons.error),
-                              fit: BoxFit.cover,
-                            ),
-                            imageFit: BoxFit.cover,
-                          ),
+                          Text('${widget.model!.messageUser!.fName}' +
+                              '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                           ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: width / 1.5),
                             child: Text(

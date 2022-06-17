@@ -71,10 +71,12 @@ class Messages {
   String? type;
   String? product;
   String? fileSize;
+  String? thumb;
   UserData? userData;
 
   Messages(
       {this.id,
+        this.thumb,
       this.fromId,
       this.groupId,
       this.pageId,
@@ -115,6 +117,7 @@ class Messages {
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'].toString();
+    thumb = json['videoThumb'].toString();
     fromId = json['from_id'].toString();
     groupId = json['group_id'].toString();
     pageId = json['page_id'].toString();
@@ -172,6 +175,7 @@ class Messages {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['videoThumb'] = this.thumb;
     data['from_id'] = this.fromId;
     data['group_id'] = this.groupId;
     data['page_id'] = this.pageId;
@@ -223,18 +227,24 @@ class Messages {
 class MessageUser {
   String? userId;
   String? avatar;
+  String? fName;
+  String? lName;
 
-  MessageUser({this.userId, this.avatar});
+  MessageUser({this.userId, this.avatar,this.fName,this.lName});
 
   MessageUser.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'].toString();
     avatar = json['avatar'].toString();
+    fName = json['first_name'].toString();
+    lName = json['last_name'].toString();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['user_id'] = this.userId;
     data['avatar'] = this.avatar;
+    data['first_name'] = this.fName;
+    data['last_name'] = this.lName;
     return data;
   }
 }
