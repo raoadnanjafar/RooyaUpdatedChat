@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:rooya/Models/StoryViewsModel.dart';
 import 'package:rooya/Providers/ClickController/SelectIndexController.dart';
 import 'package:rooya/Screens/Information/UserChatInformation/user_chat_information.dart';
 import 'package:rooya/Screens/SearchUser/SearchUser.dart';
@@ -71,9 +72,18 @@ class _MySliverState extends State<MySliver> {
               ),
               title: InkWell(
                 onTap: () {
-                  Get.to(UserChatInformation(
-                      userID:
-                          '${UserDataService.userDataModel!.userData!.userId}'));
+                  if(hasUserStory.value){
+                   int i = storyIds.indexWhere((element) =>
+                    element ==
+                        '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                   Get.to(UserChatInformation(
+                       userID:
+                       '${UserDataService.userDataModel!.userData!.userId}',userStory: allstoryList[i],));
+                  }else{
+                    Get.to(UserChatInformation(
+                        userID:
+                        '${UserDataService.userDataModel!.userData!.userId}'));
+                  }
                 },
                 child: Text(
                   UserDataService.userDataModel!.userData!.firstName!.isEmpty

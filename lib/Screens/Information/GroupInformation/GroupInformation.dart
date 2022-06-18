@@ -18,6 +18,7 @@ import 'package:rooya/Utils/text_filed/app_font.dart';
 
 import '../../../GlobalWidget/FileUploader.dart';
 import '../../../GlobalWidget/SnackBarApp.dart';
+import '../../../Utils/UserDataService.dart';
 import 'GroupInformationProvider.dart';
 
 class GroupInformation extends StatefulWidget {
@@ -43,6 +44,8 @@ class _GroupInformationState extends State<GroupInformation> {
   void initState() {
     groupModel = widget.groupModel!;
     infoController.getFriendList();
+    print('id id ${groupModel.groupId}');
+    print('gropname ${groupModel.groupName}');
     super.initState();
   }
 
@@ -77,7 +80,7 @@ class _GroupInformationState extends State<GroupInformation> {
                         ),
                         actions: [
                           Visibility(
-                            visible: true,
+                            visible: groupModel.userData!.admin == '0' ? true : false,
                             child: Container(
                               child: IconButton(
                                   onPressed: () async {
@@ -92,7 +95,7 @@ class _GroupInformationState extends State<GroupInformation> {
                             ),
                           ),
                           Visibility(
-                            visible: true,
+                            visible: groupModel.userData!.admin == '0' ? true : false,
                             child: Container(
                               child: IconButton(
                                   onPressed: () async {

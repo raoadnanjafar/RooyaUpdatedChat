@@ -11,6 +11,9 @@ import 'package:rooya/Utils/primary_color.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 
 import '../UserChat.dart';
+import '../UserCommonWidget/ProfileImage_common.dart';
+import '../UserCommonWidget/ReplyUserNameCommon.dart';
+import '../UserCommonWidget/TimeReturnCommon.dart';
 
 class TextUserChat extends StatefulWidget {
   final Messages? model;
@@ -30,43 +33,7 @@ class _TextUserChatState extends State<TextUserChat> {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: CircularProfileAvatar(
-                '',
-                onTap: () {
-                  if (widget.model!.userData == null) {
-                    Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
-                  } else {
-                    Get.to(UserChatInformation(
-                      userID: widget.model!.userData!.userId.toString(),
-                    ));
-                  }
-                },
-                radius: 15,
-                backgroundColor: Colors.blueGrey[100]!,
-                child: CachedNetworkImage(
-                  imageUrl: widget.fromGroup!
-                      ? widget.model!.userData == null
-                          ? ''
-                          : '${widget.model!.userData!.avatar}'
-                      : '${widget.model!.messageUser!.avatar}',
-                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => CachedNetworkImage(
-                    imageUrl: widget.fromGroup!
-                        ? widget.model!.userData == null
-                            ? ''
-                            : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
-                        : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
-                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => Icon(Icons.person),
-                    fit: BoxFit.cover,
-                  ),
-                  fit: BoxFit.cover,
-                ),
-                imageFit: BoxFit.cover,
-              ),
-            ),
+            ProfileImageUserCommon(fromGroup: widget.fromGroup, model: widget.model),
             SizedBox(
               width: 5,
             ),
@@ -75,21 +42,7 @@ class _TextUserChatState extends State<TextUserChat> {
               decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
-                  widget.fromGroup!
-                      ? Column(
-                          children: [
-                            Text(
-                              widget.model!.userData!.firstName!.isEmpty
-                                  ? '${widget.model!.userData!.username}'
-                                  : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
-                              style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
-                            ),
-                            SizedBox(
-                              height: height / 100,
-                            ),
-                          ],
-                        )
-                      : SizedBox(),
+                  ReplyUserName(fromGroup: widget.fromGroup, model: widget.model),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: width / 1.5),
                     child: Text(
@@ -103,22 +56,7 @@ class _TextUserChatState extends State<TextUserChat> {
                   SizedBox(
                     height: height / 100,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: width / 50),
-                        child: Text(
-                          '${dateFormat.format(date)}',
-                          style: TextStyle(
-                            color: Colors.black26,
-                            fontFamily: AppFonts.segoeui,
-                            fontSize: 9.0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                  TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
               ),
@@ -126,70 +64,20 @@ class _TextUserChatState extends State<TextUserChat> {
           ],
         );
       } else {
-        if(widget.model!.reply!.type == 'video'){
+        if (widget.model!.reply!.type == 'video') {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 10),
-                child: CircularProfileAvatar(
-                  '',
-                  onTap: () {
-                    if (widget.model!.userData == null) {
-                      Get.to(UserChatInformation(userID: widget.model!.messageUser!.userId));
-                    } else {
-                      Get.to(UserChatInformation(
-                        userID: widget.model!.userData!.userId.toString(),
-                      ));
-                    }
-                  },
-                  radius: 15,
-                  backgroundColor: Colors.blueGrey[100]!,
-                  child: CachedNetworkImage(
-                    imageUrl: widget.fromGroup!
-                        ? widget.model!.userData == null
-                        ? ''
-                        : '${widget.model!.userData!.avatar}'
-                        : '${widget.model!.messageUser!.avatar}',
-                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) => CachedNetworkImage(
-                      imageUrl: widget.fromGroup!
-                          ? widget.model!.userData == null
-                          ? ''
-                          : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
-                          : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
-                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.person),
-                      fit: BoxFit.cover,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
-                  imageFit: BoxFit.cover,
-                ),
-              ),
+              ProfileImageUserCommon(fromGroup: widget.fromGroup, model: widget.model),
               SizedBox(
                 width: 5,
               ),
               Container(
-               // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
+                // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
                 decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   children: [
-                    widget.fromGroup!
-                        ? Column(
-                      children: [
-                        Text(
-                          widget.model!.userData!.firstName!.isEmpty
-                              ? '${widget.model!.userData!.username}'
-                              : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
-                          style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
-                        ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
-                      ],
-                    )
-                        : SizedBox(),
+                    ReplyUserName(fromGroup: widget.fromGroup, model: widget.model),
                     Container(
                       height: height * 0.070,
                       decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
@@ -208,8 +96,8 @@ class _TextUserChatState extends State<TextUserChat> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 5),
-                            Text('${widget.model!.messageUser!.fName}' +
-                                '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                            Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                style: TextStyle(color: Colors.blue)),
                             ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: width / 1.5),
                               child: Text(
@@ -224,15 +112,17 @@ class _TextUserChatState extends State<TextUserChat> {
                         Container(
                           width: 50,
                           height: 50,
-                          decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(5)),
-
+                          decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(5)),
                           child: Center(
                             child: Stack(
                               children: [
-                                Image.network('https://xd.rooya.com/${widget.model!.reply!.thumb}',fit: BoxFit.fill),
+                                Image.network('https://xd.rooya.com/${widget.model!.reply!.thumb}', fit: BoxFit.fill),
                                 Positioned(
                                     top: 12,
-                                    child: Icon(Icons.play_circle_filled,color: Colors.white,)),
+                                    child: Icon(
+                                      Icons.play_circle_filled,
+                                      color: Colors.white,
+                                    )),
                               ],
                             ),
                           ),
@@ -255,29 +145,14 @@ class _TextUserChatState extends State<TextUserChat> {
                     SizedBox(
                       height: height / 100,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: width / 50),
-                          child: Text(
-                            '${dateFormat.format(date)}',
-                            style: TextStyle(
-                              color: Colors.black26,
-                              fontFamily: AppFonts.segoeui,
-                              fontSize: 9.0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
+                    TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
                   ],
                   crossAxisAlignment: CrossAxisAlignment.start,
                 ),
               ),
             ],
           );
-        }else{
+        } else {
           if (widget.model!.reply!.type == 'image') {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,15 +175,15 @@ class _TextUserChatState extends State<TextUserChat> {
                     child: CachedNetworkImage(
                       imageUrl: widget.fromGroup!
                           ? widget.model!.userData == null
-                          ? ''
-                          : '${widget.model!.userData!.avatar}'
+                              ? ''
+                              : '${widget.model!.userData!.avatar}'
                           : '${widget.model!.messageUser!.avatar}',
                       placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                       errorWidget: (context, url, error) => CachedNetworkImage(
                         imageUrl: widget.fromGroup!
                             ? widget.model!.userData == null
-                            ? ''
-                            : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                                ? ''
+                                : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
                             : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
                         placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                         errorWidget: (context, url, error) => Icon(Icons.person),
@@ -329,18 +204,18 @@ class _TextUserChatState extends State<TextUserChat> {
                     children: [
                       widget.fromGroup!
                           ? Column(
-                        children: [
-                          Text(
-                            widget.model!.userData!.firstName!.isEmpty
-                                ? '${widget.model!.userData!.username}'
-                                : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
-                            style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
-                          ),
-                          SizedBox(
-                            height: height / 100,
-                          ),
-                        ],
-                      )
+                              children: [
+                                Text(
+                                  widget.model!.userData!.firstName!.isEmpty
+                                      ? '${widget.model!.userData!.username}'
+                                      : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                                  style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
+                                ),
+                                SizedBox(
+                                  height: height / 100,
+                                ),
+                              ],
+                            )
                           : SizedBox(),
                       Container(
                         height: height * 0.070,
@@ -360,8 +235,8 @@ class _TextUserChatState extends State<TextUserChat> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 5),
-                              Text('${widget.model!.messageUser!.fName}' +
-                                  '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                              Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                  style: TextStyle(color: Colors.blue)),
                               ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: width / 1.5),
                                 child: Text(
@@ -426,7 +301,7 @@ class _TextUserChatState extends State<TextUserChat> {
                 ),
               ],
             );
-          }else{
+          } else {
             if (widget.model!.reply!.type == 'file') {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -449,15 +324,15 @@ class _TextUserChatState extends State<TextUserChat> {
                       child: CachedNetworkImage(
                         imageUrl: widget.fromGroup!
                             ? widget.model!.userData == null
-                            ? ''
-                            : '${widget.model!.userData!.avatar}'
+                                ? ''
+                                : '${widget.model!.userData!.avatar}'
                             : '${widget.model!.messageUser!.avatar}',
                         placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                         errorWidget: (context, url, error) => CachedNetworkImage(
                           imageUrl: widget.fromGroup!
                               ? widget.model!.userData == null
-                              ? ''
-                              : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                                  ? ''
+                                  : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
                               : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
                           placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => Icon(Icons.person),
@@ -478,18 +353,19 @@ class _TextUserChatState extends State<TextUserChat> {
                       children: [
                         widget.fromGroup!
                             ? Column(
-                          children: [
-                            Text(
-                              widget.model!.userData!.firstName!.isEmpty
-                                  ? '${widget.model!.userData!.username}'
-                                  : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
-                              style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
-                            ),
-                            SizedBox(
-                              height: height / 100,
-                            ),
-                          ],
-                        )
+                                children: [
+                                  Text(
+                                    widget.model!.userData!.firstName!.isEmpty
+                                        ? '${widget.model!.userData!.username}'
+                                        : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                                    style:
+                                        TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
+                                  ),
+                                  SizedBox(
+                                    height: height / 100,
+                                  ),
+                                ],
+                              )
                             : SizedBox(),
                         Container(
                           height: height * 0.070,
@@ -509,12 +385,14 @@ class _TextUserChatState extends State<TextUserChat> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 5),
-                                Text('${widget.model!.messageUser!.fName}' +
-                                    '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                                Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                    style: TextStyle(color: Colors.blue)),
                                 Row(
                                   children: [
                                     Icon(Icons.attach_file),
-                                    SizedBox(width: 5,),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
                                     Text(
                                       '${widget.model!.reply!.type}',
                                       maxLines: 1,
@@ -565,7 +443,7 @@ class _TextUserChatState extends State<TextUserChat> {
                   ),
                 ],
               );
-            }else{
+            } else {
               if (widget.model!.reply!.type == 'audio') {
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -588,15 +466,15 @@ class _TextUserChatState extends State<TextUserChat> {
                         child: CachedNetworkImage(
                           imageUrl: widget.fromGroup!
                               ? widget.model!.userData == null
-                              ? ''
-                              : '${widget.model!.userData!.avatar}'
+                                  ? ''
+                                  : '${widget.model!.userData!.avatar}'
                               : '${widget.model!.messageUser!.avatar}',
                           placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                           errorWidget: (context, url, error) => CachedNetworkImage(
                             imageUrl: widget.fromGroup!
                                 ? widget.model!.userData == null
-                                ? ''
-                                : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
+                                    ? ''
+                                    : 'https://xd.rooya.com/${widget.model!.userData!.avatar}'
                                 : 'https://xd.rooya.com/${widget.model!.messageUser!.avatar}',
                             placeholder: (context, url) => Center(child: CircularProgressIndicator()),
                             errorWidget: (context, url, error) => Icon(Icons.person),
@@ -617,18 +495,19 @@ class _TextUserChatState extends State<TextUserChat> {
                         children: [
                           widget.fromGroup!
                               ? Column(
-                            children: [
-                              Text(
-                                widget.model!.userData!.firstName!.isEmpty
-                                    ? '${widget.model!.userData!.username}'
-                                    : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
-                                style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
-                              ),
-                              SizedBox(
-                                height: height / 100,
-                              ),
-                            ],
-                          )
+                                  children: [
+                                    Text(
+                                      widget.model!.userData!.firstName!.isEmpty
+                                          ? '${widget.model!.userData!.username}'
+                                          : '${widget.model!.userData!.firstName}' + ' ${widget.model!.userData!.lastName}',
+                                      style: TextStyle(
+                                          color: Colors.deepPurple, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui, fontSize: 12),
+                                    ),
+                                    SizedBox(
+                                      height: height / 100,
+                                    ),
+                                  ],
+                                )
                               : SizedBox(),
                           Container(
                             height: height * 0.070,
@@ -648,16 +527,13 @@ class _TextUserChatState extends State<TextUserChat> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: 5),
-                                  Text('${widget.model!.messageUser!.fName}' +
-                                      '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                                  Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                      style: TextStyle(color: Colors.blue)),
                                   Container(
                                     //width: 50,
                                     //color: Colors.black,
                                     child: Row(
-                                      children: [
-                                        Icon(Icons.mic),
-                                        Text('Voice message')
-                                      ],
+                                      children: [Icon(Icons.mic), Text('Voice message')],
                                     ),
                                   ),
                                 ],
@@ -750,7 +626,7 @@ class _TextUserChatState extends State<TextUserChat> {
               width: 5,
             ),
             Container(
-             // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
+              // padding: EdgeInsets.only(right: width / 30, bottom: width / 30),
               decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
@@ -787,8 +663,8 @@ class _TextUserChatState extends State<TextUserChat> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 5),
-                          Text('${widget.model!.messageUser!.fName}' +
-                              '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                          Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                              style: TextStyle(color: Colors.blue)),
                           ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: width / 1.5, minWidth: 30),
                             child: Text(
@@ -841,6 +717,7 @@ class _TextUserChatState extends State<TextUserChat> {
           ],
         );
       }
+
       /// for user site.
     } else {
       if (widget.model!.replyId == '0') {
@@ -932,9 +809,7 @@ class _TextUserChatState extends State<TextUserChat> {
                       height: height * 0.070,
                       decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
                       margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
+                      child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                         Container(
                           height: height * 0.070,
                           width: 4,
@@ -948,8 +823,8 @@ class _TextUserChatState extends State<TextUserChat> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 5),
-                            Text('${widget.model!.messageUser!.fName}' +
-                                '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                            Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                style: TextStyle(color: Colors.blue)),
                             ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: width / 1.5),
                               child: Text(
@@ -1046,8 +921,7 @@ class _TextUserChatState extends State<TextUserChat> {
               ),
             ],
           );
-        }
-        else{
+        } else {
           if (widget.model!.reply!.type == 'file') {
             return Column(
               children: [
@@ -1056,20 +930,16 @@ class _TextUserChatState extends State<TextUserChat> {
                       color: widget.model!.seen != '0'
                           ? returnColorFromString(seenBackColor)
                           : widget.model!.delivered != '0'
-                          ? returnColorFromString(receiveBackColor)
-                          : returnColorFromString(sentBackColor),
+                              ? returnColorFromString(receiveBackColor)
+                              : returnColorFromString(sentBackColor),
                       borderRadius: BorderRadius.circular(8)),
                   child: Column(
-
                     children: [
-
                       Container(
                         //height: height * 0.070,
                         decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
                         margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Container(
                             height: height * 0.070,
                             width: 4,
@@ -1083,12 +953,14 @@ class _TextUserChatState extends State<TextUserChat> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 5),
-                              Text('${widget.model!.messageUser!.fName}' +
-                                  '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                              Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                  style: TextStyle(color: Colors.blue)),
                               Row(
                                 children: [
                                   Icon(Icons.attach_file),
-                                  SizedBox(width: 5,),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(
                                     '${widget.model!.reply!.type}',
                                     maxLines: 1,
@@ -1111,8 +983,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                   color: widget.model!.seen != '0'
                                       ? returnColorFromString(seenTextColor)
                                       : widget.model!.delivered != '0'
-                                      ? returnColorFromString(receiveTextColor)
-                                      : returnColorFromString(sentTextColor),
+                                          ? returnColorFromString(receiveTextColor)
+                                          : returnColorFromString(sentTextColor),
                                   fontWeight: FontWeight.w300,
                                   fontFamily: AppFonts.segoeui,
                                   fontSize: 14),
@@ -1131,8 +1003,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                       color: widget.model!.seen != '0'
                                           ? returnColorFromString(seenTimeColor)
                                           : widget.model!.delivered != '0'
-                                          ? returnColorFromString(receiveTimeColor)
-                                          : returnColorFromString(sentTimeColor),
+                                              ? returnColorFromString(receiveTimeColor)
+                                              : returnColorFromString(sentTimeColor),
                                       fontFamily: AppFonts.segoeui,
                                       fontSize: 9.0,
                                     ),
@@ -1143,21 +1015,21 @@ class _TextUserChatState extends State<TextUserChat> {
                                 ),
                                 widget.model!.seen != '0'
                                     ? FaIcon(
-                                  FontAwesomeIcons.checkDouble,
-                                  size: 15,
-                                  color: returnColorFromString(seenCheck),
-                                )
+                                        FontAwesomeIcons.checkDouble,
+                                        size: 15,
+                                        color: returnColorFromString(seenCheck),
+                                      )
                                     : widget.model!.delivered != '0'
-                                    ? FaIcon(
-                                  FontAwesomeIcons.checkDouble,
-                                  size: 15,
-                                  color: returnColorFromString(receiveCheck),
-                                )
-                                    : FaIcon(
-                                  FontAwesomeIcons.check,
-                                  size: 15,
-                                  color: returnColorFromString(sentCheck),
-                                ),
+                                        ? FaIcon(
+                                            FontAwesomeIcons.checkDouble,
+                                            size: 15,
+                                            color: returnColorFromString(receiveCheck),
+                                          )
+                                        : FaIcon(
+                                            FontAwesomeIcons.check,
+                                            size: 15,
+                                            color: returnColorFromString(sentCheck),
+                                          ),
                               ],
                             )
                           ],
@@ -1170,8 +1042,7 @@ class _TextUserChatState extends State<TextUserChat> {
                 ),
               ],
             );
-          }
-          else{
+          } else {
             if (widget.model!.reply!.type == 'video') {
               return Column(
                 children: [
@@ -1180,8 +1051,8 @@ class _TextUserChatState extends State<TextUserChat> {
                         color: widget.model!.seen != '0'
                             ? returnColorFromString(seenBackColor)
                             : widget.model!.delivered != '0'
-                            ? returnColorFromString(receiveBackColor)
-                            : returnColorFromString(sentBackColor),
+                                ? returnColorFromString(receiveBackColor)
+                                : returnColorFromString(sentBackColor),
                         borderRadius: BorderRadius.circular(8)),
                     child: Column(
                       children: [
@@ -1189,53 +1060,53 @@ class _TextUserChatState extends State<TextUserChat> {
                           height: height * 0.070,
                           decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
                           margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                          child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                            Container(
+                              height: height * 0.070,
+                              width: 4,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                                color: Colors.deepPurple,
+                              ),
+                            ),
+                            SizedBox(width: 5),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  height: height * 0.070,
-                                  width: 4,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
-                                    color: Colors.deepPurple,
+                                SizedBox(height: 5),
+                                Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                    style: TextStyle(color: Colors.blue)),
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: width / 1.5),
+                                  child: Text(
+                                    '${widget.model!.reply!.type}   ',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
                                   ),
                                 ),
-                                SizedBox(width: 5),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              ],
+                            ),
+                            Expanded(child: SizedBox()),
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(5)),
+                              child: Center(
+                                child: Stack(
                                   children: [
-                                    SizedBox(height: 5),
-                                    Text('${widget.model!.messageUser!.fName}' +
-                                        '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints(maxWidth: width / 1.5),
-                                      child: Text(
-                                        '${widget.model!.reply!.type}   ',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
-                                      ),
-                                    ),
+                                    Image.network('https://xd.rooya.com/${widget.model!.reply!.thumb}', fit: BoxFit.fill),
+                                    Positioned(
+                                        top: 12,
+                                        child: Icon(
+                                          Icons.play_circle_filled,
+                                          color: Colors.white,
+                                        )),
                                   ],
                                 ),
-                                Expanded(child: SizedBox()),
-                                Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(5)),
-
-                                  child: Center(
-                                    child: Stack(
-                                      children: [
-                                        Image.network('https://xd.rooya.com/${widget.model!.reply!.thumb}',fit: BoxFit.fill),
-                                        Positioned(
-                                            top: 12,
-                                            child: Icon(Icons.play_circle_filled,color: Colors.white,)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ]),
+                              ),
+                            ),
+                          ]),
                         ),
                         Container(
                           child: Column(
@@ -1247,8 +1118,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                     color: widget.model!.seen != '0'
                                         ? returnColorFromString(seenTextColor)
                                         : widget.model!.delivered != '0'
-                                        ? returnColorFromString(receiveTextColor)
-                                        : returnColorFromString(sentTextColor),
+                                            ? returnColorFromString(receiveTextColor)
+                                            : returnColorFromString(sentTextColor),
                                     fontWeight: FontWeight.w300,
                                     fontFamily: AppFonts.segoeui,
                                     fontSize: 14),
@@ -1267,8 +1138,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                         color: widget.model!.seen != '0'
                                             ? returnColorFromString(seenTimeColor)
                                             : widget.model!.delivered != '0'
-                                            ? returnColorFromString(receiveTimeColor)
-                                            : returnColorFromString(sentTimeColor),
+                                                ? returnColorFromString(receiveTimeColor)
+                                                : returnColorFromString(sentTimeColor),
                                         fontFamily: AppFonts.segoeui,
                                         fontSize: 9.0,
                                       ),
@@ -1279,21 +1150,21 @@ class _TextUserChatState extends State<TextUserChat> {
                                   ),
                                   widget.model!.seen != '0'
                                       ? FaIcon(
-                                    FontAwesomeIcons.checkDouble,
-                                    size: 15,
-                                    color: returnColorFromString(seenCheck),
-                                  )
+                                          FontAwesomeIcons.checkDouble,
+                                          size: 15,
+                                          color: returnColorFromString(seenCheck),
+                                        )
                                       : widget.model!.delivered != '0'
-                                      ? FaIcon(
-                                    FontAwesomeIcons.checkDouble,
-                                    size: 15,
-                                    color: returnColorFromString(receiveCheck),
-                                  )
-                                      : FaIcon(
-                                    FontAwesomeIcons.check,
-                                    size: 15,
-                                    color: returnColorFromString(sentCheck),
-                                  ),
+                                          ? FaIcon(
+                                              FontAwesomeIcons.checkDouble,
+                                              size: 15,
+                                              color: returnColorFromString(receiveCheck),
+                                            )
+                                          : FaIcon(
+                                              FontAwesomeIcons.check,
+                                              size: 15,
+                                              color: returnColorFromString(sentCheck),
+                                            ),
                                 ],
                               )
                             ],
@@ -1306,8 +1177,7 @@ class _TextUserChatState extends State<TextUserChat> {
                   ),
                 ],
               );
-            }
-            else{
+            } else {
               if (widget.model!.reply!.type == 'audio') {
                 return Column(
                   children: [
@@ -1316,8 +1186,8 @@ class _TextUserChatState extends State<TextUserChat> {
                           color: widget.model!.seen != '0'
                               ? returnColorFromString(seenBackColor)
                               : widget.model!.delivered != '0'
-                              ? returnColorFromString(receiveBackColor)
-                              : returnColorFromString(sentBackColor),
+                                  ? returnColorFromString(receiveBackColor)
+                                  : returnColorFromString(sentBackColor),
                           borderRadius: BorderRadius.circular(8)),
                       child: Column(
                         children: [
@@ -1325,37 +1195,32 @@ class _TextUserChatState extends State<TextUserChat> {
                             height: height * 0.070,
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.1), borderRadius: BorderRadius.circular(5)),
                             margin: EdgeInsets.only(left: width * 0.010, right: width * 0.010, top: height * 0.0050),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                              Container(
+                                height: height * 0.070,
+                                width: 4,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
+                                  color: Colors.deepPurple,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  SizedBox(height: 5),
+                                  Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                                      style: TextStyle(color: Colors.blue)),
                                   Container(
-                                    height: height * 0.070,
-                                    width: 4,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30), bottomLeft: Radius.circular(30)),
-                                      color: Colors.deepPurple,
+                                    //width: 50,
+                                    //color: Colors.black,
+                                    child: Row(
+                                      children: [Icon(Icons.mic), Text('Voice message')],
                                     ),
                                   ),
-                                  SizedBox(width: 5),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(height: 5),
-                                      Text('${widget.model!.messageUser!.fName}' +
-                                          '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
-                                      Container(
-                                        //width: 50,
-                                        //color: Colors.black,
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.mic),
-                                            Text('Voice message')
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ]),
+                                ],
+                              ),
+                            ]),
                           ),
                           Container(
                             child: Column(
@@ -1367,8 +1232,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                       color: widget.model!.seen != '0'
                                           ? returnColorFromString(seenTextColor)
                                           : widget.model!.delivered != '0'
-                                          ? returnColorFromString(receiveTextColor)
-                                          : returnColorFromString(sentTextColor),
+                                              ? returnColorFromString(receiveTextColor)
+                                              : returnColorFromString(sentTextColor),
                                       fontWeight: FontWeight.w300,
                                       fontFamily: AppFonts.segoeui,
                                       fontSize: 14),
@@ -1387,8 +1252,8 @@ class _TextUserChatState extends State<TextUserChat> {
                                           color: widget.model!.seen != '0'
                                               ? returnColorFromString(seenTimeColor)
                                               : widget.model!.delivered != '0'
-                                              ? returnColorFromString(receiveTimeColor)
-                                              : returnColorFromString(sentTimeColor),
+                                                  ? returnColorFromString(receiveTimeColor)
+                                                  : returnColorFromString(sentTimeColor),
                                           fontFamily: AppFonts.segoeui,
                                           fontSize: 9.0,
                                         ),
@@ -1399,21 +1264,21 @@ class _TextUserChatState extends State<TextUserChat> {
                                     ),
                                     widget.model!.seen != '0'
                                         ? FaIcon(
-                                      FontAwesomeIcons.checkDouble,
-                                      size: 15,
-                                      color: returnColorFromString(seenCheck),
-                                    )
+                                            FontAwesomeIcons.checkDouble,
+                                            size: 15,
+                                            color: returnColorFromString(seenCheck),
+                                          )
                                         : widget.model!.delivered != '0'
-                                        ? FaIcon(
-                                      FontAwesomeIcons.checkDouble,
-                                      size: 15,
-                                      color: returnColorFromString(receiveCheck),
-                                    )
-                                        : FaIcon(
-                                      FontAwesomeIcons.check,
-                                      size: 15,
-                                      color: returnColorFromString(sentCheck),
-                                    ),
+                                            ? FaIcon(
+                                                FontAwesomeIcons.checkDouble,
+                                                size: 15,
+                                                color: returnColorFromString(receiveCheck),
+                                              )
+                                            : FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                                color: returnColorFromString(sentCheck),
+                                              ),
                                   ],
                                 )
                               ],
@@ -1430,7 +1295,6 @@ class _TextUserChatState extends State<TextUserChat> {
             }
           }
         }
-
 
         return Column(
           children: [
@@ -1462,8 +1326,8 @@ class _TextUserChatState extends State<TextUserChat> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: 5),
-                          Text('${widget.model!.messageUser!.fName}' +
-                              '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
+                          Text('${widget.model!.messageUser!.fName} ' + '${widget.model!.messageUser!.lName}   ',
+                              style: TextStyle(color: Colors.blue)),
                           ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: width / 1.5),
                             child: Text(

@@ -210,7 +210,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                            crossAxisAlignment: CrossAxisAlignment.start,
                            children: [
                              SizedBox(height: 5),
-                             Text('${widget.model!.messageUser!.fName}' +
+                             Text('${widget.model!.messageUser!.fName} ' +
                                  '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                              ConstrainedBox(
                                constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -409,7 +409,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                              crossAxisAlignment: CrossAxisAlignment.start,
                              children: [
                                SizedBox(height: 5),
-                               Text('${widget.model!.messageUser!.fName}' +
+                               Text('${widget.model!.messageUser!.fName} ' +
                                    '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                ConstrainedBox(
                                  constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -626,7 +626,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
                                  SizedBox(height: 5),
-                                 Text('${widget.model!.messageUser!.fName}' +
+                                 Text('${widget.model!.messageUser!.fName} ' +
                                      '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                  ConstrainedBox(
                                    constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -839,7 +839,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                  crossAxisAlignment: CrossAxisAlignment.start,
                                  children: [
                                    SizedBox(height: 5),
-                                   Text('${widget.model!.messageUser!.fName}' +
+                                   Text('${widget.model!.messageUser!.fName} ' +
                                        '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                    Row(
                                      children: [
@@ -1041,7 +1041,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                    crossAxisAlignment: CrossAxisAlignment.start,
                                    children: [
                                      SizedBox(height: 5),
-                                     Text('${widget.model!.messageUser!.fName}' +
+                                     Text('${widget.model!.messageUser!.fName} ' +
                                          '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                      Container(
                                        //width: 50,
@@ -1411,7 +1411,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: 5),
-                                  Text('${widget.model!.messageUser!.fName}' +
+                                  Text('${widget.model!.messageUser!.fName} ' +
                                       '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                   ConstrainedBox(
                                     constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -1569,7 +1569,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: 5),
-                                  Text('${widget.model!.messageUser!.fName}' +
+                                  Text('${widget.model!.messageUser!.fName} ' +
                                       '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                   Row(
                                     children: [
@@ -1729,7 +1729,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(height: 5),
-                                    Text('${widget.model!.messageUser!.fName}' +
+                                    Text('${widget.model!.messageUser!.fName} ' +
                                         '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                     ConstrainedBox(
                                       constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -1903,7 +1903,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 5),
-                                      Text('${widget.model!.messageUser!.fName}' +
+                                      Text('${widget.model!.messageUser!.fName} ' +
                                           '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                       ConstrainedBox(
                                         constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -2074,7 +2074,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: 5),
-                                        Text('${widget.model!.messageUser!.fName}' +
+                                        Text('${widget.model!.messageUser!.fName} ' +
                                             '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                         Container(
                                           //width: 50,
@@ -2226,7 +2226,7 @@ class _ImageViewUserChatState extends State<ImageViewUserChat> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 5),
-                              Text('${widget.model!.messageUser!.fName}' +
+                              Text('${widget.model!.messageUser!.fName} ' +
                                   '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                               ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: width / 1.5),

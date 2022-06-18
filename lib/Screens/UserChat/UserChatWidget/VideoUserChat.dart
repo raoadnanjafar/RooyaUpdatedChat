@@ -127,7 +127,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
         );
       }else{
         if(widget.model!.reply!.type == 'text'){
-          return Row(
+          return Row  (
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
@@ -205,7 +205,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: 5),
-                            Text('${widget.model!.messageUser!.fName}' +
+                            Text('${widget.model!.messageUser!.fName} ' +
                                 '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                             ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -396,7 +396,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 5),
-                              Text('${widget.model!.messageUser!.fName}' +
+                              Text('${widget.model!.messageUser!.fName} ' +
                                   '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                               ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -410,7 +410,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                             ],
                           ),
                           // Expanded(child: SizedBox()),
-                          SizedBox(width: 70,),
+                          SizedBox(width: 65),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(5),
                             child: Container(
@@ -602,7 +602,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 5),
-                                Text('${widget.model!.messageUser!.fName}' +
+                                Text('${widget.model!.messageUser!.fName} ' +
                                     '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                 ConstrainedBox(
                                   constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -811,7 +811,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: 5),
-                                  Text('${widget.model!.messageUser!.fName}' +
+                                  Text('${widget.model!.messageUser!.fName} ' +
                                       '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                   Row(
                                     children: [
@@ -1005,7 +1005,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(height: 5),
-                                    Text('${widget.model!.messageUser!.fName}' +
+                                    Text('${widget.model!.messageUser!.fName} ' +
                                         '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                     Container(
                                       //width: 50,
@@ -1356,7 +1356,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 5),
-                                Text('${widget.model!.messageUser!.fName}' +
+                                Text('${widget.model!.messageUser!.fName} ' +
                                     '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                 ConstrainedBox(
                                   constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -1521,7 +1521,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(height: 5),
-                                  Text('${widget.model!.messageUser!.fName}' +
+                                  Text('${widget.model!.messageUser!.fName} ' +
                                       '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                   ConstrainedBox(
                                     constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -1699,7 +1699,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(height: 5),
-                                    Text('${widget.model!.messageUser!.fName}' +
+                                    Text('${widget.model!.messageUser!.fName} ' +
                                         '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                     Row(
                                       children: [
@@ -1866,7 +1866,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 5),
-                                      Text('${widget.model!.messageUser!.fName}' +
+                                      Text('${widget.model!.messageUser!.fName} ' +
                                           '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                       ConstrainedBox(
                                         constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -2047,7 +2047,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(height: 5),
-                                        Text('${widget.model!.messageUser!.fName}' +
+                                        Text('${widget.model!.messageUser!.fName} ' +
                                             '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                         Container(
                                           //width: 50,
@@ -2214,7 +2214,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(height: 5),
-                                Text('${widget.model!.messageUser!.fName}' +
+                                Text('${widget.model!.messageUser!.fName} ' +
                                     '${widget.model!.messageUser!.lName}   ',style: TextStyle(color: Colors.blue)),
                                 ConstrainedBox(
                                   constraints: BoxConstraints(maxWidth: width / 1.5),
@@ -2256,10 +2256,14 @@ class _VideoUserChatState extends State<VideoUserChat> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
-                              child: Icon(
-                                Icons.play_circle_fill,
-                                size: 40,
-                                color: Colors.white,
+                              child: Stack(
+                                children: [
+                                  Image.network('${widget.model!.thumb}',fit: BoxFit.fill),
+                                  Positioned(
+                                      top: 110,
+                                      right: 60,
+                                      child: Icon(Icons.play_circle_filled,color: Colors.white,size: 40,))
+                                ],
                               ),
                             ),
                           ),

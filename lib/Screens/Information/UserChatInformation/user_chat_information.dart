@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/GlobalWidget/FileUploader.dart';
 import 'package:rooya/Models/UserDataModel.dart';
@@ -15,17 +19,22 @@ import 'package:rooya/Utils/primary_color.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:rooya/Utils/text_filed/app_font.dart';
 import '../../../ApiConfig/BaseURL.dart';
+import '../../../GlobalWidget/Photo_View_Class.dart';
 import '../../../GlobalWidget/SnackBarApp.dart';
+import '../../../Models/UserStoriesModel.dart';
+import '../../../Utils/StoryViewPage.dart';
+import '../../../Utils/UserDataService.dart';
 import 'UserChatInformationController.dart';
 
 class UserChatInformation extends StatefulWidget {
   final String? userID;
+  final UserStoryModel? userStory;
 
-  const UserChatInformation({
+  UserChatInformation({
     Key? key,
     this.userID,
+    this.userStory,
   }) : super(key: key);
-
 
   @override
   _UserChatInformationState createState() => _UserChatInformationState();
@@ -42,6 +51,9 @@ class _UserChatInformationState extends State<UserChatInformation> {
     super.initState();
   }
 
+  var hasUserStory = true.obs;
+  var allstoryList = <UserStoryModel>[];
+  var storyIds = [];
   bool isloading = false;
 
   @override
@@ -78,17 +90,24 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                 ),
                                 actions: [
                                   Visibility(
-                                    visible: true,
+                                    visible: infoController.infoModel.value.userData!.userId == UserDataService.userDataModel!.userData!.userId
+                                        ? true
+                                        : false,
                                     child: Container(
                                       child: IconButton(
                                           onPressed: () async {
-                                            UpdateInfo(context,infoController.infoModel.value,(p0) => null, ).then((value) async{
-                                              await infoController.getGroupInfo(userID: widget.userID);
-                                              setState(() {});
-                                              setState(() {
-                                                isloading = false;
-                                              });
-                                            });
+                                            ModelButtom();
+                                            // UpdateInfo(
+                                            //   context,
+                                            //   infoController.infoModel.value,
+                                            //   (p0) => null,
+                                            // ).then((value) async {
+                                            //   await infoController.getGroupInfo(userID: widget.userID);
+                                            //   setState(() {});
+                                            //   setState(() {
+                                            //     isloading = false;
+                                            //   });
+                                            // });
                                           },
                                           icon: Icon(
                                             Icons.edit,
@@ -98,128 +117,131 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                       decoration: BoxDecoration(color: buttonColor, shape: BoxShape.circle),
                                     ),
                                   ),
-                                  Visibility(
-                                    visible: true,
-                                    child: Container(
-                                      child: IconButton(
-                                          onPressed: () async {
-                                            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                              type: FileType.custom,
-                                              allowedExtensions: [
-                                                'jpg',
-                                                'jpeg',
-                                                'png',
-                                              ],
-                                            );
-                                            if (result!.files.isNotEmpty) {
-                                              print('file path is = ${result.files[0].path}');
-                                              setState(() {
-                                                isloading = true;
-                                              });
-                                              var file = File('${result.files[0].path}');
-                                              String fileName = file.path.split('/').last;
-                                              Map<String, dynamic> data = {
-                                                'server_key': serverKey,
-                                                'cover': await dio.MultipartFile.fromFile(
-                                                  '${file.path}',
-                                                  filename: '$fileName',
-                                                ),
-                                              };
-                                              await updateUserCoverInformation(map: data);
-                                              infoController.getGroupInfo(userID: widget.userID);
-                                              setState(() {});
-                                              setState(() {
-                                                isloading = false;
-                                              });
-                                            }
-                                          },
-                                          icon: Icon(
-                                            Icons.camera_alt_outlined,
-                                            color: Colors.white,
-                                          )),
-                                      margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(color: buttonColor, shape: BoxShape.circle),
-                                    ),
-                                  )
+                                  // Visibility(
+                                  //   visible: infoController.infoModel.value.userData!.userId == UserDataService.userDataModel!.userData!.userId
+                                  //       ? true
+                                  //       : false,
+                                  //   child: Container(
+                                  //     child: IconButton(
+                                  //         onPressed: () async {
+                                  //           // FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                  //           //   type: FileType.custom,
+                                  //           //   allowedExtensions: [
+                                  //           //     'jpg',
+                                  //           //     'jpeg',
+                                  //           //     'png',
+                                  //           //   ],
+                                  //           // );
+                                  //           // if (result!.files.isNotEmpty) {
+                                  //           //   print('file path is = ${result.files[0].path}');
+                                  //           //   setState(() {
+                                  //           //     isloading = true;
+                                  //           //   });
+                                  //           //   var file = File('${result.files[0].path}');
+                                  //           //   String fileName = file.path.split('/').last;
+                                  //           //   Map<String, dynamic> data = {
+                                  //           //     'server_key': serverKey,
+                                  //           //     'cover': await dio.MultipartFile.fromFile(
+                                  //           //       '${file.path}',
+                                  //           //       filename: '$fileName',
+                                  //           //     ),
+                                  //           //   };
+                                  //           //   await updateUserCoverInformation(map: data);
+                                  //           //   infoController.getGroupInfo(userID: widget.userID);
+                                  //           //   setState(() {});
+                                  //           //   setState(() {
+                                  //           //     isloading = false;
+                                  //           //   });
+                                  //           // }
+                                  //         },
+                                  //         icon: Icon(
+                                  //           Icons.camera_alt_outlined,
+                                  //           color: Colors.white,
+                                  //         )),
+                                  //     margin: EdgeInsets.only(right: 10),
+                                  //     decoration: BoxDecoration(color: buttonColor, shape: BoxShape.circle),
+                                  //   ),
+                                  // )
                                 ],
                                 flexibleSpace: FlexibleSpaceBar(
                                   titlePadding: EdgeInsets.only(top: 2, left: 50, bottom: 2),
                                   title: Row(
                                     children: [
-                                      CircularProfileAvatar(
-                                        '',
-                                        onTap: () {},
-                                        radius: 25,
-                                        backgroundColor: Colors.blueGrey[100]!,
-                                        child: InkWell(
-                                          onTap: () async{
-                                            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                              type: FileType.custom,
-                                              allowedExtensions: [
-                                                'jpg',
-                                                'jpeg',
-                                                'png',
-                                              ],
-                                            );
-                                            if (result!.files.isNotEmpty) {
-                                              print('file path is = ${result.files[0].path}');
-                                              setState(() {
-                                                isloading = true;
-                                              });
-                                              var file = File('${result.files[0].path}');
-                                              String fileName = file.path.split('/').last;
-                                              Map<String, dynamic> data = {
-                                                'server_key': serverKey,
-                                                'avatar': await dio.MultipartFile.fromFile(
-                                                  '${file.path}',
-                                                  filename: '$fileName',
+                                      hasUserStory.value
+                                          ? CircularProfileAvatar(
+                                              '${UserDataService.userDataModel!.userData!.avatar}',
+                                              radius: 25,
+                                              borderWidth: 2,
+                                              borderColor: buttonColor,
+                                              backgroundColor: Colors.blueGrey[100]!,
+                                              onTap: () {
+                                                context.pushTransparentRoute(StoryViewPage(
+                                                  userStories: widget.userStory,
+                                                  isAdmin: true,
+                                                ));
+                                              },
+                                            )
+                                          : CircularProfileAvatar(
+                                              '',
+                                              onTap: () {},
+                                              radius: 25,
+                                              backgroundColor: Colors.blueGrey[100]!,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  // if (infoController.infoModel.value.userData!.userId ==
+                                                  //     UserDataService.userDataModel!.userData!.userId) {
+                                                  //   FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                                  //     type: FileType.custom,
+                                                  //     allowedExtensions: [
+                                                  //       'jpg',
+                                                  //       'jpeg',
+                                                  //       'png',
+                                                  //     ],
+                                                  //   );
+                                                  //   if (result!.files.isNotEmpty) {
+                                                  //     print('file path is = ${result.files[0].path}');
+                                                  //     setState(() {
+                                                  //       isloading = true;
+                                                  //     });
+                                                  //     var file = File('${result.files[0].path}');
+                                                  //     String fileName = file.path.split('/').last;
+                                                  //     Map<String, dynamic> data = {
+                                                  //       'server_key': serverKey,
+                                                  //       'avatar': await dio.MultipartFile.fromFile(
+                                                  //         '${file.path}',
+                                                  //         filename: '$fileName',
+                                                  //       ),
+                                                  //     };
+                                                  //     await updateUserCoverInformation(map: data);
+                                                  //     infoController.getGroupInfo(userID: widget.userID);
+                                                  //     setState(() {});
+                                                  //     setState(() {
+                                                  //       isloading = false;
+                                                  //     });
+                                                  //   }
+                                                  // } else {
+                                                  //   Get.to(Photo_View_Class(
+                                                  //     url: "${infoController.infoModel.value.userData!.avatar}",
+                                                  //   ));
+                                                  // }
+                                                },
+                                                child: CachedNetworkImage(
+                                                  imageUrl: '${infoController.infoModel.value.userData!.avatar}',
+                                                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                                                  errorWidget: (context, url, error) => Icon(Icons.person),
+                                                  fit: BoxFit.cover,
                                                 ),
-                                              };
-                                              await updateUserCoverInformation(map: data);
-                                              infoController.getGroupInfo(userID: widget.userID);
-                                              setState(() {});
-                                              setState(() {
-                                                isloading = false;
-                                              });
-                                            }
-                                            // if (result!.files.isNotEmpty) {
-                                            //   print(
-                                            //       'file path is = ${result.files[0].path}');
-                                            //   setState(() {
-                                            //     isloading = true;
-                                            //   });
-                                            //   String path = await uploadFile(
-                                            //       '${result.files[0].path}');
-                                            //   print('upload path is =$path');
-                                            //   Map mapdata = {
-                                            //     'groupId': '${widget.groupID}',
-                                            //     'groupImage': '$path'
-                                            //   };
-                                            //   await ApiUtils
-                                            //       .changeGroupImagePost(
-                                            //           map: mapdata);
-                                            //   await infoController.getGroupInfo(
-                                            //       groupID: widget.groupID);
-                                            //   setState(() {
-                                            //     isloading = false;
-                                            //   });
-                                            // }
-                                          },
-                                          child: CachedNetworkImage(
-                                            imageUrl: '${infoController.infoModel.value.userData!.avatar}',
-                                            placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                            errorWidget: (context, url, error) => Icon(Icons.person),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        imageFit: BoxFit.cover,
-                                      ),
+                                              ),
+                                              imageFit: BoxFit.cover,
+                                            ),
                                       SizedBox(
                                         width: 5,
                                       ),
                                       Text(
-                                         '${infoController.infoModel.value.userData!.firstName}'.isEmpty?'${infoController.infoModel.value.userData!.username}': '${infoController.infoModel.value.userData!.firstName} ' +
-                                              '${infoController.infoModel.value.userData!.lastName}',
+                                        '${infoController.infoModel.value.userData!.firstName}'.isEmpty
+                                            ? '${infoController.infoModel.value.userData!.username}'
+                                            : '${infoController.infoModel.value.userData!.firstName} ' +
+                                                '${infoController.infoModel.value.userData!.lastName}',
                                         style: TextStyle(fontSize: 14, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -935,11 +957,7 @@ class _UserChatInformationState extends State<UserChatInformation> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController userAboutController = TextEditingController();
 
- Future UpdateInfo(
-    BuildContext context,
-    UserInfoModel model,
-      Function(Map) mapData
-  ) {
+  Future UpdateInfo(BuildContext context, UserInfoModel model, Function(Map) mapData) {
     firstNameController.text = model.userData!.username ?? '';
     lastNameController.text = model.userData!.lastName ?? '';
     userAboutController.text = model.userData!.lastName ?? '';
@@ -1013,13 +1031,13 @@ class _UserChatInformationState extends State<UserChatInformation> {
                           height: 14,
                         ),
                         InkWell(
-                          onTap: () async{
+                          onTap: () async {
                             if (firstNameController.text.trim().isNotEmpty && lastNameController.text.trim().isNotEmpty) {
                               Map<String, dynamic> data = {
                                 'server_key': serverKey,
                                 'first_name': '${firstNameController.text}',
                                 'last_name': '${lastNameController.text}',
-                                'about' : '${userAboutController.text}',
+                                'about': '${userAboutController.text}',
                               };
                               await updateUserCoverInformation(map: data);
                               Navigator.of(context).pop();
@@ -1229,4 +1247,108 @@ class _UserChatInformationState extends State<UserChatInformation> {
       ],
     );
   }
+
+  Future ModelButtom(){
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: new Text('Edit User Name'),
+                onTap: () {
+                  UpdateInfo(
+                    context,
+                    infoController.infoModel.value,
+                        (p0) => null,
+                  ).then((value) async {
+                    await infoController.getGroupInfo(userID: widget.userID);
+                    setState(() {});
+                    setState(() {
+                      isloading = false;
+                    });
+                  });
+                },
+              ),
+              ListTile(
+                title: new Text('Edit User Profile'),
+                onTap: () async{
+                  if (infoController.infoModel.value.userData!.userId ==
+                      UserDataService.userDataModel!.userData!.userId) {
+                    FilePickerResult? result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: [
+                        'jpg',
+                        'jpeg',
+                        'png',
+                      ],
+                    );
+                    if (result!.files.isNotEmpty) {
+                      print('file path is = ${result.files[0].path}');
+                      setState(() {
+                        isloading = true;
+                      });
+                      var file = File('${result.files[0].path}');
+                      String fileName = file.path.split('/').last;
+                      Map<String, dynamic> data = {
+                        'server_key': serverKey,
+                        'avatar': await dio.MultipartFile.fromFile(
+                          '${file.path}',
+                          filename: '$fileName',
+                        ),
+                      };
+                      await updateUserCoverInformation(map: data);
+                      infoController.getGroupInfo(userID: widget.userID);
+                      setState(() {});
+                      setState(() {
+                        isloading = false;
+                      });
+                    }
+                  } else {
+                    Get.to(Photo_View_Class(
+                      url: "${infoController.infoModel.value.userData!.avatar}",
+                    ));
+                  }
+                },
+              ),
+              ListTile(
+                title: new Text('Edit User Cover Photo'),
+                onTap: () async {
+                  FilePickerResult? result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: [
+                      'jpg',
+                      'jpeg',
+                      'png',
+                    ],
+                  );
+                  if (result!.files.isNotEmpty) {
+                    print('file path is = ${result.files[0].path}');
+                    setState(() {
+                      isloading = true;
+                    });
+                    var file = File('${result.files[0].path}');
+                    String fileName = file.path.split('/').last;
+                    Map<String, dynamic> data = {
+                      'server_key': serverKey,
+                      'cover': await dio.MultipartFile.fromFile(
+                        '${file.path}',
+                        filename: '$fileName',
+                      ),
+                    };
+                    await updateUserCoverInformation(map: data);
+                    infoController.getGroupInfo(userID: widget.userID);
+                    setState(() {});
+                    setState(() {
+                      isloading = false;
+                    });
+                  }
+                },
+              ),
+            ],
+          );
+        }).then((value) => infoController.getGroupInfo(userID: widget.userID));
+  }
+
 }
