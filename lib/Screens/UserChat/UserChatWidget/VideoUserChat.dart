@@ -67,7 +67,7 @@ class _VideoUserChatState extends State<VideoUserChat> {
                         children: [
                           Image.network('${widget.model!.thumb}',fit: BoxFit.fill),
                           Positioned(
-                              top: 120,
+                              top: 100,
                               right: 60,
                               child: Icon(Icons.play_circle_filled,color: Colors.white,size: 40,))
                         ],

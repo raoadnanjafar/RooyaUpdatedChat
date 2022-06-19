@@ -1541,7 +1541,7 @@ class _UserChatState extends State<UserChat>
                                                                     : ''))!
                                                             .then((value) {
                                                           isActivereply.value =
-                                                              true;
+                                                              false;
                                                           selectedOneToOneChat
                                                               .clear();
                                                           setState(() {});
@@ -1600,7 +1600,7 @@ class _UserChatState extends State<UserChat>
                                                                       : '')
                                                               .then((value) {
                                                             isActivereply
-                                                                .value = true;
+                                                                .value = false;
                                                             selectedOneToOneChat
                                                                 .clear();
                                                             setState(() {});

@@ -781,7 +781,7 @@ class _ChatScreenState extends State<ChatScreen>
                                             await sentMessageAsFile(
                                                 userID: i,
                                                 text: '',
-                                                filePath: '${pickedFile.path}');
+                                                filePath: '${pickedFile.path}').then((value) => controller.getChatList());
                                           }
                                           Navigator.of(context).pop();
                                         }

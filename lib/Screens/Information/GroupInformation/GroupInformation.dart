@@ -526,10 +526,10 @@ class _GroupInformationState extends State<GroupInformation> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Text(
-                                    '(Admin)',
-                                    style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 10),
-                                  ),
+                                  // Text(
+                                  //   '(Admin)',
+                                  //   style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 10),
+                                  // ),
                                 ],
                               ),
                               subtitle: Text(
@@ -689,19 +689,25 @@ class _GroupInformationState extends State<GroupInformation> {
               content: StatefulBuilder(
                 builder: (context, setState) {
                   return Container(
-                      height: 500,
+                      height: 340,
                       width: 400,
                       //color: Colors.green,
-                      child: Column(children: [
-                        Text(
-                          'Update Group Info',
-                          style: TextStyle(color: Colors.green, fontSize: 16),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Update Group Info',
+                            style: TextStyle(color: Colors.green, fontSize: 16,fontWeight: FontWeight.bold),
+                          ),
                         ),
                         SizedBox(
-                          height: 12,
+                          height: 18,
                         ),
+                        Text('Edit Group Name:',style: TextStyle(color: Colors.green, fontSize: 16),),
                         SizedBox(
-                          height: 12,
+                          height: 8,
                         ),
                         Container(
                           width: double.infinity,
@@ -716,10 +722,15 @@ class _GroupInformationState extends State<GroupInformation> {
                           ),
                         ),
                         SizedBox(
-                          height: 12,
+                          height: 18,
+                        ),
+                        Text('Edit Group About:',style: TextStyle(color: Colors.green, fontSize: 16),),
+                        SizedBox(
+                          height: 8,
                         ),
                         Container(
                           width: double.infinity,
+                          height: 100,
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
                           child: TextField(
@@ -727,13 +738,13 @@ class _GroupInformationState extends State<GroupInformation> {
                             maxLines: 14,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Group Description',
+                                hintText: 'About',
                                 hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
                                 contentPadding: EdgeInsets.only(left: 8)),
                           ),
                         ),
                         SizedBox(
-                          height: 14,
+                          height: 30,
                         ),
                         InkWell(
                           onTap: () async {

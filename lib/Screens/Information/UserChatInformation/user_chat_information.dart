@@ -969,20 +969,27 @@ class _UserChatInformationState extends State<UserChatInformation> {
               content: StatefulBuilder(
                 builder: (context, setState) {
                   return Container(
-                      height: 500,
+                      height: 400,
                       width: 400,
                       //color: Colors.green,
-                      child: Column(children: [
-                        Text(
-                          'Update Group Info',
-                          style: TextStyle(color: Colors.green, fontSize: 16),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Update User Info',
+                            style: TextStyle(color: Colors.green, fontSize: 16,fontWeight: FontWeight.bold),
+                          ),
                         ),
                         SizedBox(
                           height: 12,
                         ),
-                        SizedBox(
-                          height: 12,
-                        ),
+
+                        Text('First Name:',style: TextStyle(color: Colors.green, fontSize: 16),),
+                            SizedBox(
+                              height: 8,
+                            ),
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
@@ -998,6 +1005,10 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         SizedBox(
                           height: 12,
                         ),
+                            Text('Last Name:',style: TextStyle(color: Colors.green, fontSize: 16),),
+                            SizedBox(
+                              height: 8,
+                            ),
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
@@ -1013,8 +1024,13 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         SizedBox(
                           height: 12,
                         ),
+                            Text('About:',style: TextStyle(color: Colors.green, fontSize: 16),),
+                            SizedBox(
+                              height: 8,
+                            ),
                         Container(
                           width: double.infinity,
+                          height: 100,
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
                           child: TextField(
@@ -1022,13 +1038,13 @@ class _UserChatInformationState extends State<UserChatInformation> {
                             maxLines: 14,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Group Description',
+                                hintText: 'About',
                                 hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
                                 contentPadding: EdgeInsets.only(left: 8)),
                           ),
                         ),
                         SizedBox(
-                          height: 14,
+                          height: 20,
                         ),
                         InkWell(
                           onTap: () async {
