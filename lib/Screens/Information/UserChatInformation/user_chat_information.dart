@@ -24,6 +24,7 @@ import '../../../GlobalWidget/SnackBarApp.dart';
 import '../../../Models/UserStoriesModel.dart';
 import '../../../Utils/StoryViewPage.dart';
 import '../../../Utils/UserDataService.dart';
+import '../../sliver_class/sliver.dart';
 import 'UserChatInformationController.dart';
 
 class UserChatInformation extends StatefulWidget {
@@ -47,13 +48,11 @@ class _UserChatInformationState extends State<UserChatInformation> {
 
   @override
   void initState() {
+    print('${widget.userID}');
     infoController.getGroupInfo(userID: widget.userID);
     super.initState();
   }
 
-  var hasUserStory = true.obs;
-  var allstoryList = <UserStoryModel>[];
-  var storyIds = [];
   bool isloading = false;
 
   @override
@@ -90,13 +89,20 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                 ),
                                 actions: [
                                   Visibility(
-                                    visible: infoController.infoModel.value.userData!.userId == UserDataService.userDataModel!.userData!.userId
+                                    visible: infoController.infoModel.value
+                                                .userData!.userId ==
+                                            UserDataService
+                                                .userDataModel!.userData!.userId
                                         ? true
                                         : false,
                                     child: Container(
                                       child: IconButton(
                                           onPressed: () async {
-                                            ModelButtom();
+                                            ModelButtom().then((value) async {
+                                              await infoController.getGroupInfo(
+                                                  userID: widget.userID);
+                                              setState(() {});
+                                            });
                                             // UpdateInfo(
                                             //   context,
                                             //   infoController.infoModel.value,
@@ -114,7 +120,9 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                             color: Colors.white,
                                           )),
                                       margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(color: buttonColor, shape: BoxShape.circle),
+                                      decoration: BoxDecoration(
+                                          color: buttonColor,
+                                          shape: BoxShape.circle),
                                     ),
                                   ),
                                   // Visibility(
@@ -164,30 +172,44 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                   // )
                                 ],
                                 flexibleSpace: FlexibleSpaceBar(
-                                  titlePadding: EdgeInsets.only(top: 2, left: 50, bottom: 2),
+                                  titlePadding: EdgeInsets.only(
+                                      top: 2, left: 50, bottom: 2),
                                   title: Row(
                                     children: [
-                                      hasUserStory.value
+                                      storyIds.contains(infoController
+                                              .infoModel.value.userData!.userId)
                                           ? CircularProfileAvatar(
-                                              '${UserDataService.userDataModel!.userData!.avatar}',
+                                              '${infoController.infoModel.value.userData!.avatar}',
                                               radius: 25,
                                               borderWidth: 2,
                                               borderColor: buttonColor,
-                                              backgroundColor: Colors.blueGrey[100]!,
+                                              backgroundColor:
+                                                  Colors.blueGrey[100]!,
                                               onTap: () {
-                                                context.pushTransparentRoute(StoryViewPage(
-                                                  userStories: widget.userStory,
-                                                  isAdmin: true,
+                                                int i = storyIds.indexWhere(
+                                                    (element) =>
+                                                        element ==
+                                                        '${infoController.infoModel.value.userData!.userId}');
+                                                context.pushTransparentRoute(
+                                                    StoryViewPage(
+                                                  userStories: allstoryList[i],
+                                                  isAdmin: storage
+                                                              .read('userID') ==
+                                                          '${infoController.infoModel.value.userData!.userId}'
+                                                      ? true
+                                                      : false,
                                                 ));
                                               },
                                             )
                                           : CircularProfileAvatar(
                                               '',
-                                              onTap: () {},
                                               radius: 25,
-                                              backgroundColor: Colors.blueGrey[100]!,
+                                              backgroundColor:
+                                                  Colors.blueGrey[100]!,
                                               child: InkWell(
                                                 onTap: () async {
+                                                  print(
+                                                      '${infoController.infoModel.value.userData!.userId} and $storyIds');
                                                   // if (infoController.infoModel.value.userData!.userId ==
                                                   //     UserDataService.userDataModel!.userData!.userId) {
                                                   //   FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -226,9 +248,15 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                   // }
                                                 },
                                                 child: CachedNetworkImage(
-                                                  imageUrl: '${infoController.infoModel.value.userData!.avatar}',
-                                                  placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                                  errorWidget: (context, url, error) => Icon(Icons.person),
+                                                  imageUrl:
+                                                      '${infoController.infoModel.value.userData!.avatar}',
+                                                  placeholder: (context, url) =>
+                                                      Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.person),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -238,20 +266,27 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                         width: 5,
                                       ),
                                       Text(
-                                        '${infoController.infoModel.value.userData!.firstName}'.isEmpty
+                                        '${infoController.infoModel.value.userData!.firstName}'
+                                                .isEmpty
                                             ? '${infoController.infoModel.value.userData!.username}'
                                             : '${infoController.infoModel.value.userData!.firstName} ' +
                                                 '${infoController.infoModel.value.userData!.lastName}',
-                                        style: TextStyle(fontSize: 14, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: AppFonts.segoeui,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
                                   centerTitle: false,
                                   background: CachedNetworkImage(
-                                    imageUrl: '${infoController.infoModel.value.userData!.cover}',
+                                    imageUrl:
+                                        '${infoController.infoModel.value.userData!.cover}',
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                    placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
                                   ),
                                 ),
                               ),
@@ -303,20 +338,23 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                       height: height * 0.08,
                                       //color: Colors.green,
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Container(
                                             height: height * 0.06,
                                             width: width * 0.45,
                                             color: Colors.blueGrey[50],
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
                                                   'Notification',
                                                   style: TextStyle(
                                                     fontSize: 13,
-                                                    fontFamily: AppFonts.segoeui,
+                                                    fontFamily:
+                                                        AppFonts.segoeui,
                                                   ),
                                                 ),
                                                 CupertinoSwitch(
@@ -335,13 +373,15 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                             width: width * 0.45,
                                             color: Colors.blueGrey[50],
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
                                                   'Favorite Message',
                                                   style: TextStyle(
                                                     fontSize: 13,
-                                                    fontFamily: AppFonts.segoeui,
+                                                    fontFamily:
+                                                        AppFonts.segoeui,
                                                   ),
                                                 ),
                                                 Icon(
@@ -356,13 +396,15 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(left: width * 0.035),
+                                      padding:
+                                          EdgeInsets.only(left: width * 0.035),
                                       child: Container(
                                         height: height * 0.06,
                                         width: width * 0.93,
                                         color: Colors.blueGrey[50],
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
                                           children: [
                                             Text(
                                               'Auto Save Media to Camera Role',
@@ -393,7 +435,8 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                             height: height * 0.02,
                                           ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Card(
                                                 elevation: 2,
@@ -404,14 +447,17 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: const Color(0x290bab0d),
+                                                        color: const Color(
+                                                            0x290bab0d),
                                                         offset: Offset(0, 3),
                                                         blurRadius: 6,
                                                       ),
                                                     ],
                                                   ),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
                                                     children: [
                                                       Container(
                                                         height: 40,
@@ -424,7 +470,13 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                       ),
                                                       Text(
                                                         'Photos',
-                                                        style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontFamily: AppFonts
+                                                                .segoeui,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       )
                                                     ],
                                                   ),
@@ -439,14 +491,17 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: const Color(0x290bab0d),
+                                                        color: const Color(
+                                                            0x290bab0d),
                                                         offset: Offset(0, 3),
                                                         blurRadius: 6,
                                                       ),
                                                     ],
                                                   ),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
                                                     children: [
                                                       Container(
                                                         height: 25,
@@ -459,7 +514,13 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                       ),
                                                       Text(
                                                         'Videos',
-                                                        style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontFamily: AppFonts
+                                                                .segoeui,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       )
                                                     ],
                                                   ),
@@ -471,7 +532,8 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                             height: height * 0.02,
                                           ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Card(
                                                 elevation: 2,
@@ -482,14 +544,17 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: const Color(0x290bab0d),
+                                                        color: const Color(
+                                                            0x290bab0d),
                                                         offset: Offset(0, 3),
                                                         blurRadius: 6,
                                                       ),
                                                     ],
                                                   ),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
                                                     children: [
                                                       Container(
                                                         height: 40,
@@ -502,7 +567,13 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                       ),
                                                       Text(
                                                         'Links',
-                                                        style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontFamily: AppFonts
+                                                                .segoeui,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       )
                                                     ],
                                                   ),
@@ -517,14 +588,17 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
-                                                        color: const Color(0x290bab0d),
+                                                        color: const Color(
+                                                            0x290bab0d),
                                                         offset: Offset(0, 3),
                                                         blurRadius: 6,
                                                       ),
                                                     ],
                                                   ),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
                                                     children: [
                                                       Container(
                                                         height: 35,
@@ -537,7 +611,13 @@ class _UserChatInformationState extends State<UserChatInformation> {
                                                       ),
                                                       Text(
                                                         'Documents',
-                                                        style: TextStyle(fontSize: 15, fontFamily: AppFonts.segoeui, fontWeight: FontWeight.bold),
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            fontFamily: AppFonts
+                                                                .segoeui,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       )
                                                     ],
                                                   ),
@@ -946,7 +1026,8 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         child: Center(
                           child: CircularProgressIndicator(),
                         ),
-                        decoration: BoxDecoration(color: Colors.black.withOpacity(0.3)),
+                        decoration:
+                            BoxDecoration(color: Colors.black.withOpacity(0.3)),
                       )
                     : SizedBox()
               ],
@@ -957,7 +1038,8 @@ class _UserChatInformationState extends State<UserChatInformation> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController userAboutController = TextEditingController();
 
-  Future UpdateInfo(BuildContext context, UserInfoModel model, Function(Map) mapData) {
+  Future UpdateInfo(
+      BuildContext context, UserInfoModel model, Function(Map) mapData) {
     firstNameController.text = model.userData!.username ?? '';
     lastNameController.text = model.userData!.lastName ?? '';
     userAboutController.text = model.userData!.lastName ?? '';
@@ -985,13 +1067,16 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         ),
                         Container(
                           width: double.infinity,
-                          decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
+                          decoration: BoxDecoration(
+                              color: Color(0XFFF5F5F5),
+                              borderRadius: BorderRadius.circular(8)),
                           child: TextField(
                             controller: firstNameController,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'User First Name',
-                                hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
+                                hintStyle: TextStyle(
+                                    fontSize: 13, fontFamily: AppFonts.segoeui),
                                 contentPadding: EdgeInsets.only(left: 8)),
                           ),
                         ),
@@ -1000,13 +1085,16 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         ),
                         Container(
                           width: double.infinity,
-                          decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
+                          decoration: BoxDecoration(
+                              color: Color(0XFFF5F5F5),
+                              borderRadius: BorderRadius.circular(8)),
                           child: TextField(
                             controller: lastNameController,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'User last Name',
-                                hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
+                                hintStyle: TextStyle(
+                                    fontSize: 13, fontFamily: AppFonts.segoeui),
                                 contentPadding: EdgeInsets.only(left: 8)),
                           ),
                         ),
@@ -1016,14 +1104,17 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         Container(
                           width: double.infinity,
                           padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(color: Color(0XFFF5F5F5), borderRadius: BorderRadius.circular(8)),
+                          decoration: BoxDecoration(
+                              color: Color(0XFFF5F5F5),
+                              borderRadius: BorderRadius.circular(8)),
                           child: TextField(
                             controller: userAboutController,
                             maxLines: 14,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Group Description',
-                                hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
+                                hintStyle: TextStyle(
+                                    fontSize: 13, fontFamily: AppFonts.segoeui),
                                 contentPadding: EdgeInsets.only(left: 8)),
                           ),
                         ),
@@ -1032,14 +1123,17 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         ),
                         InkWell(
                           onTap: () async {
-                            if (firstNameController.text.trim().isNotEmpty && lastNameController.text.trim().isNotEmpty) {
+                            if (firstNameController.text.trim().isNotEmpty &&
+                                lastNameController.text.trim().isNotEmpty) {
                               Map<String, dynamic> data = {
                                 'server_key': serverKey,
                                 'first_name': '${firstNameController.text}',
                                 'last_name': '${lastNameController.text}',
                                 'about': '${userAboutController.text}',
                               };
-                              await updateUserCoverInformation(map: data);
+                              dio.FormData formData =
+                                  new dio.FormData.fromMap(data);
+                              await updateUserCoverInformation(map: formData);
                               Navigator.of(context).pop();
                             } else {
                               snackBarFailer('Please fill up all the fields');
@@ -1052,10 +1146,15 @@ class _UserChatInformationState extends State<UserChatInformation> {
                               child: Center(
                                 child: Text(
                                   'Update',
-                                  style: TextStyle(color: Colors.white, fontSize: 13, fontFamily: AppFonts.segoeui),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontFamily: AppFonts.segoeui),
                                 ),
                               ),
-                              decoration: BoxDecoration(color: buttonColor, borderRadius: BorderRadius.circular(30)),
+                              decoration: BoxDecoration(
+                                  color: buttonColor,
+                                  borderRadius: BorderRadius.circular(30)),
                             ),
                           ),
                         )
@@ -1229,7 +1328,10 @@ class _UserChatInformationState extends State<UserChatInformation> {
             children: [
               Text(
                 '$name',
-                style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 15, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontFamily: AppFonts.segoeui,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 width: 10,
@@ -1248,7 +1350,7 @@ class _UserChatInformationState extends State<UserChatInformation> {
     );
   }
 
-  Future ModelButtom(){
+  Future ModelButtom() {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -1261,45 +1363,43 @@ class _UserChatInformationState extends State<UserChatInformation> {
                   UpdateInfo(
                     context,
                     infoController.infoModel.value,
-                        (p0) => null,
+                    (p0) => null,
                   ).then((value) async {
-                    await infoController.getGroupInfo(userID: widget.userID);
                     setState(() {});
                     setState(() {
                       isloading = false;
                     });
+                    Navigator.of(context).pop();
                   });
                 },
               ),
               ListTile(
                 title: new Text('Edit User Profile'),
-                onTap: () async{
+                onTap: () async {
                   if (infoController.infoModel.value.userData!.userId ==
                       UserDataService.userDataModel!.userData!.userId) {
-                    FilePickerResult? result = await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: [
-                        'jpg',
-                        'jpeg',
-                        'png',
-                      ],
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.image,
+                      allowMultiple: false,
                     );
                     if (result!.files.isNotEmpty) {
                       print('file path is = ${result.files[0].path}');
                       setState(() {
                         isloading = true;
                       });
-                      var file = File('${result.files[0].path}');
-                      String fileName = file.path.split('/').last;
+                      String fileName =
+                          '${result.files[0].path}'.split('/').last;
                       Map<String, dynamic> data = {
                         'server_key': serverKey,
                         'avatar': await dio.MultipartFile.fromFile(
-                          '${file.path}',
+                          '${result.files[0].path}',
                           filename: '$fileName',
                         ),
                       };
-                      await updateUserCoverInformation(map: data);
-                      infoController.getGroupInfo(userID: widget.userID);
+                      dio.FormData formData = new dio.FormData.fromMap(data);
+                      await updateUserCoverInformation(map: formData);
+                      Navigator.of(context).pop();
                       setState(() {});
                       setState(() {
                         isloading = false;
@@ -1315,13 +1415,10 @@ class _UserChatInformationState extends State<UserChatInformation> {
               ListTile(
                 title: new Text('Edit User Cover Photo'),
                 onTap: () async {
-                  FilePickerResult? result = await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: [
-                      'jpg',
-                      'jpeg',
-                      'png',
-                    ],
+                  FilePickerResult? result =
+                      await FilePicker.platform.pickFiles(
+                    type: FileType.image,
+                    allowMultiple: false,
                   );
                   if (result!.files.isNotEmpty) {
                     print('file path is = ${result.files[0].path}');
@@ -1329,6 +1426,7 @@ class _UserChatInformationState extends State<UserChatInformation> {
                       isloading = true;
                     });
                     var file = File('${result.files[0].path}');
+                    print('file path is = ${file.path}');
                     String fileName = file.path.split('/').last;
                     Map<String, dynamic> data = {
                       'server_key': serverKey,
@@ -1337,8 +1435,9 @@ class _UserChatInformationState extends State<UserChatInformation> {
                         filename: '$fileName',
                       ),
                     };
-                    await updateUserCoverInformation(map: data);
-                    infoController.getGroupInfo(userID: widget.userID);
+                    dio.FormData formData = new dio.FormData.fromMap(data);
+                    await updateUserCoverInformation(map: formData);
+                    Navigator.of(context).pop();
                     setState(() {});
                     setState(() {
                       isloading = false;
@@ -1348,7 +1447,6 @@ class _UserChatInformationState extends State<UserChatInformation> {
               ),
             ],
           );
-        }).then((value) => infoController.getGroupInfo(userID: widget.userID));
+        });
   }
-
 }

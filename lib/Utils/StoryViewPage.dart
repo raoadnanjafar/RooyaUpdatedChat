@@ -1,3 +1,4 @@
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
@@ -9,6 +10,7 @@ import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
 import 'dart:io' show Platform;
 import '../ApiConfig/BaseURL.dart';
+import '../GlobalWidget/FileUploader.dart';
 import '../Models/StoryView.dart';
 import '../Models/StoryViewsModel.dart';
 import 'UserDataService.dart';
@@ -74,187 +76,198 @@ class _StoryViewPageState extends State<StoryViewPage>
   bool openSheet = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: height,
-            width: width,
-            child: StoryView(
-              controller: controller,
-              currentIndex: (int c) {
-                print('$c');
-                currentIndex = c + 1;
-                ApiUtils.storyView(mapData: {
-                  'server_key': serverKey,
-                  'story_id':
-                      '${widget.userStories!.stories![currentIndex].id.toString()}'
+    return DismissiblePage(
+      onDismissed: () {
+        //Navigator.of(context).pop();
+      },
+      child: GestureDetector(
+        onVerticalDragUpdate: (details) {
+          print('Drag one ${details.delta.dy}');
+          if (details.delta.dy < -1.0) {
+            print('Drag two');
+            _controller.forward().whenComplete(() => _controller.reverse());
+            Future.delayed(Duration(milliseconds: 500), () {
+              if (openSheet == false && widget.isAdmin!) {
+                openSheet = true;
+                controller.pause();
+                storyPreview(widget.userStories!.stories![currentIndex].id
+                        .toString())
+                    .then((value) {
+                  controller.play();
+                  openSheet = false;
                 });
-              },
-              storyItems: widget.userStories!.stories!.map((e) {
-                if (e.videos == null || e.videos!.isEmpty) {
-                  return StoryItem.inlineImage(
-                    url: "${e.thumbnail}",
-                    controller: controller,
-                    imageFit: BoxFit.contain,
-                    duration: Duration(seconds: 10),
-                    caption: Text(
-                      "${e.description}",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        backgroundColor: Colors.black54,
-                        fontSize: 17,
-                      ),
-                    ),
-                  );
-                } else {
-                  return StoryItem.pageVideo(
-                    '${e.videos![0].filename}',
-                    controller: controller,
-                    caption: "${e.description}",
-                    duration: Duration(seconds: e.videos![0].totalTime!),
-                  );
-                }
-              }).toList(),
-              onStoryShow: (s) {
-                print("Showing a story");
-              },
-              onComplete: () {
-                print("Completed a cycle");
-                Navigator.pop(context);
-              },
-              progressPosition: ProgressPosition.top,
-              repeat: false,
-              inline: true,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Platform.isIOS
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 55, left: 10),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        Get.back();
-                      },
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.only(top: 40, left: 10),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        Get.back();
-                      },
-                    ),
-                  ),
-          ),
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.remove_red_eye,
-          //     color: Colors.white,
-          //   ),
-          //   onPressed: () {
-          //     if (storyLoaded = true) {
-          //       controller.pause();
-          //       storyPreview(widget
-          //           .userStories!.stories![currentIndex].id
-          //           .toString())
-          //           .then((value) {
-          //         controller.play();
-          //       });
-          //     }
-          //   },
-          // )
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: GestureDetector(
-              onVerticalDragUpdate: (details) {
-                print('Drag one ${details.delta.dy}');
-                if (details.delta.dy < -1.0) {
-                  print('Drag two');
-                  _controller
-                      .forward()
-                      .whenComplete(() => _controller.reverse());
-                  Future.delayed(Duration(milliseconds: 500), () {
-                    if (openSheet == false && widget.isAdmin!) {
-                      openSheet = true;
-                      controller.pause();
-                      storyPreview(widget.userStories!.stories![currentIndex].id
-                              .toString())
-                          .then((value) {
-                        controller.play();
-                        openSheet = false;
-                      });
-                    } else {
-                      if (openSheet == false) {
-                        openSheet = true;
-                        controller.pause();
-                        replyPreview(
-                                widget.userStories!.stories![currentIndex].id
-                                    .toString(),
-                                widget.socket!)
-                            .then((value) {
-                          controller.play();
-                          openSheet = false;
-                          if (value == 'send') {
-                            snackBarSuccess(
-                                'Message sent successfully to ${widget.userStories!.firstName} ${widget.userStories!.lastName}');
-                          }
-                        });
-                      }
+              } else {
+                if (openSheet == false) {
+                  openSheet = true;
+                  controller.pause();
+                  replyPreview(
+                          widget.userStories!.stories![currentIndex].id
+                              .toString(),
+                          widget.socket!)
+                      .then((value) {
+                    controller.play();
+                    openSheet = false;
+                    if (value == 'send') {
+                      snackBarSuccess(
+                          'Message sent successfully to ${widget.userStories!.firstName} ${widget.userStories!.lastName}');
                     }
                   });
                 }
-              },
-              child: SlideTransition(
-                position: animation,
-                child: Container(
-                  height: 50,
-                  width: width,
-                  margin: EdgeInsets.only(bottom: 50),
-                  child: widget.isAdmin!
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.remove_red_eye, color: Colors.white),
-                            SizedBox(),
-                            Obx(
-                              () => Text(
-                                totalView.value == 10000
-                                    ? ''
-                                    : '${totalView.value}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.keyboard_arrow_up_rounded,
-                                color: Colors.white),
-                            Text(
-                              'Reply',
-                              style: TextStyle(color: Colors.white54),
-                            ),
-                          ],
+              }
+            });
+          }
+          if (details.delta.dy > 1.0) {
+            bool pop = false;
+            if (!pop) {
+              pop = true;
+              Navigator.of(context).pop();
+            }
+            print('Drag up now');
+          }
+        },
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Container(
+                height: height,
+                width: width,
+                child: StoryView(
+                  controller: controller,
+                  currentIndex: (int c) {
+                    print('$c');
+                    currentIndex = c + 1;
+                    ApiUtils.storyView(mapData: {
+                      'server_key': serverKey,
+                      'story_id':
+                          '${widget.userStories!.stories![currentIndex].id.toString()}'
+                    });
+                  },
+                  storyItems: widget.userStories!.stories!.map((e) {
+                    if (e.videos == null || e.videos!.isEmpty) {
+                      return StoryItem.inlineImage(
+                        url: "${e.thumbnail}",
+                        controller: controller,
+                        imageFit: BoxFit.contain,
+                        duration: Duration(seconds: 10),
+                        caption: Text(
+                          "${e.description}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            backgroundColor: Colors.black54,
+                            fontSize: 17,
+                          ),
                         ),
+                      );
+                    } else {
+                      return StoryItem.pageVideo(
+                        '${e.videos![0].filename}',
+                        controller: controller,
+                        caption: "${e.description}",
+                        duration: Duration(seconds: e.videos![0].totalTime!),
+                      );
+                    }
+                  }).toList(),
+                  onStoryShow: (s) {
+                    print("Showing a story");
+                  },
+                  onComplete: () {
+                    print("Completed a cycle");
+                    Navigator.pop(context);
+                  },
+                  progressPosition: ProgressPosition.top,
+                  repeat: false,
+                  inline: true,
                 ),
               ),
-            ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Platform.isIOS
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 55, left: 10),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 40, left: 10),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                      ),
+              ),
+              // IconButton(
+              //   icon: Icon(
+              //     Icons.remove_red_eye,
+              //     color: Colors.white,
+              //   ),
+              //   onPressed: () {
+              //     if (storyLoaded = true) {
+              //       controller.pause();
+              //       storyPreview(widget
+              //           .userStories!.stories![currentIndex].id
+              //           .toString())
+              //           .then((value) {
+              //         controller.play();
+              //       });
+              //     }
+              //   },
+              // )
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SlideTransition(
+                  position: animation,
+                  child: Container(
+                    height: 50,
+                    width: width,
+                    margin: EdgeInsets.only(bottom: 50),
+                    child: widget.isAdmin!
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.remove_red_eye, color: Colors.white),
+                              SizedBox(),
+                              Obx(
+                                () => Text(
+                                  totalView.value == 10000
+                                      ? ''
+                                      : '${totalView.value}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.keyboard_arrow_up_rounded,
+                                  color: Colors.white),
+                              Text(
+                                'Reply',
+                                style: TextStyle(color: Colors.white54),
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -308,12 +321,11 @@ class _StoryViewPageState extends State<StoryViewPage>
                         ),
                         suffixIcon: IconButton(
                             onPressed: () async {
-                              socket.emit('private_message', {
-                                'msg': captionController.text,
-                                'to_id': widget.userStories!.userId,
-                                'from_id': '${storage.read('token')}',
-                                'username':
-                                    '${UserDataService.userDataModel!.userData!.username}',
+                              sentMessageWithoutFile(map: {
+                                'server_key': serverKey,
+                                'text': captionController.text,
+                                'user_id': '${widget.userStories!.userId}',
+                                'message_hash_id': '44444444',
                               });
                               Navigator.of(context).pop('send');
                             },
