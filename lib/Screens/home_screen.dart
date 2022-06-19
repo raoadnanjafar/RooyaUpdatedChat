@@ -12,6 +12,7 @@ import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/primary_color.dart';
 import 'package:get/get.dart';
 
+import '../ApiConfig/ApiUtils.dart';
 import 'chat_screen.dart';
 import 'group_screen.dart';
 
@@ -49,6 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
     UserDataService.userDataModel =
         UserDataModel.fromJson(jsonDecode(storage.read('userData')));
     selectController.observeronSearch();
+    header = {
+      'Authorization': 'Basic YWRtaW46MTIzNA==',
+      'x-auth-token': '${storage.read('token')}',
+    };
+    token = '?access_token=${storage.read('token')}';
     super.initState();
   }
 

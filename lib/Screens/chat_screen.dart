@@ -55,7 +55,9 @@ class _ChatScreenState extends State<ChatScreen>
     }
     controller.getChatList().then((value) async {
       await getStoryData();
-      setState(() {});
+      if(mounted){
+        setState(() {});
+      }
     });
     controller.connectToSocket();
     if (!streamController.hasListener) {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -32,6 +33,8 @@ import 'package:swipe_to/swipe_to.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../../GlobalWidget/ConfirmationDialog.dart';
+import '../../Utils/StoryViewPage.dart';
+import '../sliver_class/sliver.dart';
 import 'UserChatProvider.dart';
 import 'package:record/record.dart' as record;
 import 'UserChatWidget/AudioChatUser.dart';
@@ -319,17 +322,39 @@ class _UserChatState extends State<UserChat>
                                     Get.back();
                                   },
                                 ),
-                                CircularProfileAvatar(
-                                  '${widget.profilePic}',
-                                  borderColor: Colors.black26,
-                                  borderWidth: 0.5,
-                                  onTap: () {
-                                    Get.to(Photo_View_Class(
-                                      url: '${widget.profilePic}',
-                                    ));
-                                  },
-                                  radius: height / 40,
-                                ),
+                                storyIds.contains(widget.groupID)
+                                    ? CircularProfileAvatar(
+                                        '${widget.profilePic}',
+                                        radius: height / 40,
+                                        borderWidth: 2,
+                                        borderColor: buttonColor,
+                                        backgroundColor: Colors.blueGrey[100]!,
+                                        onTap: () {
+                                          int i = storyIds.indexWhere(
+                                              (element) =>
+                                                  element ==
+                                                  '${widget.groupID}');
+                                          context.pushTransparentRoute(
+                                              StoryViewPage(
+                                            userStories: allstoryList[i],
+                                            isAdmin: storage.read('userID') ==
+                                                    '${widget.groupID}'
+                                                ? true
+                                                : false,
+                                          ));
+                                        },
+                                      )
+                                    : CircularProfileAvatar(
+                                        '${widget.profilePic}',
+                                        borderColor: Colors.black26,
+                                        borderWidth: 0.5,
+                                        onTap: () {
+                                          Get.to(Photo_View_Class(
+                                            url: '${widget.profilePic}',
+                                          ));
+                                        },
+                                        radius: height / 40,
+                                      ),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -1819,7 +1844,12 @@ class _UserChatState extends State<UserChat>
                                                   print(
                                                       'audio path is =${audio_path}');
                                                   await sentMessageAsFile(
-                                                    replyid: isActivereply.value == true ? replyModel.value.id : '',
+                                                          replyid: isActivereply
+                                                                      .value ==
+                                                                  true
+                                                              ? replyModel
+                                                                  .value.id
+                                                              : '',
                                                           userID:
                                                               widget.groupID,
                                                           text: '',

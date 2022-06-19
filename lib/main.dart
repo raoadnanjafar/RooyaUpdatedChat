@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:socket_io/socket_io.dart';
 import 'package:sizer/sizer.dart';
@@ -18,26 +19,12 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() async {
-  HttpOverrides.global = new MyHttpOverrides();
-  var io = new Server();
-  var nsp = io.of('/some');
-  nsp.on('connection', (client) {
-    print('connection /some');
-    client.on('msg', (data) {
-      print('data from /some => $data');
-      client.emit('fromServer', "ok 2");
-    });
-  });
-  io.on('connection', (client) {
-    print('connection default namespace');
-    client.on('msg', (data) {
-      print('data from default => $data');
-      client.emit('fromServer', "ok");
-    });
-  });
-  io.listen(4499);
   await GetStorage.init();
-  runApp(MyApp());
+  runApp(
+    Phoenix(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -54,7 +41,7 @@ class MyApp extends StatelessWidget {
         // home: SignInTabsHandle(),
         home: storage.read('token') != null ? HomeScreen() : SignInTabsHandle(),
         debugShowCheckedModeBanner: false,
-        transitionDuration:Duration(seconds: 0),
+        transitionDuration: Duration(seconds: 0),
         defaultGlobalState: false,
       );
     });

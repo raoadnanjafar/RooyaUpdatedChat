@@ -168,11 +168,10 @@ Future<bool> deleteGroup({String? groupId}) async {
   return false;
 }
 
-Future updateUserCoverInformation({Map<String, dynamic>? map}) async {
-  FormData formData = new FormData.fromMap(map!);
+Future updateUserCoverInformation({FormData? map}) async {
   try {
     final response = await Dio().post('$baseUrl$updateUserData$token',
-        options: Options(headers: header), data: formData);
+        options: Options(headers: header), data: map);
     print('sendFileMessage responce data is = ${response.data}');
   } catch (e) {
     print('Exception is = $e');
@@ -188,6 +187,17 @@ Future createnewGroup({Map<String, dynamic>? map}) async {
     if (response.data['api_status'] != 200) {
       snackBarFailer('${response.data['errors']['error_text']}');
     }
+  } catch (e) {
+    print('Exception is = $e');
+  }
+}
+
+Future sentMessageWithoutFile({Map<String, dynamic>? map}) async {
+  FormData formData = new FormData.fromMap(map!);
+  try {
+    final response = await Dio().post('$baseUrl$sendMessage$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
   } catch (e) {
     print('Exception is = $e');
   }
