@@ -1128,14 +1128,8 @@ class _UserChatInformationState extends State<UserChatInformation> {
                             maxLines: 14,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-<<<<<<< HEAD
                                 hintText: 'About',
                                 hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
-=======
-                                hintText: 'Group Description',
-                                hintStyle: TextStyle(
-                                    fontSize: 13, fontFamily: AppFonts.segoeui),
->>>>>>> 1b1c1fef23dbab0757f4d623b2b3a26fc9994106
                                 contentPadding: EdgeInsets.only(left: 8)),
                           ),
                         ),

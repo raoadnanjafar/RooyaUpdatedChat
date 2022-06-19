@@ -599,19 +599,6 @@ class _GroupInformationState extends State<GroupInformation> {
                                   SizedBox(
                                     width: 10,
                                   ),
-<<<<<<< HEAD
-                                  // Text(
-                                  //   '(Admin)',
-                                  //   style: TextStyle(fontFamily: AppFonts.segoeui, fontSize: 10),
-                                  // ),
-=======
-                                  Text(
-                                    '(Admin)',
-                                    style: TextStyle(
-                                        fontFamily: AppFonts.segoeui,
-                                        fontSize: 10),
-                                  ),
->>>>>>> 1b1c1fef23dbab0757f4d623b2b3a26fc9994106
                                 ],
                               ),
                               subtitle: Text(
@@ -835,116 +822,127 @@ class _GroupInformationState extends State<GroupInformation> {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Update Group Info',
-                            style: TextStyle(color: Colors.green, fontSize: 16,fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 18,
-                        ),
-                        Text('Edit Group Name:',style: TextStyle(color: Colors.green, fontSize: 16),),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              color: Color(0XFFF5F5F5),
-                              borderRadius: BorderRadius.circular(8)),
-                          child: TextField(
-                            controller: groupNameController,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Group Name',
-                                hintStyle: TextStyle(
-                                    fontSize: 13, fontFamily: AppFonts.segoeui),
-                                contentPadding: EdgeInsets.only(left: 8)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 18,
-                        ),
-                        Text('Edit Group About:',style: TextStyle(color: Colors.green, fontSize: 16),),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          height: 100,
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: Color(0XFFF5F5F5),
-                              borderRadius: BorderRadius.circular(8)),
-                          child: TextField(
-                            controller: groupDescriptionController,
-                            maxLines: 14,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-<<<<<<< HEAD
-                                hintText: 'About',
-                                hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
-=======
-                                hintText: 'Group Description',
-                                hintStyle: TextStyle(
-                                    fontSize: 13, fontFamily: AppFonts.segoeui),
->>>>>>> 1b1c1fef23dbab0757f4d623b2b3a26fc9994106
-                                contentPadding: EdgeInsets.only(left: 8)),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            if (groupNameController.text.trim().isNotEmpty) {
-                              await sentGroupNameFile(
-                                  groupId: groupModel.groupId.toString(),
-                                  groupName:
-                                      groupNameController.text.toString());
-                              setState(() {});
-                              GroupModel model = await infoController
-                                  .getGroupList(groupModel.groupId!);
-                              if (model.groupId != '') {
-                                print('new data coming ');
-                                groupModel = model;
-                              }
-                              setState(() {});
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                'Update Group Info',
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Text(
+                              'Edit Group Name:',
+                              style:
+                                  TextStyle(color: Colors.green, fontSize: 16),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFF5F5F5),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: TextField(
+                                controller: groupNameController,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Group Name',
+                                    hintStyle: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: AppFonts.segoeui),
+                                    contentPadding: EdgeInsets.only(left: 8)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Text(
+                              'Edit Group About:',
+                              style:
+                                  TextStyle(color: Colors.green, fontSize: 16),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Container(
+                              width: double.infinity,
+                              height: 100,
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFF5F5F5),
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: TextField(
+                                controller: groupDescriptionController,
+                                maxLines: 14,
+                                decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'About',
+                                    hintStyle: TextStyle(
+                                        fontSize: 13,
+                                        fontFamily: AppFonts.segoeui),
+                                    contentPadding: EdgeInsets.only(left: 8)),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                if (groupNameController.text
+                                    .trim()
+                                    .isNotEmpty) {
+                                  await sentGroupNameFile(
+                                      groupId: groupModel.groupId.toString(),
+                                      groupName:
+                                          groupNameController.text.toString());
+                                  setState(() {});
+                                  GroupModel model = await infoController
+                                      .getGroupList(groupModel.groupId!);
+                                  if (model.groupId != '') {
+                                    print('new data coming ');
+                                    groupModel = model;
+                                  }
+                                  setState(() {});
 
-                              // Map map = {
-                              //   'groupId': '${model.groupId}',
-                              //   'groupName': '${groupNameController.text}',
-                              //   'description':
-                              //       '${groupDescriptionController.text}'
-                              // };
-                              // mapData.call(map);
-                              Navigator.of(context).pop();
-                            } else {
-                              snackBarFailer('Please fill up all the fields');
-                            }
-                          },
-                          child: Center(
-                            child: Container(
-                              height: height * 0.050,
-                              width: width * 0.3,
+                                  // Map map = {
+                                  //   'groupId': '${model.groupId}',
+                                  //   'groupName': '${groupNameController.text}',
+                                  //   'description':
+                                  //       '${groupDescriptionController.text}'
+                                  // };
+                                  // mapData.call(map);
+                                  Navigator.of(context).pop();
+                                } else {
+                                  snackBarFailer(
+                                      'Please fill up all the fields');
+                                }
+                              },
                               child: Center(
-                                child: Text(
-                                  'Update',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontFamily: AppFonts.segoeui),
+                                child: Container(
+                                  height: height * 0.050,
+                                  width: width * 0.3,
+                                  child: Center(
+                                    child: Text(
+                                      'Update',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 13,
+                                          fontFamily: AppFonts.segoeui),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: buttonColor,
+                                      borderRadius: BorderRadius.circular(30)),
                                 ),
                               ),
-                              decoration: BoxDecoration(
-                                  color: buttonColor,
-                                  borderRadius: BorderRadius.circular(30)),
-                            ),
-                          ),
-                        )
-                      ]));
+                            )
+                          ]));
                 },
               ));
         });
