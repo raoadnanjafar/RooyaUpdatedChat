@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:socket_io/socket_io.dart';
@@ -33,16 +34,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, deviceType) {
-      return GetMaterialApp(
-        title: 'Mersaal',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      return Portal(
+        child: GetMaterialApp(
+          title: 'Mersaal',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          // home: SignInTabsHandle(),
+          home: storage.read('token') != null ? HomeScreen() : SignInTabsHandle(),
+          debugShowCheckedModeBanner: false,
+          transitionDuration: Duration(seconds: 0),
+          defaultGlobalState: false,
         ),
-        // home: SignInTabsHandle(),
-        home: storage.read('token') != null ? HomeScreen() : SignInTabsHandle(),
-        debugShowCheckedModeBanner: false,
-        transitionDuration: Duration(seconds: 0),
-        defaultGlobalState: false,
       );
     });
   }
