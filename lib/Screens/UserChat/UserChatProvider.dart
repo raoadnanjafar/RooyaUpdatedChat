@@ -20,6 +20,7 @@ class UserChatProvider extends GetxController {
   var isReciverTyping = false.obs;
   var isOnline = false.obs;
 
+
   checkTypnigStatus({String? groupId}) {
     debounce(searchText, (value) {
       socket!.emit('typing_done', {'userId': '${storage.read('token')}'});
