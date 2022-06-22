@@ -5,6 +5,7 @@ import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/GlobalWidget/SnackBarApp.dart';
 import 'package:rooya/Models/UserStoriesModel.dart';
+import 'package:rooya/Screens/chat_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
@@ -286,7 +287,7 @@ class _StoryViewPageState extends State<StoryViewPage>
     );
   }
 
-  Future replyPreview(String id, Socket socket) {
+  Future replyPreview(String id, Socket socket,) {
     TextEditingController captionController = TextEditingController();
     return showModalBottomSheet<void>(
       context: context,
@@ -298,6 +299,36 @@ class _StoryViewPageState extends State<StoryViewPage>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  Container(
+                    height: height * 0.080,
+                    margin: EdgeInsets.only(left: 40, right: 40),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8))),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding:  EdgeInsets.only(left: 10),
+                          child: Text('${widget.userStories!.username}',style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.greenAccent,
+                              fontSize: 18),),
+                        ),
+                        Padding(
+                          padding:  EdgeInsets.only(right: 10),
+                          child: ClipRRect(
+                            borderRadius:  BorderRadius.circular(5),
+                            child: Container(
+                              height: 50,
+                              width: 60,
+                              child: Image.network('${widget.userStories!.stories![currentIndex].thumbnail}',fit: BoxFit.cover),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Container(
                     height: height * 0.070,
                     margin: EdgeInsets.only(bottom: 5, left: 10, right: 10),
