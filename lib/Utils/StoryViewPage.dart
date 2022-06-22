@@ -294,7 +294,7 @@ class _StoryViewPageState extends State<StoryViewPage>
       backgroundColor: Colors.black.withOpacity(0.5),
       builder: (BuildContext context) {
         return Container(
-            height: height * 0.450,
+            height: height * 0.530,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
