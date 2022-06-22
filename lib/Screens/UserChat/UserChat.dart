@@ -1799,6 +1799,26 @@ class _UserChatState extends State<UserChat>
                                                     .searchText.value = value;
                                               },
                                               decoration: InputDecoration(
+                                                suffixIcon: IconButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      emojiShowing =
+                                                      !emojiShowing;
+                                                      if (emojiShowing) {
+                                                        _focusNode.unfocus();
+                                                      } else {
+                                                        FocusScope.of(context)
+                                                            .requestFocus(
+                                                            _focusNode);
+                                                      }
+                                                    });
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.tag_faces,
+                                                    size: 23,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
                                                   disabledBorder:
                                                       new OutlineInputBorder(
                                                           borderRadius:
@@ -1861,28 +1881,6 @@ class _UserChatState extends State<UserChat>
                                                   });
                                                 }
                                               },
-                                              leading: [
-                                                IconButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      emojiShowing =
-                                                          !emojiShowing;
-                                                      if (emojiShowing) {
-                                                        _focusNode.unfocus();
-                                                      } else {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                                _focusNode);
-                                                      }
-                                                    });
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.tag_faces,
-                                                    size: 23,
-                                                    color: Colors.grey,
-                                                  ),
-                                                )
-                                              ],
                                               focusNode: _focusNode,
                                               mentions: [
                                                 Mention(

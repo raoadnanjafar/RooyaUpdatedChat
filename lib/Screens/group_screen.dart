@@ -463,22 +463,24 @@ class _GroupScreenState extends State<GroupScreen> {
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            Text(
-                                              date == ''
-                                                  ? ''
-                                                  : controller
-                                                              .listofChat[index]
-                                                              .lastMessage!
-                                                              .type ==
-                                                          'text'
-                                                      ? "${controller.listofChat[index].lastMessage!.text}"
-                                                      : '${controller.listofChat[index].lastMessage!.type}',
-                                              style: TextStyle(
-                                                  color: Color(0XFF373737),
-                                                  fontFamily: AppFonts.segoeui,
-                                                  fontSize: 12),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
+                                            Expanded(
+                                              child: Text(
+                                                date == ''
+                                                    ? ''
+                                                    : controller
+                                                                .listofChat[index]
+                                                                .lastMessage!
+                                                                .type ==
+                                                            'text'
+                                                        ? "${controller.listofChat[index].lastMessage!.text}"
+                                                        : '${controller.listofChat[index].lastMessage!.type}',
+                                                style: TextStyle(
+                                                    color: Color(0XFF373737),
+                                                    fontFamily: AppFonts.segoeui,
+                                                    fontSize: 12),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
                                           ],
                                         ),
