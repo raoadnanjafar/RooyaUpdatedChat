@@ -64,7 +64,7 @@ class Messages {
   String? pin;
   String? fav;
   ReplyModel? reply;
-  // List<Null>? story;
+  StoryModelForChat? story;
   Reaction? reaction;
   String? timeText;
   String? position;
@@ -76,7 +76,7 @@ class Messages {
 
   Messages(
       {this.id,
-        this.thumb,
+      this.thumb,
       this.fromId,
       this.groupId,
       this.pageId,
@@ -156,12 +156,10 @@ class Messages {
     if (json['reply'] is Map) {
       reply = ReplyModel.fromJson(json['reply']);
     }
-    // if (json['story'] != null) {
-    //   story = <Null>[];
-    //   json['story'].forEach((v) {
-    //     story!.add(new Null.fromJson(v));
-    //   });
-    // }
+    if (json['story'] != null && json['story'] is Map) {
+      story = StoryModelForChat();
+      story = StoryModelForChat.fromJson(json['story']);
+    }
     reaction = json['reaction'] != null
         ? new Reaction.fromJson(json['reaction'])
         : null;
@@ -230,7 +228,7 @@ class MessageUser {
   String? fName;
   String? lName;
 
-  MessageUser({this.userId, this.avatar,this.fName,this.lName});
+  MessageUser({this.userId, this.avatar, this.fName, this.lName});
 
   MessageUser.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'].toString();
@@ -261,7 +259,6 @@ class Reaction {
     isReacted = json['is_reacted'];
     type = json['type'].toString();
     count = json['count'].toString();
-    i1 = json['1'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -269,7 +266,142 @@ class Reaction {
     data['is_reacted'] = this.isReacted;
     data['type'] = this.type;
     data['count'] = this.count;
-    data['1'] = this.i1;
+    return data;
+  }
+}
+
+class StoryModelForChat {
+  String? id;
+  String? userId;
+  String? title;
+  String? description;
+  String? posted;
+  String? expire;
+  String? thumbnail;
+  String? eventId;
+  List<Null>? images;
+  UserData? userData;
+  List<VideosModel>? videos = [];
+  bool? isOwner;
+  Reaction? reaction;
+  String? isViewed;
+  String? timeText;
+  String? viewCount;
+
+  StoryModelForChat(
+      {this.id,
+      this.userId,
+      this.title,
+      this.description,
+      this.posted,
+      this.expire,
+      this.thumbnail,
+      this.eventId,
+      this.images,
+      this.userData,
+      this.videos,
+      this.isOwner,
+      this.reaction,
+      this.isViewed,
+      this.timeText,
+      this.viewCount});
+
+  StoryModelForChat.fromJson(Map<String, dynamic> json) {
+    id = json['id'].toString();
+    userId = json['user_id'].toString();
+    title = json['title'].toString();
+    description = json['description'].toString();
+    posted = json['posted'].toString();
+    expire = json['expire'].toString();
+    thumbnail = json['thumbnail'].toString();
+    eventId = json['event_id'].toString();
+    // if (json['images'] != null) {
+    //   images = <Null>[];
+    //   json['images'].forEach((v) {
+    //     images!.add(new Null.fromJson(v));
+    //   });
+    // }
+    userData = json['user_data'] != null
+        ? new UserData.fromJson(json['user_data'])
+        : null;
+    if (json['videos'] != null) {
+      videos = <VideosModel>[];
+      json['videos'].forEach((v) {
+        videos!.add(new VideosModel.fromJson(v));
+      });
+    }
+    isOwner = json['is_owner'];
+    reaction = json['reaction'] != null
+        ? new Reaction.fromJson(json['reaction'])
+        : null;
+    isViewed = json['is_viewed'].toString();
+    timeText = json['time_text'].toString();
+    viewCount = json['view_count'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['user_id'] = this.userId;
+    data['title'] = this.title;
+    data['description'] = this.description;
+    data['posted'] = this.posted;
+    data['expire'] = this.expire;
+    data['thumbnail'] = this.thumbnail;
+    data['event_id'] = this.eventId;
+    // if (this.images != null) {
+    //   data['images'] = this.images!.map((v) => v.toJson()).toList();
+    // }
+    if (this.userData != null) {
+      data['user_data'] = this.userData!.toJson();
+    }
+    if (this.videos != null) {
+      data['videos'] = this.videos!.map((v) => v.toJson()).toList();
+    }
+    data['is_owner'] = this.isOwner;
+    if (this.reaction != null) {
+      data['reaction'] = this.reaction!.toJson();
+    }
+    data['is_viewed'] = this.isViewed;
+    data['time_text'] = this.timeText;
+    data['view_count'] = this.viewCount;
+    return data;
+  }
+}
+
+class VideosModel {
+  String? id;
+  String? storyId;
+  String? type;
+  String? filename;
+  String? expire;
+  int? totalSeconds;
+
+  VideosModel(
+      {this.id,
+      this.storyId,
+      this.type,
+      this.filename,
+      this.expire,
+      this.totalSeconds});
+
+  VideosModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    storyId = json['story_id'];
+    type = json['type'];
+    filename = json['filename'];
+    expire = json['expire'];
+    totalSeconds = json['total_seconds'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['story_id'] = this.storyId;
+    data['type'] = this.type;
+    data['filename'] = this.filename;
+    data['expire'] = this.expire;
+    data['total_seconds'] = this.totalSeconds;
     return data;
   }
 }

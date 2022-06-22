@@ -326,6 +326,8 @@ class _StoryViewPageState extends State<StoryViewPage>
                                 'text': captionController.text,
                                 'user_id': '${widget.userStories!.userId}',
                                 'message_hash_id': '44444444',
+                                'story_id': widget
+                                    .userStories!.stories![currentIndex].id
                               });
                               Navigator.of(context).pop('send');
                             },
