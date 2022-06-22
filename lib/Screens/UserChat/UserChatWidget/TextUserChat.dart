@@ -13,6 +13,7 @@ import 'package:rooya/Utils/text_filed/app_font.dart';
 import '../UserChat.dart';
 import '../UserCommonWidget/ProfileImage_common.dart';
 import '../UserCommonWidget/ReplyUserNameCommon.dart';
+import '../UserCommonWidget/TextReturnCommon.dart';
 import '../UserCommonWidget/TimeReturnCommon.dart';
 
 class TextUserChat extends StatefulWidget {
@@ -732,18 +733,19 @@ class _TextUserChatState extends State<TextUserChat> {
               borderRadius: BorderRadius.circular(8)),
           child: Column(
             children: [
-              Text(
-                '${widget.model!.text}',
-                style: TextStyle(
-                    color: widget.model!.seen != '0'
-                        ? returnColorFromString(seenTextColor)
-                        : widget.model!.delivered != '0'
-                            ? returnColorFromString(receiveTextColor)
-                            : returnColorFromString(sentTextColor),
-                    fontWeight: FontWeight.w300,
-                    fontFamily: AppFonts.segoeui,
-                    fontSize: 14),
-              ),
+              // Text(
+              //   '${widget.model!.text}',
+              //   style: TextStyle(
+              //       color: widget.model!.seen != '0'
+              //           ? returnColorFromString(seenTextColor)
+              //           : widget.model!.delivered != '0'
+              //               ? returnColorFromString(receiveTextColor)
+              //               : returnColorFromString(sentTextColor),
+              //       fontWeight: FontWeight.w300,
+              //       fontFamily: AppFonts.segoeui,
+              //       fontSize: 14),
+              // ),
+              TextReplyCommon(model: widget.model,fromGroup: widget.fromGroup),
               SizedBox(
                 height: height / 100,
               ),
@@ -1295,7 +1297,6 @@ class _TextUserChatState extends State<TextUserChat> {
             }
           }
         }
-
         return Column(
           children: [
             Container(

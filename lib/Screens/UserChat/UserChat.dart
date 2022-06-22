@@ -64,7 +64,7 @@ String sentTimeColor = '';
 String seenBackColor = '';
 String receiveBackColor = '';
 String sentBackColor = '';
-
+GroupModel? groupModelGlobel;
 class UserChat extends StatefulWidget {
   final String? groupID;
   final String? profilePic;
@@ -104,6 +104,9 @@ class _UserChatState extends State<UserChat>
 
   @override
   void initState() {
+    if(widget.fromGroup!){
+      groupModelGlobel=widget.groupModel!;
+    }
     if (storage.read('selectedTab') == '0') {
       seenTextColor = '255,0,0,0';
       receiveTextColor = '255,0,0,0';
@@ -161,9 +164,9 @@ class _UserChatState extends State<UserChat>
       for (var i in widget.groupModel!.parts!) {
         listofUsers.add({
           'id': '${i.userId}',
-          'display': '${i.firstName} ${i.firstName}',
+          'display': '${i.username}',
           'photo': '${i.avatar}',
-          'username': '${i.username}',
+          'username': '${i.firstName} ${i.lastName}',
         });
       }
     }
@@ -1916,9 +1919,9 @@ class _UserChatState extends State<UserChat>
                                                                       .cover,
                                                                 )),
                                                         title: Text(
-                                                            '${map['display']}'),
-                                                        subtitle: Text(
                                                             '${map['username']}'),
+                                                        subtitle: Text(
+                                                            '${map['display']}'),
                                                       ),
                                                     );
                                                   },
@@ -2001,7 +2004,10 @@ class _UserChatState extends State<UserChat>
                                           width: 5,
                                         ),
                                         Visibility(
-                                          visible: getcontroller!.searchText.value.isEmpty?true:false,
+                                          visible: getcontroller!
+                                                  .searchText.value.isEmpty
+                                              ? true
+                                              : false,
                                           child: InkWell(
                                             onTap: () async {
                                               final ImagePicker _picker =
@@ -2020,7 +2026,8 @@ class _UserChatState extends State<UserChat>
                                                   .then((value) {
                                                 getcontroller!.getAllMessage(
                                                     userID: widget.groupID,
-                                                    fromGroup: widget.fromGroup);
+                                                    fromGroup:
+                                                        widget.fromGroup);
                                               });
                                             },
                                             child: Icon(
