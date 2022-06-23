@@ -12,12 +12,15 @@ import 'package:rooya/Screens/chat_screen.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 
+import '../../Models/UserChatModel.dart';
 import '../../Models/UserStoriesModel.dart';
+import '../../Providers/ChatScreenProvider.dart';
 import '../../Utils/StoryViewPage.dart';
 import '../../Utils/primary_color.dart';
 
 class MySliver extends StatefulWidget {
-  const MySliver({Key? key}) : super(key: key);
+  final Messages? model;
+  const MySliver({Key? key, this.model}) : super(key: key);
 
   @override
   _MySliverState createState() => _MySliverState();
@@ -26,9 +29,11 @@ class MySliver extends StatefulWidget {
 var hasUserStory = false.obs;
 var allstoryList = <UserStoryModel>[];
 var storyIds = [];
+var storyLoaded = false.obs;
 
 class _MySliverState extends State<MySliver> {
   var selectController = Get.find<SelectIndexController>();
+  final controller = Get.put(ChatScreenProvider());
 
   @override
   Widget build(BuildContext context) {
@@ -70,42 +75,33 @@ class _MySliverState extends State<MySliver> {
                         },
                       ),
               ),
-              title: InkWell(
-                onTap: () {
-                  if(hasUserStory.value){
-                   int i = storyIds.indexWhere((element) =>
-                    element ==
-                        '${UserDataService.userDataModel!.userData!.userId.toString()}');
-                   Get.to(UserChatInformation(
-                       userID:
-                       '${UserDataService.userDataModel!.userData!.userId}',userStory: allstoryList[i],));
-                  }else{
-                    Get.to(UserChatInformation(
-                        userID:
-                        '${UserDataService.userDataModel!.userData!.userId}'));
-                  }
-                },
-                child: Text(
-                  UserDataService.userDataModel!.userData!.firstName!.isEmpty
-                      ? '${UserDataService.userDataModel!.userData!.username}'
-                      : '${UserDataService.userDataModel!.userData!.firstName} ${UserDataService.userDataModel!.userData!.lastName}',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: AppFonts.segoeui),
+
+              title: Container(
+                height: 35,
+                width: 100,
+                decoration: BoxDecoration(color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(18),
+                ),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Search here...',
+                    prefixIcon: Icon(Icons.search,color:  Colors.green,
+                    )
+                  ),
                 ),
               ),
               trailing: Wrap(
                 children: [
-                  InkWell(
-                    child: Icon(
-                      CupertinoIcons.search,
-                    ),
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (c) => SearchUser()));
-                    },
-                  ),
+                  // InkWell(
+                  //   child: Icon(
+                  //     CupertinoIcons.search,
+                  //   ),
+                  //   onTap: () {
+                  //     Navigator.push(context,
+                  //         MaterialPageRoute(builder: (c) => SearchUser()));
+                  //   },
+                  // ),
                   InkWell(
                       onTap: () {
                         // return createAlertDialoge1(context);
@@ -127,6 +123,31 @@ class _MySliverState extends State<MySliver> {
                 ],
                 spacing: 8,
               )),
+
+          Obx(()=> !storyLoaded.value?SizedBox(): Container(
+              height: 70,
+              //color: Colors.green,
+              child: ListView.builder(itemCount: controller.storyList.length,itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 30,
+                  width: 55,
+                  decoration: BoxDecoration(shape: BoxShape.circle),
+                  child: CircularProfileAvatar(
+                    '${controller.storyList[index].stories![0].thumbnail}',
+                    borderWidth: 2,
+                    borderColor: buttonColor,
+                    backgroundColor: Colors.blueGrey[100]!,
+                    onTap: () {
+                      context.pushTransparentRoute(StoryViewPage(
+                        userStories: allstoryList[index],isAdmin: true,
+                      ));
+                    },
+                  ),
+                ),
+              ) ,scrollDirection: Axis.horizontal,),
+            ),
+          )
           // Container(
           //   height: height * 0.045,
           //   width: width,
@@ -261,3 +282,30 @@ class _MySliverState extends State<MySliver> {
         });
   }
 }
+
+
+// InkWell(
+// onTap: () {
+// if(hasUserStory.value){
+// int i = storyIds.indexWhere((element) =>
+// element ==
+// '${UserDataService.userDataModel!.userData!.userId.toString()}');
+// Get.to(UserChatInformation(
+// userID:
+// '${UserDataService.userDataModel!.userData!.userId}',userStory: allstoryList[i],));
+// }else{
+// Get.to(UserChatInformation(
+// userID:
+// '${UserDataService.userDataModel!.userData!.userId}'));
+// }
+// },
+// child: Text(
+// UserDataService.userDataModel!.userData!.firstName!.isEmpty
+// ? '${UserDataService.userDataModel!.userData!.username}'
+// : '${UserDataService.userDataModel!.userData!.firstName} ${UserDataService.userDataModel!.userData!.lastName}',
+// style: TextStyle(
+// fontSize: 15,
+// fontWeight: FontWeight.bold,
+// fontFamily: AppFonts.segoeui),
+// ),
+// )

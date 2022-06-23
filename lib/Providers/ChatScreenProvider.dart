@@ -85,7 +85,9 @@ class ChatScreenProvider extends GetxController {
       hasUserStory.value=true;
       allstoryList=storyList.value;
       storyIds=idsOfUserStories;
+
     }
+    storyLoaded.value = true;
   }
 
   sentMessageViaFile({String? filePath, String? groupId}) async {

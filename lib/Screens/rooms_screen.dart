@@ -46,26 +46,40 @@ class _RoomsScreenState extends State<RoomsScreen> {
   Position? _currentPosition;
   String? _currentAddress;
 
-  Future<void> _getCurrentPosition() async {
-    await Geolocator.getCurrentPosition().then((Position position) {
+  Future _getCurrentPosition() async {
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
       setState(() => _currentPosition = position);
-      print(
-          'current position ${_currentPosition!.longitude} ${_currentPosition!.latitude}');
-      _currentAddress = '';
+      _getAddressFromLatLng(_currentPosition!);
     }).catchError((e) {
-      print('exeption 1= $e');
+      debugPrint(e);
     });
   }
 
+  Future _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(
+        _currentPosition!.latitude, _currentPosition!.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentAddress =
+        '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
+      });
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+
   @override
   void initState() {
+    _getCurrentPosition();
     var data = storage.hasData('room_list');
     if (data) {
       List list = jsonDecode(storage.read('room_list'));
       controller.listofChat.value =
           list.map((e) => GroupModel.fromJson(e)).toList();
     }
-    _getCurrentPosition();
     controller.getGroupList();
     controller.connectToSocket();
     if (controller.friendList.isEmpty) {
@@ -716,7 +730,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               textEditingController: locationController,
                               googleAPIKey: "$google_map_api_key",
                               inputDecoration: InputDecoration(
-                                  hintText: '$_currentAddress',
+                                  hintText: _currentAddress,
                                   hintStyle: TextStyle(
                                       fontSize: 13,
                                       fontFamily: AppFonts.segoeui),

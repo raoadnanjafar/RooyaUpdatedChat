@@ -33,6 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/user/sw.svg',
     // 'assets/user/fvrt.svg',
   ];
+  List textList = [
+    'Chat',
+    'Groups',
+    'Rooms',
+  ];
 
   int currentIndex = 0;
 
@@ -72,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         SliverAppBar(
                           automaticallyImplyLeading: false,
                           elevation: 0,
-                          collapsedHeight: height * 0.110,
+                          collapsedHeight: height * 0.180,
                           backgroundColor: Colors.white,
                           expandedHeight: height * 0.110,
                           flexibleSpace: MySliver(),
@@ -95,23 +100,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                         currentIndex = index;
                                       });
                                     },
-                                    child: Container(
-                                      width: 63.3,
-                                      child: Center(
-                                          child: SvgPicture.asset(
-                                              iconList[index],
-                                              height: 20,
-                                              width: 20,
-                                              fit: BoxFit.fill,
-                                              color: selectController
-                                                          .listofBool[index] ==
-                                                      true
-                                                  ? buttonColor
-                                                  : Colors.black)),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(3),
-                                          color: Colors.white),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: 63.3,
+                                          child: Center(
+                                              child: SvgPicture.asset(
+                                                  iconList[index],
+                                                  height: 20,
+                                                  width: 20,
+                                                  fit: BoxFit.fill,
+                                                  color: selectController
+                                                              .listofBool[index] ==
+                                                          true
+                                                      ? buttonColor
+                                                      : Colors.black)),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(3),
+                                              color: Colors.white),
+                                        ),
+                                        SizedBox(height: 4,),
+                                        Text(textList[index])
+                                      ],
                                     ),
                                   ),
                                 );
@@ -137,10 +148,10 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 30;
+  double get maxExtent => 40;
 
   @override
-  double get minExtent => 30;
+  double get minExtent => 40;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {

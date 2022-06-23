@@ -901,7 +901,7 @@ class _ChatScreenState extends State<ChatScreen>
             ),
           ),
           SizedBox(
-            width: 10,
+            width: 100,
           ),
           FloatingActionButton(
             heroTag: "btn2",
