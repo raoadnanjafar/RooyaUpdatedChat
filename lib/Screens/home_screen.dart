@@ -13,9 +13,13 @@ import 'package:rooya/Utils/primary_color.dart';
 import 'package:get/get.dart';
 
 import '../ApiConfig/ApiUtils.dart';
+import 'Information/UserChatInformation/user_chat_information.dart';
+import 'Settings/Appearance/Apearence.dart';
+import 'Settings/Settings.dart';
 import 'chat_screen.dart';
 import 'group_screen.dart';
-
+import 'login_screens/sign_in_tabs_handle.dart';
+ final GlobalKey<ScaffoldState> scaffoldStateKey = GlobalKey();
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -23,7 +27,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   var selectController = Get.put(SelectIndexController());
 
   List iconList = [
@@ -63,13 +67,74 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  bool indexColors = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          key: scaffoldStateKey,
+            drawer: Drawer(
+              width: 220,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Column(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20,),
+                    CircularProfileAvatar('',
+                    radius: 50,
+                      //backgroundColor: Colors.green,
+                      child: Image.network('${UserDataService.userDataModel!.userData!.avatar}'),
+                    ),
+                    SizedBox(height: 15,),
+                    InkWell(
+                      onTap: (){
+                        Get.to(
+                            UserChatInformation(
+                                userID:
+                                '${UserDataService.userDataModel!.userData!.userId}')
+                        );
+                      },
+                      child: Text('${UserDataService.userDataModel!.userData!.firstName}  ${UserDataService.userDataModel!.userData!.lastName}',style:
+                        TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),),
+                    ),
+                    SizedBox(height: 8,),
+                    Text('${UserDataService.userDataModel!.userData!.username}@',style: TextStyle(fontSize: 20),),
+                  Divider(height: 20,color: Colors.grey,),
+                    ListTile(
+                      onTap: (){
+                        Get.to(Apearennce());
+                      },
+                      title: Text('Appearance',style: TextStyle(fontSize: 16),),
+                    ),
+                    ListTile(
+                      title: Text('Block Users',style: TextStyle(fontSize: 16),),
+                    ),
+                    ListTile(
+                      onTap: (){
+                        Get.to(Settings());
+                      },
+                      title: Text('Settings',style: TextStyle(fontSize: 16),),
+                    ),
+                    ListTile(
+                      onTap: (){
+                        var selectController = Get.find<SelectIndexController>();
+                        // final controller = Get.find<GroupProvider>();
+                        selectController.updateColor(0);
+                        // controller.listofMember.value=[];
+                        storage.erase();
+                        Get.deleteAll();
+                        Get.offAll(SignInTabsHandle());
+                      },
+                      title: Text('Logout',style: TextStyle(fontSize: 16,color: Colors.red),),
+                    )
+                  ],
+                ),
+              )
+            ),
             backgroundColor: Colors.white,
             body: DefaultTabController(
-                length: 2,
+                length: 3,
                 child: NestedScrollView(
                     physics: NeverScrollableScrollPhysics(),
                     headerSliverBuilder: (context, isScrool) {
@@ -77,62 +142,72 @@ class _HomeScreenState extends State<HomeScreen> {
                         SliverAppBar(
                           automaticallyImplyLeading: false,
                           elevation: 0,
-                          collapsedHeight: height * 0.180,
+                          collapsedHeight: height * 0.200,
                           backgroundColor: Colors.white,
-                          expandedHeight: height * 0.110,
+                          expandedHeight: height * 0.130,
+                          bottom: TabBar(
+                            onTap: (w){
+                              setState(() {
+                                //indexColors = false;
+                              });
+                            },
+                            indicatorColor: Colors.green,
+                            indicatorWeight: 2,
+                            indicatorSize: TabBarIndicatorSize.label,
+                            tabs: [
+                              Tab(
+                                height: 40,
+                                child: Column(
+                                children: [
+                                  SvgPicture.asset('assets/user/prs.svg',color: Colors.black,),
+                                  SizedBox(height: 3,),
+                                  Text('Chat',style: TextStyle(color: Colors.black),),
+                                ],
+                              ),),
+                              Tab(
+                                height: 40,
+                                child: Column(
+                                children: [
+                                  SvgPicture.asset('assets/user/persons.svg',),
+                                  Text('Groups',style: TextStyle(color: Colors.black),),
+                                ],
+                              ),),
+                              Tab(
+                                height: 40,
+                                child: Column(
+                                children: [
+                                  SvgPicture.asset('assets/user/sw.svg',),
+                                  Text('Rooms',style: TextStyle(color: Colors.black),),
+                                ],
+                              ),),
+                            ],
+                          ),
                           flexibleSpace: MySliver(),
                         ),
-                        SliverPersistentHeader(
-                          floating: true,
-                          //pinned: true,
-                          delegate: MyDelegate(Container(
-                            height: 100,
-                            color: Colors.white,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: iconList.map((e) {
-                                int index = iconList.indexOf(e);
-                                return Obx(
-                                  () => InkWell(
-                                    onTap: () {
-                                      selectController.updateColor(index);
-                                      setState(() {
-                                        currentIndex = index;
-                                      });
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: 63.3,
-                                          child: Center(
-                                              child: SvgPicture.asset(
-                                                  iconList[index],
-                                                  height: 20,
-                                                  width: 20,
-                                                  fit: BoxFit.fill,
-                                                  color: selectController
-                                                              .listofBool[index] ==
-                                                          true
-                                                      ? buttonColor
-                                                      : Colors.black)),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(3),
-                                              color: Colors.white),
-                                        ),
-                                        SizedBox(height: 2,),
-                                        Text(textList[index],style: TextStyle(fontSize: 12),),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          )),
-                        ),
+
                       ];
                     },
-                    body: tabContent[currentIndex]))));
+                    body: TabBarView(
+                      children: [
+                        (ChatScreen()),
+                        (GroupScreen()),
+                        (RoomsScreen()),
+                      ],
+                    ),))));
+  }
+  Widget openDrawer(BuildContext context){
+    return Drawer(
+      width: 300,
+      child: Column(
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.green,
+            radius: 20,
+          ),
+          Text('the man of the end'),
+        ],
+      ),
+    );
   }
 }
 
@@ -158,3 +233,47 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
     return false;
   }
 }
+// MyDelegate(Container(
+// height: 100,
+// color: Colors.white,
+// child: Row(
+// mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+// children: iconList.map((e) {
+// int index = iconList.indexOf(e);
+// return Obx(
+// () => InkWell(
+// onTap: () {
+// selectController.updateColor(index);
+// setState(() {
+// currentIndex = index;
+// });
+// },
+// child: Column(
+// children: [
+// Container(
+// width: 63.3,
+// child: Center(
+// child: SvgPicture.asset(
+// iconList[index],
+// height: 20,
+// width: 20,
+// fit: BoxFit.fill,
+// color: selectController
+//     .listofBool[index] ==
+// true
+// ? buttonColor
+//     : Colors.black)),
+// decoration: BoxDecoration(
+// borderRadius:
+// BorderRadius.circular(3),
+// color: Colors.white),
+// ),
+// SizedBox(height: 2,),
+// Text(textList[index],style: TextStyle(fontSize: 12),),
+// ],
+// ),
+// ),
+// );
+// }).toList(),
+// ),
+// ))

@@ -19,6 +19,7 @@ import '../../Providers/ChatScreenProvider.dart';
 import '../../Utils/StoryViewPage.dart';
 import '../../Utils/StoryViewScreen.dart';
 import '../../Utils/primary_color.dart';
+import '../home_screen.dart';
 
 class MySliver extends StatefulWidget {
   final Messages? model;
@@ -38,188 +39,209 @@ class _MySliverState extends State<MySliver> {
   final controller = Get.put(ChatScreenProvider());
   var listOfSelectedMember = <Data>[].obs;
 
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
+      //key: keys,
       backgroundColor: Colors.white,
-      body: Column(
+      body: Stack(
         children: [
-          SizedBox(
-            height: 9,
-          ),
-          ListTile(
-              leading: Obx(
-                () => hasUserStory.value
-                    ? CircularProfileAvatar(
-                        '${UserDataService.userDataModel!.userData!.avatar}',
-                        radius: 18,
-                        borderWidth: 2,
-                        borderColor: buttonColor,
-                        backgroundColor: Colors.blueGrey[100]!,
-                        onTap: () {
-                          int i = storyIds.indexWhere((element) =>
-                              element ==
-                              '${UserDataService.userDataModel!.userData!.userId.toString()}');
-                          context.pushTransparentRoute(StoryViewPage(
-                            userStories: allstoryList[i],
-                            isAdmin: true,
-                          ));
-                        },
-                      )
-                    : CircularProfileAvatar(
-                        '${UserDataService.userDataModel!.userData!.avatar}',
-                        radius: 18,
-                        backgroundColor: Colors.blueGrey[100]!,
-                        onTap: () {
-                          Get.to(UserChatInformation(
-                              userID:
-                                  '${UserDataService.userDataModel!.userData!.userId}'));
-                        },
-                      ),
+          Column(
+            children: [
+              SizedBox(
+                height: 9,
               ),
-              title: Container(
-                height: 26,
-                width: 100,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Search here...',
-                      hintStyle: TextStyle(fontSize: 12),
-                      isDense: true,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.green,
-                      )),
-                ),
-              ),
-              trailing: Wrap(
-                children: [
-                  // InkWell(
-                  //   child: Icon(
-                  //     CupertinoIcons.search,
-                  //   ),
-                  //   onTap: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (c) => SearchUser()));
-                  //   },
-                  // ),
-                  InkWell(
-                      onTap: () {
-                        // return createAlertDialoge1(context);
-                      },
-                      child: Icon(
-                        CupertinoIcons.bell_solid,
-                        color: Colors.black,
-                        size: 23,
-                      )),
-                  InkWell(
-                      onTap: () {
-                        Get.to(Settings());
-                      },
-                      child: Container(
-                        height: 20,
-                        width: 20,
-                        child: SvgPicture.asset('assets/user/setting.svg'),
-                      )),
-                ],
-                spacing: 8,
-              )),
-
-          Obx(
-            () => !storyLoaded.value
-                ? SizedBox()
-                : Container(
-                    height: 60,
-                    //color: Colors.green,
-                    child: ListView.builder(
-                      itemCount: controller.storyList.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 30,
-                          width: 45,
-                          decoration: BoxDecoration(shape: BoxShape.circle),
-                          child: CircularProfileAvatar(
-                            '${controller.storyList[index].stories![0].thumbnail}',
-                            borderWidth: 1,
+              ListTile(
+                  leading: Obx(
+                    () => hasUserStory.value
+                        ? CircularProfileAvatar(
+                            '${UserDataService.userDataModel!.userData!.avatar}',
+                            radius: 28,
+                            borderWidth: 2,
                             borderColor: buttonColor,
                             backgroundColor: Colors.blueGrey[100]!,
-                            onTap: listOfSelectedMember.isNotEmpty
-                                ? null
-                                : () {
-                                    context
-                                        .pushTransparentRoute(
-                                            StoryScreenUpdated(
-                                      storyList: controller.storyList,
-                                      currentIndex: index,
-                                    ))
-                                        .then((value) async {
-                                      await controller.getChatList();
-                                      controller.connectToSocket();
-                                      setState(() {});
-                                    });
-                                  },
+                            onTap: () {
+                              int i = storyIds.indexWhere((element) =>
+                                  element ==
+                                  '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                              context.pushTransparentRoute(StoryViewPage(
+                                userStories: allstoryList[i],
+                                isAdmin: true,
+                              ));
+                            },
+                          )
+                        : CircularProfileAvatar(
+                            '${UserDataService.userDataModel!.userData!.avatar}',
+                            radius: 28,
+                            backgroundColor: Colors.blueGrey[100]!,
+                            onTap: () {
+                              scaffoldStateKey.currentState?.openDrawer();
+                              // Get.to(
+                              //     UserChatInformation(
+                              //     userID:
+                              //         '${UserDataService.userDataModel!.userData!.userId}')
+                              // );
+                            },
                           ),
-                        ),
+                  ),
+                  title: Padding(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: Container(
+                      margin: EdgeInsets.only(right: 40),
+                      height: 26,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(18),
                       ),
-                      scrollDirection: Axis.horizontal,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search here...',
+                            hintStyle: TextStyle(fontSize: 12),
+                            isDense: true,
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.green,
+                            )),
+                      ),
                     ),
                   ),
-          )
-          // Container(
-          //   height: height * 0.045,
-          //   width: width,
-          //   margin: EdgeInsets.symmetric(horizontal: 10),
-          //   padding: EdgeInsets.only(left: 10, right: 0),
-          //   child: TextFormField(
-          //     onChanged: (value) {
-          //       selectController.search.value = value;
-          //       print('selectController search is = ${selectController.search.value}');
-          //     },
-          //     style: TextStyle(fontSize: 14),
-          //     decoration: InputDecoration(
-          //       disabledBorder: new OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(30),
-          //           borderSide: new BorderSide(
-          //             color: Colors.black12,
-          //           )),
-          //       focusedBorder: new OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(30),
-          //           borderSide: new BorderSide(
-          //             color: Colors.black12,
-          //           )),
-          //       enabledBorder: new OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(30),
-          //           borderSide: new BorderSide(
-          //             color: Colors.black12,
-          //           )),
-          //       border: new OutlineInputBorder(
-          //           borderRadius: BorderRadius.circular(30),
-          //           borderSide: new BorderSide(
-          //             color: Colors.black12,
-          //           )),
-          //       isDense: true,
-          //       hintText: 'Search here ...',
-          //       hintStyle: TextStyle(fontSize: 10, color: Colors.black),
-          //       suffixIcon: Icon(
-          //         Icons.search,
-          //         size: 20,
-          //         color: Color(0XFF0BAB0D),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+                  trailing: Wrap(
+                    children: [
+                      // InkWell(
+                      //   child: Icon(
+                      //     CupertinoIcons.search,
+                      //   ),
+                      //   onTap: () {
+                      //     Navigator.push(context,
+                      //         MaterialPageRoute(builder: (c) => SearchUser()));
+                      //   },
+                      // ),
+                      InkWell(
+                          onTap: () {
+                            // return createAlertDialoge1(context);
+                          },
+                          child: Icon(
+                            CupertinoIcons.bell_solid,
+                            color: Colors.black,
+                            size: 23,
+                          )),
+                      // InkWell(
+                      //     onTap: () {
+                      //       Get.to(Settings());
+                      //     },
+                      //     child: Container(
+                      //       height: 20,
+                      //       width: 20,
+                      //       child: SvgPicture.asset('assets/user/setting.svg'),
+                      //     )),
+                    ],
+                    spacing: 8,
+                  )),
+
+              Obx(
+                () => !storyLoaded.value
+                    ? SizedBox()
+                    : Container(
+                        height: 95,
+                        //width: 80,
+                        //color: Colors.green,
+                        child: ListView.builder(
+                          itemCount: controller.storyList.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: 62,
+                                  decoration: BoxDecoration(shape: BoxShape.circle),
+                                  child: CircularProfileAvatar(
+                                    '${controller.storyList[index].stories![0].thumbnail}',
+                                    borderWidth: 1,
+                                    borderColor: buttonColor,
+                                    backgroundColor: Colors.blueGrey[100]!,
+                                    onTap: listOfSelectedMember.isNotEmpty
+                                        ? null
+                                        : () {
+                                            context
+                                                .pushTransparentRoute(
+                                                    StoryScreenUpdated(
+                                              storyList: controller.storyList,
+                                              currentIndex: index,
+                                            ))
+                                                .then((value) async {
+                                              await controller.getChatList();
+                                              controller.connectToSocket();
+                                              setState(() {});
+                                            });
+                                          },
+                                  ),
+                                ),
+                                Text('${controller.storyList[index].username}')
+                              ],
+                            ),
+                          ),
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
+              )
+              // Container(
+              //   height: height * 0.045,
+              //   width: width,
+              //   margin: EdgeInsets.symmetric(horizontal: 10),
+              //   padding: EdgeInsets.only(left: 10, right: 0),
+              //   child: TextFormField(
+              //     onChanged: (value) {
+              //       selectController.search.value = value;
+              //       print('selectController search is = ${selectController.search.value}');
+              //     },
+              //     style: TextStyle(fontSize: 14),
+              //     decoration: InputDecoration(
+              //       disabledBorder: new OutlineInputBorder(
+              //           borderRadius: BorderRadius.circular(30),
+              //           borderSide: new BorderSide(
+              //             color: Colors.black12,
+              //           )),
+              //       focusedBorder: new OutlineInputBorder(
+              //           borderRadius: BorderRadius.circular(30),
+              //           borderSide: new BorderSide(
+              //             color: Colors.black12,
+              //           )),
+              //       enabledBorder: new OutlineInputBorder(
+              //           borderRadius: BorderRadius.circular(30),
+              //           borderSide: new BorderSide(
+              //             color: Colors.black12,
+              //           )),
+              //       border: new OutlineInputBorder(
+              //           borderRadius: BorderRadius.circular(30),
+              //           borderSide: new BorderSide(
+              //             color: Colors.black12,
+              //           )),
+              //       isDense: true,
+              //       hintText: 'Search here ...',
+              //       hintStyle: TextStyle(fontSize: 10, color: Colors.black),
+              //       suffixIcon: Icon(
+              //         Icons.search,
+              //         size: 20,
+              //         color: Color(0XFF0BAB0D),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
         ],
       ),
     );
   }
 
+
+}
+  
   createAlertDialoge1(BuildContext context) {
     TextEditingController customController = TextEditingController();
 
@@ -305,7 +327,7 @@ class _MySliverState extends State<MySliver> {
                   ])));
         });
   }
-}
+
 
 // InkWell(
 // onTap: () {

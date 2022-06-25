@@ -138,16 +138,16 @@ class _SettingsState extends State<Settings> {
                       title: 'MY INFORMATION',
                       svgname: 'assets/setting/svg/information.svg'),
                 ),
-                InkWell(
-                  onTap: () {
-                    Get.to(Apearennce());
-                  },
-                  child: settingRow(
-                      width: width,
-                      height: height,
-                      title: 'APPEARANCE',
-                      svgname: 'assets/setting/svg/information.svg'),
-                ),
+                // InkWell(
+                //   onTap: () {
+                //     Get.to(Apearennce());
+                //   },
+                //   child: settingRow(
+                //       width: width,
+                //       height: height,
+                //       title: 'APPEARANCE',
+                //       svgname: 'assets/setting/svg/information.svg'),
+                // ),
                 Container(
                   height: height * 0.060,
                   margin: EdgeInsets.only(bottom: height * 0.015),
