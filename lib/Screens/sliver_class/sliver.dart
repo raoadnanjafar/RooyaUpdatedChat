@@ -17,6 +17,7 @@ import '../../Models/UserChatModel.dart';
 import '../../Models/UserStoriesModel.dart';
 import '../../Providers/ChatScreenProvider.dart';
 import '../../Utils/StoryViewPage.dart';
+import '../../Utils/StoryViewScreen.dart';
 import '../../Utils/primary_color.dart';
 
 class MySliver extends StatefulWidget {
@@ -62,7 +63,8 @@ class _MySliverState extends State<MySliver> {
                               element ==
                               '${UserDataService.userDataModel!.userData!.userId.toString()}');
                           context.pushTransparentRoute(StoryViewPage(
-                            userStories: allstoryList[i],isAdmin: true,
+                            userStories: allstoryList[i],
+                            isAdmin: true,
                           ));
                         },
                       )
@@ -77,22 +79,23 @@ class _MySliverState extends State<MySliver> {
                         },
                       ),
               ),
-
               title: Container(
                 height: 26,
                 width: 100,
-                decoration: BoxDecoration(color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(18),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(18),
                 ),
                 child: TextFormField(
                   decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Search here...',
-                    hintStyle: TextStyle(fontSize: 12),
-                    isDense: true,
-                    prefixIcon: Icon(Icons.search,color:  Colors.green,
-                    )
-                  ),
+                      border: InputBorder.none,
+                      hintText: 'Search here...',
+                      hintStyle: TextStyle(fontSize: 12),
+                      isDense: true,
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.green,
+                      )),
                 ),
               ),
               trailing: Wrap(
@@ -128,50 +131,46 @@ class _MySliverState extends State<MySliver> {
                 spacing: 8,
               )),
 
-          Obx(()=> !storyLoaded.value?SizedBox(): Container(
-              height: 70,
-              //color: Colors.green,
-              child: ListView.builder(itemCount: controller.storyList.length,itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 30,
-                  width: 55,
-                  decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: CircularProfileAvatar(
-                    '${controller.storyList[index].stories![0].thumbnail}',
-                    borderWidth: 2,
-                    borderColor: buttonColor,
-                    backgroundColor: Colors.blueGrey[100]!,
-                    onTap: listOfSelectedMember
-                        .isNotEmpty
-                        ? null
-                        : () {
-                      if (listOfSelectedMember
-                          .isEmpty) {
-                        int i = controller
-                            .idsOfUserStories
-                            .indexWhere((element) =>
-                        element ==
-                            '${controller.listofChat[index].userId}');
-                        context.pushTransparentRoute(
-                            StoryViewPage(
-                              userStories:
-                              controller
-                                  .storyList[index],
-                              socket:
-                              controller
-                                  .socket,
-                            )).then((value) async{
-                          await controller.getChatList();
-                          controller.connectToSocket();
-                          setState(() {});
-                        });
-                      }
-                    },
+          Obx(
+            () => !storyLoaded.value
+                ? SizedBox()
+                : Container(
+                    height: 60,
+                    //color: Colors.green,
+                    child: ListView.builder(
+                      itemCount: controller.storyList.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 30,
+                          width: 45,
+                          decoration: BoxDecoration(shape: BoxShape.circle),
+                          child: CircularProfileAvatar(
+                            '${controller.storyList[index].stories![0].thumbnail}',
+                            borderWidth: 1,
+                            borderColor: buttonColor,
+                            backgroundColor: Colors.blueGrey[100]!,
+                            onTap: listOfSelectedMember.isNotEmpty
+                                ? null
+                                : () {
+                                    context
+                                        .pushTransparentRoute(
+                                            StoryScreenUpdated(
+                                      storyList: controller.storyList,
+                                      currentIndex: index,
+                                    ))
+                                        .then((value) async {
+                                      await controller.getChatList();
+                                      controller.connectToSocket();
+                                      setState(() {});
+                                    });
+                                  },
+                          ),
+                        ),
+                      ),
+                      scrollDirection: Axis.horizontal,
+                    ),
                   ),
-                ),
-              ) ,scrollDirection: Axis.horizontal,),
-            ),
           )
           // Container(
           //   height: height * 0.045,
@@ -307,7 +306,6 @@ class _MySliverState extends State<MySliver> {
         });
   }
 }
-
 
 // InkWell(
 // onTap: () {

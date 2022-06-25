@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen>
     }
     controller.getChatList().then((value) async {
       await getStoryData();
-      if(mounted){
+      if (mounted) {
         setState(() {});
       }
     });
@@ -421,33 +421,37 @@ class _ChatScreenState extends State<ChatScreen>
                                                           Icon(Icons.error),
                                                   fit: BoxFit.cover,
                                                 ),
-                                                onTap:
-                                                    listOfSelectedMember
-                                                            .isNotEmpty
-                                                        ? null
-                                                        : () {
-                                                            if (listOfSelectedMember
-                                                                .isEmpty) {
-                                                              int i = controller
-                                                                  .idsOfUserStories
-                                                                  .indexWhere((element) =>
+                                                onTap: listOfSelectedMember
+                                                        .isNotEmpty
+                                                    ? null
+                                                    : () {
+                                                        if (listOfSelectedMember
+                                                            .isEmpty) {
+                                                          int i = controller
+                                                              .idsOfUserStories
+                                                              .indexWhere(
+                                                                  (element) =>
                                                                       element ==
                                                                       '${controller.listofChat[index].userId}');
-                                                              context.pushTransparentRoute(
+                                                          context
+                                                              .pushTransparentRoute(
                                                                   StoryViewPage(
-                                                                userStories:
-                                                                    controller
-                                                                        .storyList[i],
-                                                                socket:
-                                                                    controller
-                                                                        .socket,
-                                                              )).then((value) async{
-                                                                await controller.getChatList();
-                                                                controller.connectToSocket();
-                                                                setState(() {});
-                                                              });
-                                                            }
-                                                          },
+                                                            userStories:
+                                                                controller
+                                                                    .storyList[i],
+                                                            socket: controller
+                                                                .socket,
+                                                          ))
+                                                              .then(
+                                                                  (value) async {
+                                                            await controller
+                                                                .getChatList();
+                                                            controller
+                                                                .connectToSocket();
+                                                            setState(() {});
+                                                          });
+                                                        }
+                                                      },
                                                 imageFit: BoxFit.cover,
                                               )
                                             : CircularProfileAvatar(
@@ -784,9 +788,12 @@ class _ChatScreenState extends State<ChatScreen>
                                         if (pickedFile != null) {
                                           for (var i in listofmap) {
                                             await sentMessageAsFile(
-                                                userID: i,
-                                                text: '',
-                                                filePath: '${pickedFile.path}').then((value) => controller.getChatList());
+                                                    userID: i,
+                                                    text: '',
+                                                    filePath:
+                                                        '${pickedFile.path}')
+                                                .then((value) =>
+                                                    controller.getChatList());
                                           }
                                           Navigator.of(context).pop();
                                         }
@@ -904,7 +911,7 @@ class _ChatScreenState extends State<ChatScreen>
             ),
           ),
           SizedBox(
-            width: width/3.7,
+            width: width / 3.7,
           ),
           FloatingActionButton(
             heroTag: "btn2",

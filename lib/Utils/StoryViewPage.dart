@@ -22,12 +22,13 @@ class StoryViewPage extends StatefulWidget {
   final Socket? socket;
   final UserStoryModel? userStories;
   final bool? isAdmin;
-
+  final Function(String)? swipCallBack;
   const StoryViewPage({
     Key? key,
     this.userStories,
     this.isAdmin = false,
     this.socket,
+    this.swipCallBack,
   }) : super(key: key);
 
   @override
@@ -75,7 +76,9 @@ class _StoryViewPageState extends State<StoryViewPage>
     _controller.dispose();
     super.dispose();
   }
-  PageController pageController = PageController(initialPage: 0, keepPage: false);
+
+  PageController pageController =
+      PageController(initialPage: 0, keepPage: false);
 
   bool openSheet = false;
   @override
@@ -105,10 +108,8 @@ class _StoryViewPageState extends State<StoryViewPage>
                   openSheet = true;
                   controller.pause();
                   replyPreview(
-                          widget.userStories!.stories![currentIndex].id
-                              .toString(),
-                          widget.socket!)
-                      .then((value) {
+                    widget.userStories!.stories![currentIndex].id.toString(),
+                  ).then((value) {
                     controller.play();
                     openSheet = false;
                     if (value == 'send') {
@@ -133,26 +134,31 @@ class _StoryViewPageState extends State<StoryViewPage>
           body: Stack(
             children: [
               GestureDetector(
-                onHorizontalDragUpdate: (DragUpdateDetails details){
-                  // print('dtdfhihgiudfhgkjfghkj');
-                  // if (details.delta.dx < 1.0) {
-                  //  // _controller.forward().whenComplete(() => _controller.reverse());
-                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => StoryScreenUpdated(indexStory: widget.userStories!),));
-                  // }
+                onHorizontalDragUpdate: (DragUpdateDetails details) {
+                  bool drag = true;
+                  if (drag && widget.swipCallBack != null) {
+                    drag = false;
+                    if (details.delta.dx < -1) {
+                      widget.swipCallBack!.call('next');
+                    } else {
+                      widget.swipCallBack!.call('back');
+                    }
+                  }
                 },
                 child: Container(
                   height: height,
                   width: width,
-                  child:  StoryView(
+                  child: StoryView(
                     controller: controller,
-                    currentIndex: (int c) {
-                      print('$c');
+                    currentIndex: (int c) async{
+                      print('currentIndex = $c');
                       currentIndex = c + 1;
-                      ApiUtils.storyView(mapData: {
+                      model = await ApiUtils.storyView(mapData: {
                         'server_key': serverKey,
                         'story_id':
-                        '${widget.userStories!.stories![currentIndex].id.toString()}'
+                            '${widget.userStories!.stories![currentIndex].id.toString()}'
                       });
+                      totalView.value = model!.users!.length;
                     },
                     storyItems: widget.userStories!.stories!.map((e) {
                       if (e.videos == null || e.videos!.isEmpty) {
@@ -184,8 +190,14 @@ class _StoryViewPageState extends State<StoryViewPage>
                       print("Showing a story");
                     },
                     onComplete: () {
-                      print("Completed a cycle");
-                      Navigator.pop(context);
+                      if (widget.swipCallBack == null) {
+                        print("Completed a cycle");
+                        Navigator.pop(context);
+                      }
+                      if (widget.userStories!.stories!.length ==
+                          currentIndex + 1) {
+                        widget.swipCallBack!.call('next');
+                      }
                     },
                     progressPosition: ProgressPosition.top,
                     repeat: false,
@@ -195,41 +207,10 @@ class _StoryViewPageState extends State<StoryViewPage>
               ),
               Align(
                 alignment: Alignment.topLeft,
-                child: Platform.isIOS
-                    ? Column(
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 55, left: 10),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Get.back();
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,top:55 ),
-                          child: Text('${widget.userStories!.username}',style: TextStyle(color: Colors.white),),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 70),
-                      child: Text('${widget.userStories!.stories![currentIndex].timeText}',
-                        style: TextStyle(color: Colors.white),),
-                    ),
-                  ],
-                )
-                    : Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Row(
                       children: [
                         Padding(
@@ -245,29 +226,32 @@ class _StoryViewPageState extends State<StoryViewPage>
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 10,top:40 ),
+                          padding: const EdgeInsets.only(left: 10, top: 40),
                           child: InkWell(
-                            onTap: (){
+                            onTap: () {
                               controller.pause();
                               Get.to(UserChatInformation(
-                                  userID: widget.userStories!.userId
-                                      .toString()))?.then((value) => controller.play());
+                                      userID: widget.userStories!.userId
+                                          .toString()))
+                                  ?.then((value) => controller.play());
                             },
-                            child: Text('${widget.userStories!.username}',style: TextStyle(color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
-
-                            ),),
-
+                            child: Text(
+                              '${widget.userStories!.username}',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                            ),
                           ),
                         ),
-
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 70),
-                      child: Text('${widget.userStories!.stories![currentIndex].timeText}',
-                        style: TextStyle(color: Colors.white),),
+                      child: Text(
+                        '${widget.userStories!.stories![currentIndex].timeText}',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -299,33 +283,33 @@ class _StoryViewPageState extends State<StoryViewPage>
                     margin: EdgeInsets.only(bottom: 50),
                     child: widget.isAdmin!
                         ? Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.remove_red_eye, color: Colors.white),
-                        SizedBox(),
-                        Obx(
-                              () => Text(
-                            totalView.value == 10000
-                                ? ''
-                                : '${totalView.value}',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    )
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.remove_red_eye, color: Colors.white),
+                              SizedBox(),
+                              Obx(
+                                () => Text(
+                                  totalView.value == 10000
+                                      ? ''
+                                      : '${totalView.value}',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          )
                         : Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.keyboard_arrow_up_rounded,
-                            color: Colors.white),
-                        Text(
-                          'Reply',
-                          style: TextStyle(color: Colors.white54),
-                        ),
-                      ],
-                    ),
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.keyboard_arrow_up_rounded,
+                                  color: Colors.white),
+                              Text(
+                                'Reply',
+                                style: TextStyle(color: Colors.white54),
+                              ),
+                            ],
+                          ),
                   ),
                 ),
               ),
@@ -350,7 +334,9 @@ class _StoryViewPageState extends State<StoryViewPage>
     );
   }
 
-  Future replyPreview(String id, Socket socket,) {
+  Future replyPreview(
+    String id,
+  ) {
     TextEditingController captionController = TextEditingController();
     return showModalBottomSheet<void>(
       context: context,
@@ -367,25 +353,32 @@ class _StoryViewPageState extends State<StoryViewPage>
                     margin: EdgeInsets.only(left: 40, right: 40),
                     decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight: Radius.circular(8))),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8))),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding:  EdgeInsets.only(left: 10),
-                          child: Text('${widget.userStories!.username}',style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.greenAccent,
-                              fontSize: 18),),
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            '${widget.userStories!.username}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.greenAccent,
+                                fontSize: 18),
+                          ),
                         ),
                         Padding(
-                          padding:  EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.only(right: 10),
                           child: ClipRRect(
-                            borderRadius:  BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(5),
                             child: Container(
                               height: 50,
                               width: 60,
-                              child: Image.network('${widget.userStories!.stories![currentIndex].thumbnail}',fit: BoxFit.cover),
+                              child: Image.network(
+                                  '${widget.userStories!.stories![currentIndex].thumbnail}',
+                                  fit: BoxFit.cover),
                             ),
                           ),
                         ),
