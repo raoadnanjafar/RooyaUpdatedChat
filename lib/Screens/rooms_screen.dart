@@ -44,7 +44,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
   var selectedIndexController = Get.find<SelectIndexController>();
   final Geolocator geolocator = Geolocator();
   Position? _currentPosition;
-  String? _currentAddress;
+ late  String? _currentAddress ;
 
   Future _getCurrentPosition() async {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
@@ -653,6 +653,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     double? lng;
     String address;
     PickedFile? pickedFile;
+    locationController.text = _currentAddress!;
     return showDialog(
         context: context,
         builder: (context) {
@@ -732,7 +733,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               textEditingController: locationController,
                               googleAPIKey: "$google_map_api_key",
                               inputDecoration: InputDecoration(
-                                  hintText: _currentAddress,
+                                 // hintText: _currentAddress,
                                   hintStyle: TextStyle(
                                       fontSize: 13,
                                       fontFamily: AppFonts.segoeui),
@@ -746,6 +747,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               itmClick: (Prediction prediction) {
                                 locationController.text =
                                     prediction.description!;
+
                               }),
                         ),
                         SizedBox(

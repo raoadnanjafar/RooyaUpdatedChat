@@ -332,6 +332,7 @@ class _UserChatState extends State<UserChat>
                                                               i]);
                                                 }
                                                 selectedOneToOneChat.clear();
+                                                Navigator.pop(context);
                                                 setState(() {});
                                               });
                                         },
