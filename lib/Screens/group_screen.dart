@@ -90,6 +90,7 @@ class _GroupScreenState extends State<GroupScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          Divider(),
           CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -175,7 +176,7 @@ class _GroupScreenState extends State<GroupScreen> {
                             return createAlertDialoge(context);
                           },
                           child: Text(
-                            'Groups',
+                            '',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,

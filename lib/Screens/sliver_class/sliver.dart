@@ -12,6 +12,7 @@ import 'package:rooya/Screens/chat_screen.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 import 'package:rooya/Utils/text_filed/app_font.dart';
 
+import '../../Models/FriendsListModel.dart';
 import '../../Models/UserChatModel.dart';
 import '../../Models/UserStoriesModel.dart';
 import '../../Providers/ChatScreenProvider.dart';
@@ -34,6 +35,7 @@ var storyLoaded = false.obs;
 class _MySliverState extends State<MySliver> {
   var selectController = Get.find<SelectIndexController>();
   final controller = Get.put(ChatScreenProvider());
+  var listOfSelectedMember = <Data>[].obs;
 
   @override
   Widget build(BuildContext context) {
@@ -77,15 +79,17 @@ class _MySliverState extends State<MySliver> {
               ),
 
               title: Container(
-                height: 35,
+                height: 26,
                 width: 100,
-                decoration: BoxDecoration(color: Colors.grey.shade300,
+                decoration: BoxDecoration(color: Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(18),
                 ),
                 child: TextFormField(
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Search here...',
+                    hintStyle: TextStyle(fontSize: 12),
+                    isDense: true,
                     prefixIcon: Icon(Icons.search,color:  Colors.green,
                     )
                   ),
@@ -138,10 +142,31 @@ class _MySliverState extends State<MySliver> {
                     borderWidth: 2,
                     borderColor: buttonColor,
                     backgroundColor: Colors.blueGrey[100]!,
-                    onTap: () {
-                      context.pushTransparentRoute(StoryViewPage(
-                        userStories: allstoryList[index],isAdmin: true,
-                      ));
+                    onTap: listOfSelectedMember
+                        .isNotEmpty
+                        ? null
+                        : () {
+                      if (listOfSelectedMember
+                          .isEmpty) {
+                        int i = controller
+                            .idsOfUserStories
+                            .indexWhere((element) =>
+                        element ==
+                            '${controller.listofChat[index].userId}');
+                        context.pushTransparentRoute(
+                            StoryViewPage(
+                              userStories:
+                              controller
+                                  .storyList[index],
+                              socket:
+                              controller
+                                  .socket,
+                            )).then((value) async{
+                          await controller.getChatList();
+                          controller.connectToSocket();
+                          setState(() {});
+                        });
+                      }
                     },
                   ),
                 ),

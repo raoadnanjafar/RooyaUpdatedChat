@@ -452,36 +452,26 @@ class _UserChatState extends State<UserChat>
                                                 Future.delayed(
                                                     Duration(seconds: 0),
                                                     () async {
-                                                  await showAlertDialog(
-                                                      context: context,
-                                                      content:
-                                                          'You want to leave the it?',
-                                                      cancel: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      done: () async {
                                                         Map map = {
                                                           'server_key':
-                                                              serverKey,
+                                                          serverKey,
                                                           'type': 'leave',
                                                           'id': widget.groupID
                                                         };
                                                         bool v = await ApiUtils
                                                             .leaveGroup(
-                                                                map: map);
+                                                            map: map);
                                                         if (v) {
                                                           Navigator.of(context)
                                                               .pop();
                                                           Navigator.of(context)
                                                               .pop();
                                                         } else {
-                                                          snackBarFailer(
-                                                              'Admin did not leave the group');
+                                                          // snackBarFailer(
+                                                          //     'Admin did not leave the group');
                                                           Navigator.of(context)
                                                               .pop();
                                                         }
-                                                      });
                                                   setState(() {});
                                                 });
                                               },

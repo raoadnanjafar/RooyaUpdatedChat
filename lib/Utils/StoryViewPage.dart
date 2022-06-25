@@ -6,6 +6,7 @@ import 'package:rooya/ApiConfig/SizeConfiq.dart';
 import 'package:rooya/GlobalWidget/SnackBarApp.dart';
 import 'package:rooya/Models/UserStoriesModel.dart';
 import 'package:rooya/Screens/chat_screen.dart';
+import 'package:rooya/Utils/StoryViewScreen.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/widgets/story_view.dart';
@@ -14,6 +15,7 @@ import '../ApiConfig/BaseURL.dart';
 import '../GlobalWidget/FileUploader.dart';
 import '../Models/StoryView.dart';
 import '../Models/StoryViewsModel.dart';
+import '../Screens/Information/UserChatInformation/user_chat_information.dart';
 import 'UserDataService.dart';
 
 class StoryViewPage extends StatefulWidget {
@@ -73,6 +75,7 @@ class _StoryViewPageState extends State<StoryViewPage>
     _controller.dispose();
     super.dispose();
   }
+  PageController pageController = PageController(initialPage: 0, keepPage: false);
 
   bool openSheet = false;
   @override
@@ -129,85 +132,145 @@ class _StoryViewPageState extends State<StoryViewPage>
         child: Scaffold(
           body: Stack(
             children: [
-              Container(
-                height: height,
-                width: width,
-                child: StoryView(
-                  controller: controller,
-                  currentIndex: (int c) {
-                    print('$c');
-                    currentIndex = c + 1;
-                    ApiUtils.storyView(mapData: {
-                      'server_key': serverKey,
-                      'story_id':
-                          '${widget.userStories!.stories![currentIndex].id.toString()}'
-                    });
-                  },
-                  storyItems: widget.userStories!.stories!.map((e) {
-                    if (e.videos == null || e.videos!.isEmpty) {
-                      return StoryItem.inlineImage(
-                        url: "${e.thumbnail}",
-                        controller: controller,
-                        imageFit: BoxFit.contain,
-                        duration: Duration(seconds: 10),
-                        caption: Text(
-                          "${e.description}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            backgroundColor: Colors.black54,
-                            fontSize: 17,
+              GestureDetector(
+                onHorizontalDragUpdate: (DragUpdateDetails details){
+                  // print('dtdfhihgiudfhgkjfghkj');
+                  // if (details.delta.dx < 1.0) {
+                  //  // _controller.forward().whenComplete(() => _controller.reverse());
+                  //   Navigator.push(context, MaterialPageRoute(builder: (context) => StoryScreenUpdated(indexStory: widget.userStories!),));
+                  // }
+                },
+                child: Container(
+                  height: height,
+                  width: width,
+                  child:  StoryView(
+                    controller: controller,
+                    currentIndex: (int c) {
+                      print('$c');
+                      currentIndex = c + 1;
+                      ApiUtils.storyView(mapData: {
+                        'server_key': serverKey,
+                        'story_id':
+                        '${widget.userStories!.stories![currentIndex].id.toString()}'
+                      });
+                    },
+                    storyItems: widget.userStories!.stories!.map((e) {
+                      if (e.videos == null || e.videos!.isEmpty) {
+                        return StoryItem.inlineImage(
+                          url: "${e.thumbnail}",
+                          controller: controller,
+                          imageFit: BoxFit.contain,
+                          duration: Duration(seconds: 10),
+                          caption: Text(
+                            "${e.description}",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              backgroundColor: Colors.black54,
+                              fontSize: 17,
+                            ),
                           ),
-                        ),
-                      );
-                    } else {
-                      return StoryItem.pageVideo(
-                        '${e.videos![0].filename}',
-                        controller: controller,
-                        caption: "${e.description}",
-                        duration: Duration(seconds: e.videos![0].totalTime!),
-                      );
-                    }
-                  }).toList(),
-                  onStoryShow: (s) {
-                    print("Showing a story");
-                  },
-                  onComplete: () {
-                    print("Completed a cycle");
-                    Navigator.pop(context);
-                  },
-                  progressPosition: ProgressPosition.top,
-                  repeat: false,
-                  inline: true,
+                        );
+                      } else {
+                        return StoryItem.pageVideo(
+                          '${e.videos![0].filename}',
+                          controller: controller,
+                          caption: "${e.description}",
+                          duration: Duration(seconds: e.videos![0].totalTime!),
+                        );
+                      }
+                    }).toList(),
+                    onStoryShow: (s) {
+                      print("Showing a story");
+                    },
+                    onComplete: () {
+                      print("Completed a cycle");
+                      Navigator.pop(context);
+                    },
+                    progressPosition: ProgressPosition.top,
+                    repeat: false,
+                    inline: true,
+                  ),
                 ),
               ),
               Align(
                 alignment: Alignment.topLeft,
                 child: Platform.isIOS
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 55, left: 10),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
+                    ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 55, left: 10),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Get.back();
+                            },
                           ),
-                          onPressed: () {
-                            Get.back();
-                          },
                         ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 40, left: 10),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10,top:55 ),
+                          child: Text('${widget.userStories!.username}',style: TextStyle(color: Colors.white),),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 70),
+                      child: Text('${widget.userStories!.stories![currentIndex].timeText}',
+                        style: TextStyle(color: Colors.white),),
+                    ),
+                  ],
+                )
+                    : Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 40, left: 10),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Get.back();
+                            },
                           ),
-                          onPressed: () {
-                            Get.back();
-                          },
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10,top:40 ),
+                          child: InkWell(
+                            onTap: (){
+                              controller.pause();
+                              Get.to(UserChatInformation(
+                                  userID: widget.userStories!.userId
+                                      .toString()))?.then((value) => controller.play());
+                            },
+                            child: Text('${widget.userStories!.username}',style: TextStyle(color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16
+
+                            ),),
+
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 70),
+                      child: Text('${widget.userStories!.stories![currentIndex].timeText}',
+                        style: TextStyle(color: Colors.white),),
+                    ),
+                  ],
+                ),
               ),
               // IconButton(
               //   icon: Icon(
@@ -236,33 +299,33 @@ class _StoryViewPageState extends State<StoryViewPage>
                     margin: EdgeInsets.only(bottom: 50),
                     child: widget.isAdmin!
                         ? Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.remove_red_eye, color: Colors.white),
-                              SizedBox(),
-                              Obx(
-                                () => Text(
-                                  totalView.value == 10000
-                                      ? ''
-                                      : '${totalView.value}',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.keyboard_arrow_up_rounded,
-                                  color: Colors.white),
-                              Text(
-                                'Reply',
-                                style: TextStyle(color: Colors.white54),
-                              ),
-                            ],
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.remove_red_eye, color: Colors.white),
+                        SizedBox(),
+                        Obx(
+                              () => Text(
+                            totalView.value == 10000
+                                ? ''
+                                : '${totalView.value}',
+                            style: TextStyle(color: Colors.white),
                           ),
+                        ),
+                      ],
+                    )
+                        : Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.keyboard_arrow_up_rounded,
+                            color: Colors.white),
+                        Text(
+                          'Reply',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

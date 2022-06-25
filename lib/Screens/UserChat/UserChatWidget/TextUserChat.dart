@@ -32,109 +32,88 @@ class TextUserChat extends StatefulWidget {
 class _TextUserChatState extends State<TextUserChat> {
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
     var date = DateTime.fromMillisecondsSinceEpoch(int.parse("${widget.model!.time}") * 1000);
     if (widget.model!.position != 'right') {
       if (widget.model!.storyId != '0') {
         return InkWell(
-            onTap: () {
-              context.pushTransparentRoute(StoryViewPage(
-                userStories: UserStoryModel(
-                    firstName: '${widget.model!.messageUser!.fName}',
-                    lastName: '${widget.model!.messageUser!.lName}',
-                    userId: '${widget.model!.messageUser!.userId}',
-                    stories: [Stories.fromJson(widget.model!.story!.toJson())]),
-                isAdmin: storage.read('userID') == '${widget.model!.story!.userId}' ? true : false,
-              ));
-            },
-            child: Column(
-              children: [
-                ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: width / 1.8, maxWidth: width / 1.8),
-                    child: Stack(
+          onTap: () {
+            context.pushTransparentRoute(StoryViewPage(
+              userStories: UserStoryModel(
+                  firstName: '${widget.model!.messageUser!.fName}',
+                  lastName: '${widget.model!.messageUser!.lName}',
+                  userId: '${widget.model!.messageUser!.userId}',
+                  stories: [Stories.fromJson(widget.model!.story!.toJson())]),
+              isAdmin: storage.read('userID') == '${widget.model!.story!.userId}' ? true : false,
+            ));
+          },
+          child:
+          ConstrainedBox(
+            constraints: BoxConstraints( maxWidth: width / 1.8),
+            child:
+            ClipRRect(
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
+              child: Container(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Stack(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: Container(
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            Stack(
-                              children: [
-                                Container(
-                                  height: height * 0.3,
-                                  width: width * 0.5,
-                                  child: widget.model!.story == null
-                                      ? SizedBox()
-                                      : Image.network(
-                                          '${widget.model!.story!.thumbnail}',
-                                          fit: BoxFit.cover,
-                                        ),
-                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: buttonColor, width: 1)),
-                                ),
-                                Container(
-                                  height: height * 0.3,
-                                  width: width * 0.5,
-                                  decoration:
-                                      BoxDecoration(borderRadius: BorderRadius.circular(8)),
-                                ),
-                                Positioned(
-                                    top: 120,
-                                    left: 50,
-                                    child: Text(
-                                      'View Story',
-                                      style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                                    )),
-                              ],
-                            ),
-                          ])),
+                        Container(
+                          height: height * 0.3,
+                          width: width * 0.5,
+                          child: widget.model!.story == null
+                              ? SizedBox()
+                              : Image.network(
+                            '${widget.model!.story!.thumbnail}',
+                            fit: BoxFit.cover,
+                          ),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: buttonColor, width: 1)),
                         ),
-                        // Positioned(
-                        //   bottom: 0,
-                        //   child: ConstrainedBox(
-                        //     constraints: BoxConstraints(
-                        //       maxWidth: width / 1.8,
-                        //     ),
-                        //     child: Container(
-                        //       decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(16)),
-                        //       child: InkWell(
-                        //         child: Padding(
-                        //           padding: const EdgeInsets.all(8.0),
-                        //           child: Text('${widget.model!.text}', style: TextStyle(color: Colors.white,
-                        //             fontSize: 16,)),
-                        //         ),
-                        //         onTap: () {
-                        //           context.pushTransparentRoute(StoryViewPage(
-                        //             userStories: UserStoryModel(
-                        //                 firstName: '${widget.model!.messageUser!.fName}',
-                        //                 lastName: '${widget.model!.messageUser!.lName}',
-                        //                 userId: '${widget.model!.messageUser!.userId}',
-                        //                 stories: [Stories.fromJson(widget.model!.story!.toJson())]),
-                        //             isAdmin: storage.read('userID') == '${widget.model!.story!.userId}' ? true : false,
-                        //           ));
-                        //         },
-                        //       ),
-                        //     ),
-                        //   ),
-                        // )
-                      ],
-                    )),
-                Container(
-                  width: 220,
-                  decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(16)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text('${widget.model!.text}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
+                        Container(
+                          height: height * 0.3,
+                          width: width * 0.5,
+                          decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        Positioned(
+                            top: 120,
+                            left: 50,
+                            child: Text(
+                              'View Story',
+                              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                             )),
-                        TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
                       ],
                     ),
-                  ),
-                )
-              ],
-            ));
+                    Container(
+                      padding: EdgeInsets.all(width / 30),
+                      decoration: BoxDecoration(color: Color(0xffF3F3F3), borderRadius: BorderRadius.circular(8)),
+                      child: Column(
+                        children: [
+                          ReplyUserName(fromGroup: widget.fromGroup, model: widget.model),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: width / 1.5),
+                            child: Text(
+                              '${widget.model!.text}',
+                              //  decrypString(
+                              //      encript: '${widget.model!.text}',
+                              //      pass: widget.model!.time),
+                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
+                            ),
+                          ),
+                          SizedBox(
+                            height: height / 100,
+                          ),
+                          TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                    )
+                  ]
+                  )
+              ),
+            ),
+
+          ),
+        );
       }
       if (widget.model!.replyId == '0') {
         return Row(
@@ -839,14 +818,12 @@ class _TextUserChatState extends State<TextUserChat> {
                 isAdmin: storage.read('userID') == '${widget.model!.story!.userId}' ? true : false,
               ));
             },
-            child: Column(
-              children: [
+            child:
                 ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: width / 1.8, maxWidth: width / 1.8),
-                    child: Stack(
-                      children: [
+                    constraints: BoxConstraints( maxWidth: width / 1.8),
+                    child:
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(12),topRight: Radius.circular(12)),
                           child: Container(
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Stack(
@@ -877,61 +854,84 @@ class _TextUserChatState extends State<TextUserChat> {
                                         )),
                                   ],
                                 ),
-                              ])),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: height * 0.010, horizontal: width * 0.030),
+                                  decoration: BoxDecoration(
+                                      color: widget.model!.seen != '0'
+                                          ? returnColorFromString(seenBackColor)
+                                          : widget.model!.delivered != '0'
+                                          ? returnColorFromString(receiveBackColor)
+                                          : returnColorFromString(sentBackColor),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Column(
+                                    children: [
+                                      // Text(
+                                      //   '${widget.model!.text}',
+                                      //   style: TextStyle(
+                                      //       color: widget.model!.seen != '0'
+                                      //           ? returnColorFromString(seenTextColor)
+                                      //           : widget.model!.delivered != '0'
+                                      //               ? returnColorFromString(receiveTextColor)
+                                      //               : returnColorFromString(sentTextColor),
+                                      //       fontWeight: FontWeight.w300,
+                                      //       fontFamily: AppFonts.segoeui,
+                                      //       fontSize: 14),
+                                      // ),
+                                      TextReplyCommon(model: widget.model, fromGroup: widget.fromGroup),
+                                      SizedBox(
+                                        height: height / 100,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(left: width / 50),
+                                            child: Text(
+                                              '${dateFormat.format(date)}',
+                                              style: TextStyle(
+                                                color: widget.model!.seen != '0'
+                                                    ? returnColorFromString(seenTimeColor)
+                                                    : widget.model!.delivered != '0'
+                                                    ? returnColorFromString(receiveTimeColor)
+                                                    : returnColorFromString(sentTimeColor),
+                                                fontFamily: AppFonts.segoeui,
+                                                fontSize: 9.0,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 3,
+                                          ),
+                                          widget.model!.seen != '0'
+                                              ? FaIcon(
+                                            FontAwesomeIcons.checkDouble,
+                                            size: 15,
+                                            color: returnColorFromString(seenCheck),
+                                          )
+                                              : widget.model!.delivered != '0'
+                                              ? FaIcon(
+                                            FontAwesomeIcons.checkDouble,
+                                            size: 15,
+                                            color: returnColorFromString(receiveCheck),
+                                          )
+                                              : FaIcon(
+                                            FontAwesomeIcons.check,
+                                            size: 15,
+                                            color: returnColorFromString(sentCheck),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                  ),
+                                )
+                              ]
+                              )
+                          ),
                         ),
-                        // Positioned(
-                        //   bottom: 0,
-                        //   child: ConstrainedBox(
-                        //     constraints: BoxConstraints(
-                        //       maxWidth: width / 1.8,
-                        //     ),
-                        //     child: Container(
-                        //       decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(16)),
-                        //       child: InkWell(
-                        //         child: Padding(
-                        //           padding: const EdgeInsets.all(8.0),
-                        //           child: Text('${widget.model!.text}', style: TextStyle(color: Colors.white,
-                        //             fontSize: 16,)),
-                        //         ),
-                        //         onTap: () {
-                        //           context.pushTransparentRoute(StoryViewPage(
-                        //             userStories: UserStoryModel(
-                        //                 firstName: '${widget.model!.messageUser!.fName}',
-                        //                 lastName: '${widget.model!.messageUser!.lName}',
-                        //                 userId: '${widget.model!.messageUser!.userId}',
-                        //                 stories: [Stories.fromJson(widget.model!.story!.toJson())]),
-                        //             isAdmin: storage.read('userID') == '${widget.model!.story!.userId}' ? true : false,
-                        //           ));
-                        //         },
-                        //       ),
-                        //     ),
-                        //   ),
-                        // )
-                      ],
-                    )),
-                Container(
-                  width: 220,
-                  decoration: BoxDecoration(color: widget.model!.seen != '0'
-                      ? returnColorFromString(seenBackColor)
-                      : widget.model!.delivered != '0'
-                      ? returnColorFromString(receiveBackColor)
-                      : returnColorFromString(sentBackColor), borderRadius: BorderRadius.circular(16)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text('${widget.model!.text}',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                            )),
-                        TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ));
+
+                      ),
+              );
       }
       if (widget.model!.replyId == '0') {
         return Container(

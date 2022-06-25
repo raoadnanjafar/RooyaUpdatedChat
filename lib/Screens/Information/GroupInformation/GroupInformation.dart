@@ -81,8 +81,8 @@ class _GroupInformationState extends State<GroupInformation> {
                         actions: [
                           Visibility(
                             visible: groupModel.userData!.admin == '0'
-                                ? true
-                                : false,
+                                ? false
+                                : true,
                             child: Container(
                               child: IconButton(
                                   onPressed: () async {
@@ -99,8 +99,8 @@ class _GroupInformationState extends State<GroupInformation> {
                           ),
                           Visibility(
                             visible: groupModel.userData!.admin == '0'
-                                ? true
-                                : false,
+                                ? false
+                                : true,
                             child: Container(
                               child: IconButton(
                                   onPressed: () async {

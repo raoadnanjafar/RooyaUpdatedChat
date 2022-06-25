@@ -41,24 +41,18 @@ class _FindChatRoomsState extends State<FindChatRooms> {
         return Future.error('Location permissions are denied');
       }
     }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     lat = position.latitude;
     lng = position.longitude;
     print('token = ${token}');
-    await controller.getGroupList(mapData: {
-      'server_key': serverKey,
-      'type': 'get_all',
-      'lat': '$lat',
-      'lng': '$lng',
-      'variant': 'room',
-      'distance': '${current_per.toInt()}'
-    });
+    await controller.getGroupList(
+        mapData: {'server_key': serverKey, 'type': 'get_all', 'lat': '$lat', 'lng': '$lng', 'variant': 'room', 'distance': '${current_per.toInt()}'});
     setState(() {});
   }
 
   String selectedFilter = 'all';
   double current_per = 60.0;
+  int value = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +93,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                       child: Center(
                         child: Text(
                           'All',
-                          style: TextStyle(
-                              color: selectedFilter == 'all'
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 15,
-                              fontFamily: AppFonts.segoeui),
+                          style: TextStyle(color: selectedFilter == 'all' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
                         ),
                       ),
                       decoration: selectedFilter == 'all'
@@ -113,10 +102,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                               color: Color(0XFF0BAB0D),
                             )
                           : BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                              border:
-                                  Border.all(color: Colors.black26, width: 1)),
+                              borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
                     ),
                   ),
                 ),
@@ -145,12 +131,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                       child: Center(
                         child: Text(
                           'Public',
-                          style: TextStyle(
-                              color: selectedFilter == 'public'
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 15,
-                              fontFamily: AppFonts.segoeui),
+                          style:
+                              TextStyle(color: selectedFilter == 'public' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
                         ),
                       ),
                       decoration: selectedFilter == 'public'
@@ -159,10 +141,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                               color: Color(0XFF0BAB0D),
                             )
                           : BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                              border:
-                                  Border.all(color: Colors.black26, width: 1)),
+                              borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
                     ),
                   ),
                 ),
@@ -191,12 +170,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                       child: Center(
                         child: Text(
                           'Private',
-                          style: TextStyle(
-                              color: selectedFilter == 'private'
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontSize: 15,
-                              fontFamily: AppFonts.segoeui),
+                          style:
+                              TextStyle(color: selectedFilter == 'private' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
                         ),
                       ),
                       decoration: selectedFilter == 'private'
@@ -205,10 +180,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                               color: Color(0XFF0BAB0D),
                             )
                           : BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                              border:
-                                  Border.all(color: Colors.black26, width: 1)),
+                              borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
                     ),
                   ),
                 ),
@@ -255,52 +227,226 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                 Text('${current_per.toInt()} km')
               ],
             ),
-            Container(
-              height: 55,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.blueGrey[50],
-              ),
-              child: GooglePlaceAutoCompleteTextField(
-                  textEditingController: locationController,
-                  googleAPIKey: "$google_map_api_key",
-                  inputDecoration: InputDecoration(
-                      hintText: 'Select location',
-                      hintStyle:
-                          TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
-                      contentPadding: EdgeInsets.only(left: 8),
-                      border: InputBorder.none),
-                  getPlaceDetailWithLatLng: (Prediction prediction) async {
-                    lat = double.parse(prediction.lat!);
-                    lng = double.parse(prediction.lng!);
-                    if (selectedFilter == 'all') {
-                      await controller.getGroupList(mapData: {
-                        'server_key': serverKey,
-                        'type': 'get_all',
-                        'lat': '$lat',
-                        'lng': '$lng',
-                        'variant': 'room',
-                        'distance': '${current_per.toInt()}'
-                      });
-                    } else {
-                      await controller.getGroupList(mapData: {
-                        'server_key': serverKey,
-                        'type': 'get_all',
-                        'privacy':
-                            selectedFilter == 'private' ? 'private' : 'public',
-                        'lat': '$lat',
-                        'lng': '$lng',
-                        'variant': 'room',
-                        'distance': '${current_per.toInt()}'
-                      });
-                    }
-                    setState(() {});
-                  },
-                  itmClick: (Prediction prediction) {
-                    locationController.text = prediction.description!;
-                    locationController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: prediction.description!.length));
-                  }),
+            Row(
+              children: [
+                Container(
+                  height: 55,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.blueGrey[50],
+                  ),
+                  child: GooglePlaceAutoCompleteTextField(
+                      textEditingController: locationController,
+                      googleAPIKey: "$google_map_api_key",
+                      inputDecoration: InputDecoration(
+                          hintText: 'Select location',
+                          hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
+                          contentPadding: EdgeInsets.only(left: 8),
+                          border: InputBorder.none),
+                      getPlaceDetailWithLatLng: (Prediction prediction) async {
+                        lat = double.parse(prediction.lat!);
+                        lng = double.parse(prediction.lng!);
+                        if (selectedFilter == 'all') {
+                          await controller.getGroupList(mapData: {
+                            'server_key': serverKey,
+                            'type': 'get_all',
+                            'lat': '$lat',
+                            'lng': '$lng',
+                            'variant': 'room',
+                            'distance': '${current_per.toInt()}'
+                          });
+                        } else {
+                          await controller.getGroupList(mapData: {
+                            'server_key': serverKey,
+                            'type': 'get_all',
+                            'privacy': selectedFilter == 'private' ? 'private' : 'public',
+                            'lat': '$lat',
+                            'lng': '$lng',
+                            'variant': 'room',
+                            'distance': '${current_per.toInt()}'
+                          });
+                        }
+                        setState(() {});
+                      },
+                      itmClick: (Prediction prediction) {
+                        locationController.text = prediction.description!;
+                        locationController.selection = TextSelection.fromPosition(TextPosition(offset: prediction.description!.length));
+                      }),
+                ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                  child: PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(value: selectedFilter,child: Container(
+                      height: 100,
+                      width: 300,
+                      child:  Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: SfSlider(
+                                  min: 0.0,
+                                  max: 1000.0,
+                                  value: current_per,
+                                  interval: 50,
+                                  showTicks: true,
+                                  enableTooltip: true,
+                                  minorTicksPerInterval: 1,
+                                  onChanged: (dynamic value) {
+                                    setState(() {
+                                      current_per = value;
+                                    });
+                                  },
+                                  onChangeEnd: (value) async {
+                                    setState(() {
+                                      current_per = value;
+                                    });
+                                    controller.loadChat.value = false;
+                                    await controller.getGroupList(mapData: {
+                                      'server_key': serverKey,
+                                      'type': 'get_all',
+                                      'privacy': 'private',
+                                      'lat': '$lat',
+                                      'lng': '$lng',
+                                      'variant': 'room',
+                                      'distance': '${current_per.toInt()}'
+                                    });
+                                    controller.loadChat.value = true;
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                              Text('${current_per.toInt()} km')
+                            ],
+                          ),
+
+                          Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () async {
+                                    setState(() {
+                                      selectedFilter = 'all';
+                                    });
+                                    await controller.getGroupList(mapData: {
+                                      'server_key': serverKey,
+                                      'type': 'get_all',
+                                      'privacy': 'get_all',
+                                      'lat': '$lat',
+                                      'lng': '$lng',
+                                      'variant': 'room',
+                                      'distance': '${current_per.toInt()}'
+                                    });
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    child: Center(
+                                      child: Text(
+                                        'All',
+                                        style: TextStyle(color: selectedFilter == 'all' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+                                      ),
+                                    ),
+                                    decoration: selectedFilter == 'all'
+                                        ? BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Color(0XFF0BAB0D),
+                                    )
+                                        : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () async {
+                                    setState(() {
+                                      selectedFilter = 'public';
+                                    });
+                                    await controller.getGroupList(mapData: {
+                                      'server_key': serverKey,
+                                      'type': 'get_all',
+                                      'privacy': 'public',
+                                      'lat': '$lat',
+                                      'lng': '$lng',
+                                      'variant': 'room',
+                                      'distance': '${current_per.toInt()}'
+                                    });
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    child: Center(
+                                      child: Text(
+                                        'Public',
+                                        style:
+                                        TextStyle(color: selectedFilter == 'public' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+                                      ),
+                                    ),
+                                    decoration: selectedFilter == 'public'
+                                        ? BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Color(0XFF0BAB0D),
+                                    )
+                                        : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () async {
+                                    setState(() {
+                                      selectedFilter = 'private';
+                                    });
+                                    await controller.getGroupList(mapData: {
+                                      'server_key': serverKey,
+                                      'type': 'get_all',
+                                      'privacy': 'private',
+                                      'lat': '$lat',
+                                      'lng': '$lng',
+                                      'variant': 'room',
+                                      'distance': '${current_per.toInt()}'
+                                    });
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    child: Center(
+                                      child: Text(
+                                        'Private',
+                                        style:
+                                        TextStyle(color: selectedFilter == 'private' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+                                      ),
+                                    ),
+                                    decoration: selectedFilter == 'private'
+                                        ? BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      color: Color(0XFF0BAB0D),
+                                    )
+                                        : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ))],
+                  ),
+                )
+              ],
             ),
             SizedBox(
               height: 10,
@@ -321,12 +467,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                             slivers: [
                               SliverGrid(
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 10,
-                                          mainAxisSpacing: 10),
-                                  delegate: SliverChildBuilderDelegate(
-                                      (BuildContext context, int index) {
+                                      SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
+                                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                                     return ClipRRect(
                                       borderRadius: BorderRadius.circular(7),
                                       child: Stack(
@@ -336,46 +478,31 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                                             width: double.infinity,
                                             color: Colors.green,
                                             child: CachedNetworkImage(
-                                              imageUrl:
-                                                  "${controller.listofChat[index].avatar!}",
-                                              placeholder: (context, url) =>
-                                                  CircularProgressIndicator(),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
+                                              imageUrl: "${controller.listofChat[index].avatar!}",
+                                              placeholder: (context, url) => CircularProgressIndicator(),
+                                              errorWidget: (context, url, error) => Icon(Icons.error),
                                               fit: BoxFit.cover,
                                             ),
                                           ),
                                           Align(
                                             alignment: Alignment.topRight,
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: InkWell(
                                                 onTap: () async {
-                                                  if (controller
-                                                          .listofChat[index]
-                                                          .groupPrivacy !=
-                                                      'private') {
-                                                    bool result =
-                                                        await controller
-                                                            .joinRoom(mapData: {
+                                                  if (controller.listofChat[index].groupPrivacy != 'private') {
+                                                    bool result = await controller.joinRoom(mapData: {
                                                       'server_key': serverKey,
                                                       'type': 'join_room',
-                                                      'id': controller
-                                                          .listofChat[index]
-                                                          .groupId,
+                                                      'id': controller.listofChat[index].groupId,
                                                       'password': ''
                                                     });
                                                     if (result) {
-                                                      controller.listofChat
-                                                          .removeAt(index);
+                                                      controller.listofChat.removeAt(index);
                                                     }
                                                     setState(() {});
                                                   } else {
-                                                    TextEditingController
-                                                        passwordController =
-                                                        TextEditingController();
+                                                    TextEditingController passwordController = TextEditingController();
                                                     showDialog(
                                                         context: context,
                                                         builder: (c) {
@@ -386,45 +513,23 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                                                                 children: [
                                                                   Container(
                                                                     height: 45,
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            top:
-                                                                                12),
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              30),
-                                                                      color: Colors
-                                                                          .blueGrey[50],
+                                                                    margin: EdgeInsets.only(top: 12),
+                                                                    decoration: BoxDecoration(
+                                                                      borderRadius: BorderRadius.circular(30),
+                                                                      color: Colors.blueGrey[50],
                                                                     ),
-                                                                    child:
-                                                                        TextField(
-                                                                      controller:
-                                                                          passwordController,
-                                                                      keyboardType:
-                                                                          TextInputType.numberWithOptions(
-                                                                              signed: true),
+                                                                    child: TextField(
+                                                                      controller: passwordController,
+                                                                      keyboardType: TextInputType.numberWithOptions(signed: true),
                                                                       inputFormatters: [
-                                                                        FilteringTextInputFormatter
-                                                                            .digitsOnly,
+                                                                        FilteringTextInputFormatter.digitsOnly,
                                                                       ],
-                                                                      textInputAction:
-                                                                          TextInputAction
-                                                                              .done,
+                                                                      textInputAction: TextInputAction.done,
                                                                       decoration: InputDecoration(
-                                                                          hintText:
-                                                                              'Password',
-                                                                          hintStyle: TextStyle(
-                                                                              fontSize:
-                                                                                  13,
-                                                                              fontFamily: AppFonts
-                                                                                  .segoeui),
-                                                                          contentPadding: EdgeInsets.only(
-                                                                              left:
-                                                                                  8),
-                                                                          border:
-                                                                              InputBorder.none),
+                                                                          hintText: 'Password',
+                                                                          hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
+                                                                          contentPadding: EdgeInsets.only(left: 8),
+                                                                          border: InputBorder.none),
                                                                     ),
                                                                   )
                                                                 ],
@@ -432,52 +537,25 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                                                             ),
                                                             title: Text(
                                                               "Write the password of Room",
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      AppFonts
-                                                                          .segoeui,
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                              style:
+                                                                  TextStyle(fontFamily: AppFonts.segoeui, fontSize: 14, fontWeight: FontWeight.bold),
                                                             ),
                                                             actions: [
                                                               TextButton(
-                                                                child: Text(
-                                                                    "Join"),
-                                                                onPressed:
-                                                                    () async {
-                                                                  if (passwordController
-                                                                      .text
-                                                                      .trim()
-                                                                      .toString()
-                                                                      .isNotEmpty) {
-                                                                    bool
-                                                                        result =
-                                                                        await controller.joinRoom(
-                                                                            mapData: {
-                                                                          'server_key':
-                                                                              serverKey,
-                                                                          'type':
-                                                                              'join_room',
-                                                                          'id': controller
-                                                                              .listofChat[index]
-                                                                              .groupId,
-                                                                          'password':
-                                                                              '${passwordController.text.trim().toString()}'
-                                                                        });
+                                                                child: Text("Join"),
+                                                                onPressed: () async {
+                                                                  if (passwordController.text.trim().toString().isNotEmpty) {
+                                                                    bool result = await controller.joinRoom(mapData: {
+                                                                      'server_key': serverKey,
+                                                                      'type': 'join_room',
+                                                                      'id': controller.listofChat[index].groupId,
+                                                                      'password': '${passwordController.text.trim().toString()}'
+                                                                    });
                                                                     if (result) {
-                                                                      controller
-                                                                          .listofChat
-                                                                          .removeAt(
-                                                                              index);
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
+                                                                      controller.listofChat.removeAt(index);
+                                                                      Navigator.of(context).pop();
                                                                     } else {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop();
+                                                                      Navigator.of(context).pop();
                                                                     }
                                                                   }
                                                                 },
@@ -495,17 +573,10 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                                                   child: Center(
                                                     child: Text(
                                                       'Join',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontFamily:
-                                                              AppFonts.segoeui),
+                                                      style: TextStyle(color: Colors.white, fontFamily: AppFonts.segoeui),
                                                     ),
                                                   ),
-                                                  decoration: BoxDecoration(
-                                                      color: buttonColor,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              7)),
+                                                  decoration: BoxDecoration(color: buttonColor, borderRadius: BorderRadius.circular(7)),
                                                 ),
                                               ),
                                             ),
@@ -513,22 +584,14 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                                           Align(
                                             alignment: Alignment.bottomLeft,
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
                                                   Text(
                                                     '${controller.listofChat[index].groupName}',
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontFamily:
-                                                            AppFonts.segoeui),
+                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: AppFonts.segoeui),
                                                   ),
                                                   SizedBox(
                                                     height: 3,
@@ -543,17 +606,8 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                                                         width: 3,
                                                       ),
                                                       Text(
-                                                        controller
-                                                                    .listofChat[
-                                                                        index]
-                                                                    .groupPrivacy ==
-                                                                'private'
-                                                            ? 'Private'
-                                                            : 'Public',
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontFamily: AppFonts
-                                                                .segoeui),
+                                                        controller.listofChat[index].groupPrivacy == 'private' ? 'Private' : 'Public',
+                                                        style: TextStyle(color: Colors.white, fontFamily: AppFonts.segoeui),
                                                       ),
                                                     ],
                                                   )

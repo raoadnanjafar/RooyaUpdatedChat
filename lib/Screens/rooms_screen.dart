@@ -101,6 +101,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
   DateFormat sdf2 = DateFormat("hh.mm aa");
   var listOfSelectedMember = <GroupModel>[].obs;
+  bool showw = false;
 
   @override
   void dispose() {
@@ -118,6 +119,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          Divider(),
           CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -203,7 +205,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             return createAlertDialoge(context);
                           },
                           child: Text(
-                            'Rooms',
+                            '',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -1064,20 +1066,24 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                     'lng': lng.toString()
                                   });
                                 } else {
-                                  mapData.call({
-                                    'server_key': serverKey,
-                                    'type': 'create',
-                                    'group_name':
-                                        '${groupNameController.text.trim()}',
-                                    'parts': ids,
-                                    'variant': 'room',
-                                    'privacy': 'private',
-                                    'password': passwordController.text
-                                        .trim()
-                                        .toString(),
-                                    'lat': lat.toString(),
-                                    'lng': lng.toString()
-                                  });
+                                  if(passwordController.text.length > 3){
+                                    mapData.call({
+                                      'server_key': serverKey,
+                                      'type': 'create',
+                                      'group_name':
+                                      '${groupNameController.text.trim()}',
+                                      'parts': ids,
+                                      'variant': 'room',
+                                      'privacy': 'private',
+                                      'password': passwordController.text
+                                          .trim()
+                                          .toString(),
+                                      'lat': lat.toString(),
+                                      'lng': lng.toString()
+                                    });
+                                  }else{
+                                    snackBarFailer('Enter Password Less then 4 digit');
+                                  }
                                 }
                               }
                               Navigator.of(context).pop();

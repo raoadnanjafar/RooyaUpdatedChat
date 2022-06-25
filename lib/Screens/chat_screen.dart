@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -94,6 +95,7 @@ class _ChatScreenState extends State<ChatScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          Divider(),
           CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -175,7 +177,7 @@ class _ChatScreenState extends State<ChatScreen>
                             return createAlertDialoge(context);
                           },
                           child: Text(
-                            'Chats',
+                            '',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -256,6 +258,7 @@ class _ChatScreenState extends State<ChatScreen>
                                       });
                                   setState(() {});
                                 },
+                                autoClose: true,
                                 backgroundColor: Color(0xFFFE4A49),
                                 foregroundColor: Colors.white,
                                 icon: Icons.delete,
@@ -901,7 +904,7 @@ class _ChatScreenState extends State<ChatScreen>
             ),
           ),
           SizedBox(
-            width: 100,
+            width: width/3.7,
           ),
           FloatingActionButton(
             heroTag: "btn2",
