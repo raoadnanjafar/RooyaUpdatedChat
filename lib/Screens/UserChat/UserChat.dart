@@ -65,6 +65,7 @@ String seenBackColor = '';
 String receiveBackColor = '';
 String sentBackColor = '';
 GroupModel? groupModelGlobel;
+
 class UserChat extends StatefulWidget {
   final String? groupID;
   final String? profilePic;
@@ -104,8 +105,8 @@ class _UserChatState extends State<UserChat>
 
   @override
   void initState() {
-    if(widget.fromGroup!){
-      groupModelGlobel=widget.groupModel!;
+    if (widget.fromGroup!) {
+      groupModelGlobel = widget.groupModel!;
     }
     if (storage.read('selectedTab') == '0') {
       seenTextColor = '255,0,0,0';
@@ -453,26 +454,22 @@ class _UserChatState extends State<UserChat>
                                                 Future.delayed(
                                                     Duration(seconds: 0),
                                                     () async {
-                                                        Map map = {
-                                                          'server_key':
-                                                          serverKey,
-                                                          'type': 'leave',
-                                                          'id': widget.groupID
-                                                        };
-                                                        bool v = await ApiUtils
-                                                            .leaveGroup(
-                                                            map: map);
-                                                        if (v) {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        } else {
-                                                          // snackBarFailer(
-                                                          //     'Admin did not leave the group');
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        }
+                                                  Map map = {
+                                                    'server_key': serverKey,
+                                                    'type': 'leave',
+                                                    'id': widget.groupID
+                                                  };
+                                                  bool v =
+                                                      await ApiUtils.leaveGroup(
+                                                          map: map);
+                                                  if (v) {
+                                                    Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+                                                  } else {
+                                                    // snackBarFailer(
+                                                    //     'Admin did not leave the group');
+                                                    Navigator.of(context).pop();
+                                                  }
                                                   setState(() {});
                                                 });
                                               },
@@ -1790,26 +1787,26 @@ class _UserChatState extends State<UserChat>
                                                     .searchText.value = value;
                                               },
                                               decoration: InputDecoration(
-                                                suffixIcon: IconButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      emojiShowing =
-                                                      !emojiShowing;
-                                                      if (emojiShowing) {
-                                                        _focusNode.unfocus();
-                                                      } else {
-                                                        FocusScope.of(context)
-                                                            .requestFocus(
-                                                            _focusNode);
-                                                      }
-                                                    });
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.tag_faces,
-                                                    size: 23,
-                                                    color: Colors.grey,
+                                                  suffixIcon: IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        emojiShowing =
+                                                            !emojiShowing;
+                                                        if (emojiShowing) {
+                                                          _focusNode.unfocus();
+                                                        } else {
+                                                          FocusScope.of(context)
+                                                              .requestFocus(
+                                                                  _focusNode);
+                                                        }
+                                                      });
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.tag_faces,
+                                                      size: 23,
+                                                      color: Colors.grey,
+                                                    ),
                                                   ),
-                                                ),
                                                   disabledBorder:
                                                       new OutlineInputBorder(
                                                           borderRadius:

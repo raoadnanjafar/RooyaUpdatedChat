@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:rooya/ApiConfig/ApiUtils.dart';
 import 'package:rooya/Models/StoryViewsModel.dart';
 import 'package:rooya/Providers/ClickController/SelectIndexController.dart';
 import 'package:rooya/Screens/Information/UserChatInformation/user_chat_information.dart';
@@ -41,7 +42,6 @@ class _MySliverState extends State<MySliver> {
   final controller = Get.put(ChatScreenProvider());
   var listOfSelectedMember = <Data>[].obs;
 
-
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -56,36 +56,36 @@ class _MySliverState extends State<MySliver> {
           ),
           ListTile(
               leading: Obx(
-                    () => hasUserStory.value
+                () => hasUserStory.value
                     ? CircularProfileAvatar(
-                  '${UserDataService.userDataModel!.userData!.avatar}',
-                  radius: 21,
-                  borderWidth: 2,
-                  borderColor: buttonColor,
-                  backgroundColor: Colors.blueGrey[100]!,
-                  onTap: () {
-                    int i = storyIds.indexWhere((element) =>
-                    element ==
-                        '${UserDataService.userDataModel!.userData!.userId.toString()}');
-                    context.pushTransparentRoute(StoryViewPage(
-                      userStories: allstoryList[i],
-                      isAdmin: true,
-                    ));
-                  },
-                )
+                        '${UserDataService.userDataModel!.userData!.avatar}',
+                        radius: 21,
+                        borderWidth: 2,
+                        borderColor: buttonColor,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        onTap: () {
+                          int i = storyIds.indexWhere((element) =>
+                              element ==
+                              '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                          context.pushTransparentRoute(StoryViewPage(
+                            userStories: allstoryList[i],
+                            isAdmin: true,
+                          ));
+                        },
+                      )
                     : CircularProfileAvatar(
-                  '${UserDataService.userDataModel!.userData!.avatar}',
-                  radius: 21,
-                  backgroundColor: Colors.blueGrey[100]!,
-                  onTap: () {
-                    scaffoldStateKey.currentState?.openDrawer();
-                    // Get.to(
-                    //     UserChatInformation(
-                    //     userID:
-                    //         '${UserDataService.userDataModel!.userData!.userId}')
-                    // );
-                  },
-                ),
+                        '${UserDataService.userDataModel!.userData!.avatar}',
+                        radius: 21,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        onTap: () {
+                          scaffoldStateKey.currentState?.openDrawer();
+                          // Get.to(
+                          //     UserChatInformation(
+                          //     userID:
+                          //         '${UserDataService.userDataModel!.userData!.userId}')
+                          // );
+                        },
+                      ),
               ),
               title: Padding(
                 padding: const EdgeInsets.only(left: 10),
@@ -165,53 +165,49 @@ class _MySliverState extends State<MySliver> {
                 ],
                 spacing: 8,
               )),
-
-          Obx(
-                () => !storyLoaded.value
+          Expanded(
+            child: Obx(() => !storyLoaded.value
                 ? SizedBox()
-                : Container(
-              height: 95,
-              //width: 80,
-              //color: Colors.green,
-              child: ListView.builder(
-                itemCount: controller.storyList.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 55,
-                        width: 56,
-                        decoration: BoxDecoration(shape: BoxShape.circle),
-                        child: CircularProfileAvatar(
-                          '${controller.storyList[index].stories![0].thumbnail}',
-                          borderWidth: 1,
-                          borderColor: buttonColor,
-                          backgroundColor: Colors.blueGrey[100]!,
-                          onTap: listOfSelectedMember.isNotEmpty
-                              ? null
-                              : () {
-                            context
-                                .pushTransparentRoute(
-                                StoryScreenUpdated(
-                                  storyList: controller.storyList,
-                                  currentIndex: index,
-                                ))
-                                .then((value) async {
-                              await controller.getChatList();
-                              controller.connectToSocket();
-                              setState(() {});
-                            });
-                          },
+                : Center(
+                    child: ListView.builder(
+                      itemCount: controller.storyList.length,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 55,
+                              width: 56,
+                              decoration: BoxDecoration(shape: BoxShape.circle),
+                              child: CircularProfileAvatar(
+                                '${controller.storyList[index].stories![0].thumbnail}',
+                                borderWidth: 1,
+                                borderColor: buttonColor,
+                                backgroundColor: Colors.blueGrey[100]!,
+                                onTap: listOfSelectedMember.isNotEmpty
+                                    ? null
+                                    : () {
+                                        context
+                                            .pushTransparentRoute(
+                                                StoryScreenUpdated(
+                                          storyList: controller.storyList,
+                                          currentIndex: index,
+                                        ))
+                                            .then((value) async {
+                                          await controller.getChatList();
+                                          controller.connectToSocket();
+                                          setState(() {});
+                                        });
+                                      },
+                              ),
+                            ),
+                            Text('${controller.storyList[index].username}')
+                          ],
                         ),
                       ),
-                      Text('${controller.storyList[index].username}')
-                    ],
-                  ),
-                ),
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
+                      scrollDirection: Axis.horizontal,
+                    ),
+                  )),
           )
           // Container(
           //   height: height * 0.045,
@@ -260,96 +256,92 @@ class _MySliverState extends State<MySliver> {
       ),
     );
   }
-
-
 }
-  
-  createAlertDialoge1(BuildContext context) {
-    TextEditingController customController = TextEditingController();
 
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-              insetPadding: EdgeInsets.only(left: 15, right: 15),
-              content: Container(
-                  height: 260,
-                  width: 350,
-                  //color: Colors.green,
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 115),
-                          child: Text(
-                            'Steven',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 25,
-                                fontFamily: AppFonts.segoeui),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Container(
-                            height: 40,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Color(0XFFF9F9F9),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'online',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontFamily: AppFonts.segoeui),
-                                ),
-                                Icon(Icons.arrow_drop_down_outlined)
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    CircularProfileAvatar(
-                      '',
-                      radius: 60,
-                      //backgroundColor: Colors.red,
-                      child: Image(
-                        image: AssetImage('assets/user/logooo.png'),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 40,
-                      width: 130,
-                      child: Center(
+createAlertDialoge1(BuildContext context) {
+  TextEditingController customController = TextEditingController();
+
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+            insetPadding: EdgeInsets.only(left: 15, right: 15),
+            content: Container(
+                height: 260,
+                width: 350,
+                //color: Colors.green,
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 115),
                         child: Text(
-                          'SAVE',
+                          'Steven',
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 25,
                               fontFamily: AppFonts.segoeui),
                         ),
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Color(0XFF0BAB0D),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Container(
+                          height: 40,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Color(0XFFF9F9F9),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'online',
+                                style: TextStyle(
+                                    fontSize: 13, fontFamily: AppFonts.segoeui),
+                              ),
+                              Icon(Icons.arrow_drop_down_outlined)
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  CircularProfileAvatar(
+                    '',
+                    radius: 60,
+                    //backgroundColor: Colors.red,
+                    child: Image(
+                      image: AssetImage('assets/user/logooo.png'),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 40,
+                    width: 130,
+                    child: Center(
+                      child: Text(
+                        'SAVE',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontFamily: AppFonts.segoeui),
                       ),
                     ),
-                  ])));
-        });
-  }
-
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Color(0XFF0BAB0D),
+                    ),
+                  ),
+                ])));
+      });
+}
 
 // InkWell(
 // onTap: () {

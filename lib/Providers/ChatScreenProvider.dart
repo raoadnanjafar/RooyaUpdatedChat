@@ -74,9 +74,10 @@ class ChatScreenProvider extends GetxController {
   var idsOfUserStories = [];
   var storyList = <UserStoryModel>[].obs;
   Future getStoryList() async {
+     idsOfUserStories = [];
+     storyList = <UserStoryModel>[].obs;
     storyList.value =
         await ApiUtils.getAllStoriesData(mapData: {'server_key': serverKey});
-    idsOfUserStories = [];
     for (var i in storyList) {
       idsOfUserStories.add(i.userId);
     }

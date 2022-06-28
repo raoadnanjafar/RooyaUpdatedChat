@@ -95,7 +95,6 @@ class _ChatScreenState extends State<ChatScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Divider(),
           CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
