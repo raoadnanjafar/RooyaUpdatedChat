@@ -106,20 +106,20 @@ class _StoryViewPageState extends State<StoryViewPage>
                   openSheet = false;
                 });
               } else {
-                // if (openSheet == false) {
-                //   openSheet = true;
-                //   controller.pause();
-                //   replyPreview(
-                //     widget.userStories!.stories![currentIndex].id.toString(),
-                //   ).then((value) {
-                //     controller.play();
-                //     openSheet = false;
-                //     if (value == 'send') {
-                //       snackBarSuccess(
-                //           'Message sent successfully to ${widget.userStories!.firstName} ${widget.userStories!.lastName}');
-                //     }
-                //   });
-                // }
+                if (openSheet == false) {
+                  openSheet = true;
+                  controller.pause();
+                  replyPreview(
+                    widget.userStories!.stories![currentIndex].id.toString(),
+                  ).then((value) {
+                    controller.play();
+                    openSheet = false;
+                    if (value == 'send') {
+                      snackBarSuccess(
+                          'Message sent successfully to ${widget.userStories!.firstName} ${widget.userStories!.lastName}');
+                    }
+                  });
+                }
               }
             });
           }
@@ -211,8 +211,10 @@ class _StoryViewPageState extends State<StoryViewPage>
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(padding: EdgeInsets.only(top: 60,left: 18),
-                    child: CircularProfileAvatar('',
+                  Padding(
+                    padding: EdgeInsets.only(top: 60, left: 18),
+                    child: CircularProfileAvatar(
+                      '',
                       radius: 20,
                       child: Image.network('${widget.userStories!.avatar}'),
                     ),
@@ -232,13 +234,13 @@ class _StoryViewPageState extends State<StoryViewPage>
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only( top: 63,left: 10),
+                        padding: const EdgeInsets.only(top: 63, left: 10),
                         child: InkWell(
                           onTap: () {
                             controller.pause();
                             Get.to(UserChatInformation(
-                                userID: widget.userStories!.userId
-                                    .toString()))
+                                    userID:
+                                        widget.userStories!.userId.toString()))
                                 ?.then((value) => controller.play());
                           },
                           child: Text(
@@ -251,7 +253,7 @@ class _StoryViewPageState extends State<StoryViewPage>
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 5,top: 5),
+                        padding: const EdgeInsets.only(left: 5, top: 5),
                         child: Text(
                           '${widget.userStories!.stories![currentIndex].timeText}',
                           style: TextStyle(color: Colors.white),
@@ -307,59 +309,10 @@ class _StoryViewPageState extends State<StoryViewPage>
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                height: height * 0.060,
-                                margin: EdgeInsets.only(left: 10, right: 10),
-                                decoration: new BoxDecoration(
-                                    borderRadius: new BorderRadius.circular(30),
-                                    border: Border.all(
-                                        color: Colors.green, width: 2)),
-                                child: TextField(
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                  onSubmitted: (v) {
-                                    controller.play();
-                                  },
-                                  onTap: () {
-                                    controller.pause();
-                                  },
-                                  controller: captionCon,
-                                  decoration: InputDecoration(
-                                    hintText: 'Send message',
-                                    hintStyle: TextStyle(
-                                        color: Colors.white, fontSize: 13),
-                                    isDense: true,
-                                    suffixIcon: IconButton(
-                                        onPressed: () async {
-                                          sentMessageWithoutFile(map: {
-                                            'server_key': serverKey,
-                                            'text': captionCon.text,
-                                            'user_id':
-                                                '${widget.userStories!.userId}',
-                                            'message_hash_id': '44444444',
-                                            'story_id': widget.userStories!
-                                                .stories![currentIndex].id
-                                          });
-                                          captionCon.clear();
-                                        },
-                                        icon: Icon(
-                                          Icons.send,
-                                          color: Colors.greenAccent,
-                                        )),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: BorderSide(
-                                        width: 0,
-                                        color: Colors.green,
-                                        style: BorderStyle.none,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              )
+                              Icon(Icons.keyboard_arrow_up_rounded,
+                                  color: Colors.white),
+                              Text('Reply',
+                                  style: TextStyle(color: Colors.white54)),
                             ],
                           ),
                   ),
@@ -394,57 +347,70 @@ class _StoryViewPageState extends State<StoryViewPage>
       context: context,
       backgroundColor: Colors.black.withOpacity(0.5),
       builder: (BuildContext context) {
+        // Container(
+        //   height: height * 0.060,
+        //   margin: EdgeInsets.only(left: 10, right: 10),
+        //   decoration: new BoxDecoration(
+        //       borderRadius: new BorderRadius.circular(30),
+        //       border: Border.all(
+        //           color: Colors.green, width: 2)),
+        //   child: TextField(
+        //     style: TextStyle(
+        //         color: Colors.white, fontSize: 18),
+        //     onSubmitted: (v) {
+        //       controller.play();
+        //     },
+        //     onTap: () {
+        //       controller.pause();
+        //     },
+        //     controller: captionCon,
+        //     decoration: InputDecoration(
+        //       hintText: 'Send message',
+        //       hintStyle: TextStyle(
+        //           color: Colors.white, fontSize: 13),
+        //       isDense: true,
+        //       suffixIcon: IconButton(
+        //           onPressed: () async {
+        //             sentMessageWithoutFile(map: {
+        //               'server_key': serverKey,
+        //               'text': captionCon.text,
+        //               'user_id':
+        //                   '${widget.userStories!.userId}',
+        //               'message_hash_id': '44444444',
+        //               'story_id': widget.userStories!
+        //                   .stories![currentIndex].id
+        //             });
+        //             captionCon.clear();
+        //           },
+        //           icon: Icon(
+        //             Icons.send,
+        //             color: Colors.greenAccent,
+        //           )),
+        //       border: OutlineInputBorder(
+        //         borderRadius: BorderRadius.circular(30),
+        //         borderSide: BorderSide(
+        //           width: 0,
+        //           color: Colors.green,
+        //           style: BorderStyle.none,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         return Container(
-            height: height * 0.530,
+            height: height * 0.470,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    height: height * 0.080,
-                    margin: EdgeInsets.only(left: 40, right: 40),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            topRight: Radius.circular(8))),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            '${widget.userStories!.username}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.greenAccent,
-                                fontSize: 18),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Container(
-                              height: 50,
-                              width: 60,
-                              child: Image.network(
-                                  '${widget.userStories!.stories![currentIndex].thumbnail}',
-                                  fit: BoxFit.cover),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: height * 0.070,
+                    height: height * 0.060,
                     margin: EdgeInsets.only(bottom: 5, left: 10, right: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(30)),
+                    decoration: new BoxDecoration(
+                        borderRadius: new BorderRadius.circular(30),
+                        border: Border.all(color: Colors.green, width: 1)),
                     child: TextField(
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                       onSubmitted: (v) {
                         print('done call');
                         Navigator.of(context).pop();
@@ -452,12 +418,8 @@ class _StoryViewPageState extends State<StoryViewPage>
                       controller: captionController,
                       autofocus: true,
                       decoration: InputDecoration(
-                        hintText: 'Add a Caption',
-                        hintStyle: TextStyle(color: Colors.greenAccent),
-                        prefixIcon: Icon(
-                          Icons.image,
-                          color: Colors.greenAccent,
-                        ),
+                        hintText: 'Send message',
+                        hintStyle: TextStyle(color: Colors.white, fontSize: 13),
                         suffixIcon: IconButton(
                             onPressed: () async {
                               sentMessageWithoutFile(map: {
@@ -474,7 +436,13 @@ class _StoryViewPageState extends State<StoryViewPage>
                               Icons.send,
                               color: Colors.greenAccent,
                             )),
-                        border: InputBorder.none,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
                       ),
                     ),
                   ),
