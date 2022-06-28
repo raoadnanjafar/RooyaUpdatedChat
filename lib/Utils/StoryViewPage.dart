@@ -44,6 +44,7 @@ class _StoryViewPageState extends State<StoryViewPage>
   var totalView = 10000.obs;
   @override
   void initState() {
+
     Future.delayed(Duration(), () async {
       model = await ApiUtils.storyView(mapData: {
         'server_key': serverKey,
@@ -311,7 +312,7 @@ class _StoryViewPageState extends State<StoryViewPage>
                             children: [
                               Icon(Icons.keyboard_arrow_up_rounded,
                                   color: Colors.white),
-                              Text('Reply',
+                              Text('',
                                   style: TextStyle(color: Colors.white54)),
                             ],
                           ),

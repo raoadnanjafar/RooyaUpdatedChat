@@ -45,14 +45,20 @@ class _FindChatRoomsState extends State<FindChatRooms> {
     lat = position.latitude;
     lng = position.longitude;
     print('token = ${token}');
-    await controller.getGroupList(
-        mapData: {'server_key': serverKey, 'type': 'get_all', 'lat': '$lat', 'lng': '$lng', 'variant': 'room', 'distance': '${current_per.toInt()}'});
+    await controller.getGroupList(mapData: {
+      'server_key': serverKey,
+      'type': 'get_all',
+      'lat': '$lat',
+      'lng': '$lng',
+      'variant': 'room',
+      'distance': '${current_per.value.toInt()}'
+    });
     setState(() {});
   }
 
-  String selectedFilter = 'all';
-  double current_per = 60.0;
-  int value = 1;
+  var selectedFilter = 'all'.obs;
+  var current_per = 60.0.obs;
+  var value = 1.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -69,164 +75,164 @@ class _FindChatRoomsState extends State<FindChatRooms> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () async {
-                      setState(() {
-                        selectedFilter = 'all';
-                      });
-                      await controller.getGroupList(mapData: {
-                        'server_key': serverKey,
-                        'type': 'get_all',
-                        'privacy': 'get_all',
-                        'lat': '$lat',
-                        'lng': '$lng',
-                        'variant': 'room',
-                        'distance': '${current_per.toInt()}'
-                      });
-                      setState(() {});
-                    },
-                    child: Container(
-                      height: 30,
-                      child: Center(
-                        child: Text(
-                          'All',
-                          style: TextStyle(color: selectedFilter == 'all' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
-                        ),
-                      ),
-                      decoration: selectedFilter == 'all'
-                          ? BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Color(0XFF0BAB0D),
-                            )
-                          : BoxDecoration(
-                              borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () async {
-                      setState(() {
-                        selectedFilter = 'public';
-                      });
-                      await controller.getGroupList(mapData: {
-                        'server_key': serverKey,
-                        'type': 'get_all',
-                        'privacy': 'public',
-                        'lat': '$lat',
-                        'lng': '$lng',
-                        'variant': 'room',
-                        'distance': '${current_per.toInt()}'
-                      });
-                      setState(() {});
-                    },
-                    child: Container(
-                      height: 30,
-                      child: Center(
-                        child: Text(
-                          'Public',
-                          style:
-                              TextStyle(color: selectedFilter == 'public' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
-                        ),
-                      ),
-                      decoration: selectedFilter == 'public'
-                          ? BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Color(0XFF0BAB0D),
-                            )
-                          : BoxDecoration(
-                              borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () async {
-                      setState(() {
-                        selectedFilter = 'private';
-                      });
-                      await controller.getGroupList(mapData: {
-                        'server_key': serverKey,
-                        'type': 'get_all',
-                        'privacy': 'private',
-                        'lat': '$lat',
-                        'lng': '$lng',
-                        'variant': 'room',
-                        'distance': '${current_per.toInt()}'
-                      });
-                      setState(() {});
-                    },
-                    child: Container(
-                      height: 30,
-                      child: Center(
-                        child: Text(
-                          'Private',
-                          style:
-                              TextStyle(color: selectedFilter == 'private' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
-                        ),
-                      ),
-                      decoration: selectedFilter == 'private'
-                          ? BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Color(0XFF0BAB0D),
-                            )
-                          : BoxDecoration(
-                              borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: SfSlider(
-                    min: 0.0,
-                    max: 1000.0,
-                    value: current_per,
-                    interval: 50,
-                    showTicks: true,
-                    enableTooltip: true,
-                    minorTicksPerInterval: 1,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        current_per = value;
-                      });
-                    },
-                    onChangeEnd: (value) async {
-                      setState(() {
-                        current_per = value;
-                      });
-                      controller.loadChat.value = false;
-                      await controller.getGroupList(mapData: {
-                        'server_key': serverKey,
-                        'type': 'get_all',
-                        'privacy': 'private',
-                        'lat': '$lat',
-                        'lng': '$lng',
-                        'variant': 'room',
-                        'distance': '${current_per.toInt()}'
-                      });
-                      controller.loadChat.value = true;
-                      setState(() {});
-                    },
-                  ),
-                ),
-                Text('${current_per.toInt()} km')
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: InkWell(
+            //         onTap: () async {
+            //           setState(() {
+            //             selectedFilter = 'all'.obs;
+            //           });
+            //           await controller.getGroupList(mapData: {
+            //             'server_key': serverKey,
+            //             'type': 'get_all',
+            //             'privacy': 'get_all',
+            //             'lat': '$lat',
+            //             'lng': '$lng',
+            //             'variant': 'room',
+            //             'distance': '${current_per.value.toInt()}'
+            //           });
+            //           setState(() {});
+            //         },
+            //         child: Container(
+            //           height: 30,
+            //           child: Center(
+            //             child: Text(
+            //               'All',
+            //               style: TextStyle(color: selectedFilter == 'all' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+            //             ),
+            //           ),
+            //           decoration: selectedFilter == 'all'
+            //               ? BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(30),
+            //                   color: Color(0XFF0BAB0D),
+            //                 )
+            //               : BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+            //         ),
+            //       ),
+            //     ),
+            //     SizedBox(
+            //       width: 10,
+            //     ),
+            //     Expanded(
+            //       child: InkWell(
+            //         onTap: () async {
+            //           setState(() {
+            //             selectedFilter = 'public'.obs;
+            //           });
+            //           await controller.getGroupList(mapData: {
+            //             'server_key': serverKey,
+            //             'type': 'get_all',
+            //             'privacy': 'public',
+            //             'lat': '$lat',
+            //             'lng': '$lng',
+            //             'variant': 'room',
+            //             'distance': '${current_per.value.toInt()}'
+            //           });
+            //           setState(() {});
+            //         },
+            //         child: Container(
+            //           height: 30,
+            //           child: Center(
+            //             child: Text(
+            //               'Public',
+            //               style:
+            //                   TextStyle(color: selectedFilter == 'public' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+            //             ),
+            //           ),
+            //           decoration: selectedFilter == 'public'
+            //               ? BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(30),
+            //                   color: Color(0XFF0BAB0D),
+            //                 )
+            //               : BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+            //         ),
+            //       ),
+            //     ),
+            //     SizedBox(
+            //       width: 10,
+            //     ),
+            //     Expanded(
+            //       child: InkWell(
+            //         onTap: () async {
+            //           setState(() {
+            //             selectedFilter = 'private'.obs;
+            //           });
+            //           await controller.getGroupList(mapData: {
+            //             'server_key': serverKey,
+            //             'type': 'get_all',
+            //             'privacy': 'private',
+            //             'lat': '$lat',
+            //             'lng': '$lng',
+            //             'variant': 'room',
+            //             'distance': '${current_per.value.toInt()}'
+            //           });
+            //           setState(() {});
+            //         },
+            //         child: Container(
+            //           height: 30,
+            //           child: Center(
+            //             child: Text(
+            //               'Private',
+            //               style:
+            //                   TextStyle(color: selectedFilter == 'private' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+            //             ),
+            //           ),
+            //           decoration: selectedFilter == 'private'
+            //               ? BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(30),
+            //                   color: Color(0XFF0BAB0D),
+            //                 )
+            //               : BoxDecoration(
+            //                   borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: SfSlider(
+            //         min: 0.0,
+            //         max: 1000.0,
+            //         value: current_per.value,
+            //         interval: 50,
+            //         showTicks: true,
+            //         enableTooltip: true,
+            //         minorTicksPerInterval: 1,
+            //         onChanged: (dynamic value) {
+            //           setState(() {
+            //             current_per.value = value;
+            //           });
+            //         },
+            //         onChangeEnd: (value) async {
+            //           setState(() {
+            //             current_per.value = value;
+            //           });
+            //           controller.loadChat.value = false;
+            //           await controller.getGroupList(mapData: {
+            //             'server_key': serverKey,
+            //             'type': 'get_all',
+            //             'privacy': 'private',
+            //             'lat': '$lat',
+            //             'lng': '$lng',
+            //             'variant': 'room',
+            //             'distance': '${current_per.value.toInt()}'
+            //           });
+            //           controller.loadChat.value = true;
+            //           setState(() {});
+            //         },
+            //       ),
+            //     ),
+            //     Text('${current_per.value.toInt()} km')
+            //   ],
+            // ),
             Row(
               children: [
                 Container(
@@ -254,7 +260,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                             'lat': '$lat',
                             'lng': '$lng',
                             'variant': 'room',
-                            'distance': '${current_per.toInt()}'
+                            'distance': '${current_per.value.toInt()}'
                           });
                         } else {
                           await controller.getGroupList(mapData: {
@@ -264,7 +270,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                             'lat': '$lat',
                             'lng': '$lng',
                             'variant': 'room',
-                            'distance': '${current_per.toInt()}'
+                            'distance': '${current_per.value.toInt()}'
                           });
                         }
                         setState(() {});
@@ -280,170 +286,187 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                   decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
                   child: PopupMenuButton(
                     itemBuilder: (context) => [
-                      PopupMenuItem(value: selectedFilter,child: Container(
-                      height: 100,
-                      width: 300,
-                      child:  Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SfSlider(
-                                  min: 0.0,
-                                  max: 1000.0,
-                                  value: current_per,
-                                  interval: 50,
-                                  showTicks: true,
-                                  enableTooltip: true,
-                                  minorTicksPerInterval: 1,
-                                  onChanged: (dynamic value) {
-                                    setState(() {
-                                      current_per = value;
-                                    });
-                                  },
-                                  onChangeEnd: (value) async {
-                                    setState(() {
-                                      current_per = value;
-                                    });
-                                    controller.loadChat.value = false;
-                                    await controller.getGroupList(mapData: {
-                                      'server_key': serverKey,
-                                      'type': 'get_all',
-                                      'privacy': 'private',
-                                      'lat': '$lat',
-                                      'lng': '$lng',
-                                      'variant': 'room',
-                                      'distance': '${current_per.toInt()}'
-                                    });
-                                    controller.loadChat.value = true;
-                                    setState(() {});
-                                  },
-                                ),
-                              ),
-                              Text('${current_per.toInt()} km')
-                            ],
-                          ),
-
-                          Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    setState(() {
-                                      selectedFilter = 'all';
-                                    });
-                                    await controller.getGroupList(mapData: {
-                                      'server_key': serverKey,
-                                      'type': 'get_all',
-                                      'privacy': 'get_all',
-                                      'lat': '$lat',
-                                      'lng': '$lng',
-                                      'variant': 'room',
-                                      'distance': '${current_per.toInt()}'
-                                    });
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    child: Center(
-                                      child: Text(
-                                        'All',
-                                        style: TextStyle(color: selectedFilter == 'all' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+                      PopupMenuItem(
+                          value: selectedFilter,
+                          child: StatefulBuilder(builder: (context, setState) {
+                            return Container(
+                              height: 100,
+                              width: 300,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: SfSlider(
+                                          min: 0.0,
+                                          max: 1000.0,
+                                          value: current_per.value,
+                                          interval: 50,
+                                          showTicks: true,
+                                          enableTooltip: true,
+                                          minorTicksPerInterval: 1,
+                                          onChanged: (dynamic value) {
+                                            setState(() {
+                                              current_per.value = value;
+                                            });
+                                          },
+                                          onChangeEnd: (value) async {
+                                            setState(() {
+                                              current_per.value = value;
+                                            });
+                                            controller.loadChat.value = false;
+                                            await controller.getGroupList(mapData: {
+                                              'server_key': serverKey,
+                                              'type': 'get_all',
+                                              'privacy': 'private',
+                                              'lat': '$lat',
+                                              'lng': '$lng',
+                                              'variant': 'room',
+                                              'distance': '${current_per.value.toInt()}'
+                                            });
+                                            controller.loadChat.value = true;
+                                            setState(() {});
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    decoration: selectedFilter == 'all'
-                                        ? BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Color(0XFF0BAB0D),
-                                    )
-                                        : BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+                                      Text('${current_per.value.toInt()} km')
+                                    ],
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    setState(() {
-                                      selectedFilter = 'public';
-                                    });
-                                    await controller.getGroupList(mapData: {
-                                      'server_key': serverKey,
-                                      'type': 'get_all',
-                                      'privacy': 'public',
-                                      'lat': '$lat',
-                                      'lng': '$lng',
-                                      'variant': 'room',
-                                      'distance': '${current_per.toInt()}'
-                                    });
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    child: Center(
-                                      child: Text(
-                                        'Public',
-                                        style:
-                                        TextStyle(color: selectedFilter == 'public' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () async {
+                                            setState(() {
+                                              selectedFilter = 'all'.obs;
+                                            });
+                                            await controller.getGroupList(mapData: {
+                                              'server_key': serverKey,
+                                              'type': 'get_all',
+                                              'privacy': 'get_all',
+                                              'lat': '$lat',
+                                              'lng': '$lng',
+                                              'variant': 'room',
+                                              'distance': '${current_per.value.toInt()}'
+                                            });
+                                            setState(() {});
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            child: Center(
+                                              child: Text(
+                                                'All',
+                                                style: TextStyle(
+                                                    color: selectedFilter == 'all' ? Colors.white : Colors.black,
+                                                    fontSize: 15,
+                                                    fontFamily: AppFonts.segoeui),
+                                              ),
+                                            ),
+                                            decoration: selectedFilter == 'all'
+                                                ? BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    color: Color(0XFF0BAB0D),
+                                                  )
+                                                : BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    color: Colors.white,
+                                                    border: Border.all(color: Colors.black26, width: 1)),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    decoration: selectedFilter == 'public'
-                                        ? BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Color(0XFF0BAB0D),
-                                    )
-                                        : BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () async {
-                                    setState(() {
-                                      selectedFilter = 'private';
-                                    });
-                                    await controller.getGroupList(mapData: {
-                                      'server_key': serverKey,
-                                      'type': 'get_all',
-                                      'privacy': 'private',
-                                      'lat': '$lat',
-                                      'lng': '$lng',
-                                      'variant': 'room',
-                                      'distance': '${current_per.toInt()}'
-                                    });
-                                    setState(() {});
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    child: Center(
-                                      child: Text(
-                                        'Private',
-                                        style:
-                                        TextStyle(color: selectedFilter == 'private' ? Colors.white : Colors.black, fontSize: 15, fontFamily: AppFonts.segoeui),
+                                      SizedBox(
+                                        width: 10,
                                       ),
-                                    ),
-                                    decoration: selectedFilter == 'private'
-                                        ? BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Color(0XFF0BAB0D),
-                                    )
-                                        : BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30), color: Colors.white, border: Border.all(color: Colors.black26, width: 1)),
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () async {
+                                            setState(() {
+                                              selectedFilter = 'public'.obs;
+                                            });
+                                            await controller.getGroupList(mapData: {
+                                              'server_key': serverKey,
+                                              'type': 'get_all',
+                                              'privacy': 'public',
+                                              'lat': '$lat',
+                                              'lng': '$lng',
+                                              'variant': 'room',
+                                              'distance': '${current_per.value.toInt()}'
+                                            });
+                                            setState(() {});
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            child: Center(
+                                              child: Text(
+                                                'Public',
+                                                style: TextStyle(
+                                                    color: selectedFilter == 'public' ? Colors.white : Colors.black,
+                                                    fontSize: 15,
+                                                    fontFamily: AppFonts.segoeui),
+                                              ),
+                                            ),
+                                            decoration: selectedFilter == 'public'
+                                                ? BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    color: Color(0XFF0BAB0D),
+                                                  )
+                                                : BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    color: Colors.white,
+                                                    border: Border.all(color: Colors.black26, width: 1)),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: InkWell(
+                                          onTap: () async {
+                                            setState(() {
+                                              selectedFilter = 'private'.obs;
+                                            });
+                                            await controller.getGroupList(mapData: {
+                                              'server_key': serverKey,
+                                              'type': 'get_all',
+                                              'privacy': 'private',
+                                              'lat': '$lat',
+                                              'lng': '$lng',
+                                              'variant': 'room',
+                                              'distance': '${current_per.value.toInt()}'
+                                            });
+                                            setState(() {});
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            child: Center(
+                                              child: Text(
+                                                'Private',
+                                                style: TextStyle(
+                                                    color: selectedFilter == 'private' ? Colors.white : Colors.black,
+                                                    fontSize: 15,
+                                                    fontFamily: AppFonts.segoeui),
+                                              ),
+                                            ),
+                                            decoration: selectedFilter == 'private'
+                                                ? BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    color: Color(0XFF0BAB0D),
+                                                  )
+                                                : BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(30),
+                                                    color: Colors.white,
+                                                    border: Border.all(color: Colors.black26, width: 1)),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ))],
+                            );
+                          }))
+                    ],
                   ),
                 )
               ],
