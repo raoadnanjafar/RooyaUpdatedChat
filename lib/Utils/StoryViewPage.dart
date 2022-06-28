@@ -215,18 +215,24 @@ class _StoryViewPageState extends State<StoryViewPage>
                   children: [
                     Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 40, left: 10),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              Get.back();
-                            },
+                        Padding(padding: EdgeInsets.only(top: 60,left: 18),
+                          child: CircularProfileAvatar('',
+                            radius: 20,
+                            child: Image.network('${widget.userStories!.avatar}'),
                           ),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 40, left: 10),
+                        //   child: IconButton(
+                        //     icon: Icon(
+                        //       Icons.arrow_back_ios,
+                        //       color: Colors.white,
+                        //     ),
+                        //     onPressed: () {
+                        //       Get.back();
+                        //     },
+                        //   ),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(left: 10, top: 40),
                           child: InkWell(

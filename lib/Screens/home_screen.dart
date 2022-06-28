@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ? height * 0.160
                               : height * 0.180,
                           backgroundColor: Colors.white,
-                          //expandedHeight: height * 0.120,
+                          expandedHeight: height * 0.120,
                           bottom: TabBar(
                             onTap: (w) {
                               setState(() {
