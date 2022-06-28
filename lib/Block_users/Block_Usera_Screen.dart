@@ -66,7 +66,7 @@ class _BlockUsersScreenListState extends State<BlockUsersScreenList> {
                                         'server_key': serverKey,
                                         'user_id': controller
                                             .listOfBlockUser[index].userId,
-                                        'block_action': 'block'
+                                        'block_action': 'un-block'
                                       };
                                       await ApiUtils.blockUnblockUser(map: map);
                                       controller.listOfBlockUser

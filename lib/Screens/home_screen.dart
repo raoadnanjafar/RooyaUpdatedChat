@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import '../ApiConfig/ApiUtils.dart';
 import '../Block_users/Block_Usera_Screen.dart';
 import '../GlobalWidget/Photo_View_Class.dart';
+import '../Providers/ChatScreenProvider.dart';
 import '../Utils/StoryViewPage.dart';
 import 'Information/UserChatInformation/user_chat_information.dart';
 import 'Settings/Appearance/Apearence.dart';
@@ -33,8 +34,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   var selectController = Get.put(SelectIndexController());
 
   List iconList = [
@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen>
   ];
 
   int currentIndex = 0;
+  final controller = Get.put(ChatScreenProvider());
 
   List tabContent = [
     (ChatScreen()),
@@ -63,8 +64,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     GetStorage storage = GetStorage();
-    UserDataService.userDataModel =
-        UserDataModel.fromJson(jsonDecode(storage.read('userData')));
+    UserDataService.userDataModel = UserDataModel.fromJson(jsonDecode(storage.read('userData')));
     selectController.observeronSearch();
     header = {
       'Authorization': 'Basic YWRtaW46MTIzNA==',
@@ -103,9 +103,8 @@ class _HomeScreenState extends State<HomeScreen>
                                   borderColor: buttonColor,
                                   backgroundColor: Colors.blueGrey[100]!,
                                   onTap: () {
-                                    int i = storyIds.indexWhere((element) =>
-                                        element ==
-                                        '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                                    int i =
+                                        storyIds.indexWhere((element) => element == '${UserDataService.userDataModel!.userData!.userId.toString()}');
                                     context.pushTransparentRoute(StoryViewPage(
                                       userStories: allstoryList[i],
                                       isAdmin: true,
@@ -118,8 +117,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   backgroundColor: Colors.blueGrey[100]!,
                                   onTap: () {
                                     Get.to(Photo_View_Class(
-                                      url:
-                                          "${UserDataService.userDataModel!.userData!.avatar}",
+                                      url: "${UserDataService.userDataModel!.userData!.avatar}",
                                     ));
                                   },
                                 ),
@@ -129,9 +127,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            Get.to(UserChatInformation(
-                                userID:
-                                    '${UserDataService.userDataModel!.userData!.userId}'));
+                            Get.to(UserChatInformation(userID: '${UserDataService.userDataModel!.userData!.userId}'));
                           },
                           child: Text(
                             '${UserDataService.userDataModel!.userData!.firstName}  ${UserDataService.userDataModel!.userData!.lastName}',
@@ -146,9 +142,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         InkWell(
                             onTap: () {
-                              Get.to(UserChatInformation(
-                                  userID:
-                                      '${UserDataService.userDataModel!.userData!.userId}'));
+                              Get.to(UserChatInformation(userID: '${UserDataService.userDataModel!.userData!.userId}'));
                             },
                             child: Text(
                               '${UserDataService.userDataModel!.userData!.username}@',
@@ -174,8 +168,12 @@ class _HomeScreenState extends State<HomeScreen>
                           height: 16,
                         ),
                         InkWell(
-                          onTap: () {
-                            Get.to(BlockUsersScreenList());
+                          onTap: () async {
+                            Get.to(BlockUsersScreenList())?.then((value) async {
+                              await controller.getChatList();
+                              await controller.getFriendList();
+                              setState(() {});
+                            });
                           },
                           child: Text(
                             'Blocked Users',
@@ -199,8 +197,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                         InkWell(
                           onTap: () {
-                            var selectController =
-                                Get.find<SelectIndexController>();
+                            var selectController = Get.find<SelectIndexController>();
                             // final controller = Get.find<GroupProvider>();
                             selectController.updateColor(0);
                             // controller.listofMember.value=[];
@@ -210,10 +207,7 @@ class _HomeScreenState extends State<HomeScreen>
                           },
                           child: Text(
                             'Logout',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 18, color: Colors.red, fontWeight: FontWeight.bold),
                           ),
                         )
                       ],
@@ -229,9 +223,7 @@ class _HomeScreenState extends State<HomeScreen>
                         SliverAppBar(
                           automaticallyImplyLeading: false,
                           elevation: 0,
-                          collapsedHeight: Platform.isAndroid
-                              ? height * 0.160
-                              : height * 0.180,
+                          collapsedHeight: Platform.isAndroid ? height * 0.160 : height * 0.180,
                           backgroundColor: Colors.white,
                           expandedHeight: height * 0.120,
                           bottom: TabBar(
@@ -317,8 +309,7 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   final Widget widget;
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return widget;
   }
 
