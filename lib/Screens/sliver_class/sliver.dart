@@ -201,6 +201,7 @@ class _MySliverState extends State<MySliver> {
                                             .then((value) async {
                                           await controller.getChatList();
                                           controller.connectToSocket();
+                                          await controller.getStoryList();
                                           setState(() {});
                                         });
                                       },
