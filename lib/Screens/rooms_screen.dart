@@ -119,7 +119,6 @@ class _RoomsScreenState extends State<RoomsScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Divider(),
           CustomScrollView(
             slivers: [
               SliverToBoxAdapter(

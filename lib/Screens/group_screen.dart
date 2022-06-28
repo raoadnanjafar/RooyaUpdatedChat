@@ -90,7 +90,6 @@ class _GroupScreenState extends State<GroupScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          Divider(),
           CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
