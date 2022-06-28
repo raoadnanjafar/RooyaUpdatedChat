@@ -47,6 +47,7 @@ final changeGroupName = 'changeGroupName';
 final changeGroupImage = 'changeGroupImage';
 final blockGroup = 'blockGroup';
 final unblockGroup = 'unblockGroup';
+final getUnBlockedUsers = 'get-blocked-users';
 
 GetStorage storage = GetStorage();
 Map<String, String> header = {
@@ -525,6 +526,21 @@ class ApiUtils {
       if (data['api_status'] != 200) {
         snackBarFailer('${data['errors']['error_text']}');
       }
+    } catch (e) {
+      print('Exception is = $e');
+    }
+  }
+
+  static Future unblockedUser({Map<String,dynamic>? map}) async {
+    var url = Uri.parse('$baseUrl$getUnBlockedUsers$token');
+    try {
+      var responce = await http.post(url, body: map);
+     // var data = jsonDecode(responce.body);
+      // print('blockUnblockUser = $data');
+      // log(' response${responce.body}');
+      // if (data['api_status'] != 200) {
+      //   snackBarFailer('${data['errors']['error_text']}');
+      // }
     } catch (e) {
       print('Exception is = $e');
     }

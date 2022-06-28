@@ -15,6 +15,8 @@ import 'package:rooya/Utils/text_filed/app_font.dart';
 import '../../Models/FriendsListModel.dart';
 import '../../Models/UserChatModel.dart';
 import '../../Models/UserStoriesModel.dart';
+import '../../Plugins/FocusedMenu/focused_menu.dart';
+import '../../Plugins/FocusedMenu/modals.dart';
 import '../../Providers/ChatScreenProvider.dart';
 import '../../Utils/StoryViewPage.dart';
 import '../../Utils/StoryViewScreen.dart';
@@ -52,14 +54,14 @@ class _MySliverState extends State<MySliver> {
           Column(
             children: [
               SizedBox(
-                height: 9,
+                height: 1,
               ),
               ListTile(
                   leading: Obx(
                     () => hasUserStory.value
                         ? CircularProfileAvatar(
                             '${UserDataService.userDataModel!.userData!.avatar}',
-                            radius: 28,
+                            radius: 21,
                             borderWidth: 2,
                             borderColor: buttonColor,
                             backgroundColor: Colors.blueGrey[100]!,
@@ -75,7 +77,7 @@ class _MySliverState extends State<MySliver> {
                           )
                         : CircularProfileAvatar(
                             '${UserDataService.userDataModel!.userData!.avatar}',
-                            radius: 28,
+                            radius: 21,
                             backgroundColor: Colors.blueGrey[100]!,
                             onTap: () {
                               scaffoldStateKey.currentState?.openDrawer();
@@ -88,10 +90,10 @@ class _MySliverState extends State<MySliver> {
                           ),
                   ),
                   title: Padding(
-                    padding: const EdgeInsets.only(left: 30),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Container(
-                      margin: EdgeInsets.only(right: 40),
-                      height: 26,
+                      //margin: EdgeInsets.only(right: 10),
+                      height: 30,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(18),
@@ -102,6 +104,8 @@ class _MySliverState extends State<MySliver> {
                             hintText: 'Search here...',
                             hintStyle: TextStyle(fontSize: 12),
                             isDense: true,
+                            contentPadding: EdgeInsets.only(top: 3),
+                            isCollapsed: true,
                             prefixIcon: Icon(
                               Icons.search,
                               color: Colors.green,
@@ -129,6 +133,28 @@ class _MySliverState extends State<MySliver> {
                             color: Colors.black,
                             size: 23,
                           )),
+                      FocusedMenuHolder(
+                        blurSize: 5.0,
+                        menuItemExtent: 45,
+                        menuWidth: width * 0.4,
+                        menuOffset: 0,
+                        openWithTap: true,
+                        blurBackgroundColor: Colors.black54,
+                        onCneTapMenuItems: <FocusedMenuItem>[
+                          FocusedMenuItem(
+                              title: Text("Select All"), onPressed: () {}),
+                          FocusedMenuItem(
+                              title: Text("Delete All"), onPressed: () {}),
+                          FocusedMenuItem(
+                              title: Text("Mark All"), onPressed: () {}),
+                        ],
+                        onPressed: () {},
+                        child: Icon(
+                          Icons.more_vert,
+                          color: Colors.black,
+                          size: 20,
+                        ),
+                      ),
                       // InkWell(
                       //     onTap: () {
                       //       Get.to(Settings());
@@ -152,12 +178,12 @@ class _MySliverState extends State<MySliver> {
                         child: ListView.builder(
                           itemCount: controller.storyList.length,
                           itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(left: 16),
                             child: Column(
                               children: [
                                 Container(
-                                  height: 60,
-                                  width: 62,
+                                  height: 55,
+                                  width: 56,
                                   decoration: BoxDecoration(shape: BoxShape.circle),
                                   child: CircularProfileAvatar(
                                     '${controller.storyList[index].stories![0].thumbnail}',

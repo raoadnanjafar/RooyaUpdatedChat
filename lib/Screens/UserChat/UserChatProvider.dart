@@ -143,6 +143,7 @@ class UserChatProvider extends GetxController {
   }
 
   var block_user = false.obs;
+  var unblock_user = false.obs;
 
   onSentMessage(
       {String? message,

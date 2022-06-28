@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +14,9 @@ import 'package:rooya/Utils/primary_color.dart';
 import 'package:get/get.dart';
 
 import '../ApiConfig/ApiUtils.dart';
+import '../Block_users/Block_Usera_Screen.dart';
+import '../GlobalWidget/Photo_View_Class.dart';
+import '../Utils/StoryViewPage.dart';
 import 'Information/UserChatInformation/user_chat_information.dart';
 import 'Settings/Appearance/Apearence.dart';
 import 'Settings/Settings.dart';
@@ -76,15 +80,41 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             drawer: Drawer(
               width: 220,
               child: Padding(
-                padding: const EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 14),
                 child: Column(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20,),
-                    CircularProfileAvatar('',
-                    radius: 50,
-                      //backgroundColor: Colors.green,
-                      child: Image.network('${UserDataService.userDataModel!.userData!.avatar}'),
+                    Obx(
+                          () => hasUserStory.value
+                          ? CircularProfileAvatar(
+                        '${UserDataService.userDataModel!.userData!.avatar}',
+                        radius: 46,
+                        borderWidth: 2,
+                        borderColor: buttonColor,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        onTap: () {
+                          int i = storyIds.indexWhere((element) =>
+                          element ==
+                              '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                          context.pushTransparentRoute(StoryViewPage(
+                            userStories: allstoryList[i],
+                            isAdmin: true,
+                          ));
+                        },
+                      )
+                          : CircularProfileAvatar(
+                        '${UserDataService.userDataModel!.userData!.avatar}',
+                        radius: 46,
+                        backgroundColor: Colors.blueGrey[100]!,
+                        onTap: () {
+                          Get.to(
+                              Photo_View_Class(
+                                url:
+                                "${UserDataService.userDataModel!.userData!.avatar}",
+                              ));
+                        },
+                      ),
                     ),
                     SizedBox(height: 15,),
                     InkWell(
@@ -99,24 +129,39 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),),
                     ),
                     SizedBox(height: 8,),
-                    Text('${UserDataService.userDataModel!.userData!.username}@',style: TextStyle(fontSize: 20),),
+                    InkWell(
+                        onTap: (){
+                          Get.to(
+                              UserChatInformation(
+                                  userID:
+                                  '${UserDataService.userDataModel!.userData!.userId}')
+                          );
+                        },
+                        child: Text('${UserDataService.userDataModel!.userData!.username}@',style: TextStyle(fontSize: 20),)),
                   Divider(height: 20,color: Colors.grey,),
-                    ListTile(
+                    SizedBox(height: 20,),
+                    InkWell(
                       onTap: (){
                         Get.to(Apearennce());
                       },
-                      title: Text('Appearance',style: TextStyle(fontSize: 16),),
+                      child: Text('Appearance',style: TextStyle(fontSize: 18,color: Colors.black),),
                     ),
-                    ListTile(
-                      title: Text('Block Users',style: TextStyle(fontSize: 16),),
+                    SizedBox(height: 16,),
+                    InkWell(
+                      onTap: (){
+                        Get.to(BlockUsersScreenList());
+                      },
+                      child: Text('Blocked Users',style: TextStyle(fontSize: 18,color: Colors.black),),
                     ),
-                    ListTile(
+                    SizedBox(height: 16,),
+                    InkWell(
                       onTap: (){
                         Get.to(Settings());
                       },
-                      title: Text('Settings',style: TextStyle(fontSize: 16),),
+                      child: Text('Settings',style: TextStyle(fontSize: 18,color: Colors.black),),
                     ),
-                    ListTile(
+                    SizedBox(height: 16,),
+                    InkWell(
                       onTap: (){
                         var selectController = Get.find<SelectIndexController>();
                         // final controller = Get.find<GroupProvider>();
@@ -126,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         Get.deleteAll();
                         Get.offAll(SignInTabsHandle());
                       },
-                      title: Text('Logout',style: TextStyle(fontSize: 16,color: Colors.red),),
+                      child: Text('Logout',style: TextStyle(fontSize: 18,color: Colors.red,fontWeight: FontWeight.bold),),
                     )
                   ],
                 ),
@@ -142,9 +187,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         SliverAppBar(
                           automaticallyImplyLeading: false,
                           elevation: 0,
-                          collapsedHeight: height * 0.200,
+                          collapsedHeight: height * 0.160,
                           backgroundColor: Colors.white,
-                          expandedHeight: height * 0.130,
+                          //expandedHeight: height * 0.120,
                           bottom: TabBar(
                             onTap: (w){
                               setState(() {
@@ -152,15 +197,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               });
                             },
                             indicatorColor: Colors.green,
-                            indicatorWeight: 2,
+                            //indicatorWeight: 2,
                             indicatorSize: TabBarIndicatorSize.label,
                             tabs: [
                               Tab(
-                                height: 40,
+                                height: 39,
                                 child: Column(
                                 children: [
                                   SvgPicture.asset('assets/user/prs.svg',color: Colors.black,),
-                                  SizedBox(height: 3,),
+                                  SizedBox(height: 4,),
                                   Text('Chat',style: TextStyle(color: Colors.black),),
                                 ],
                               ),),
@@ -177,10 +222,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 child: Column(
                                 children: [
                                   SvgPicture.asset('assets/user/sw.svg',),
+                                  SizedBox(height: 4,),
                                   Text('Rooms',style: TextStyle(color: Colors.black),),
                                 ],
-                              ),),
+                              ),
+                              ),
                             ],
+
                           ),
                           flexibleSpace: MySliver(),
                         ),
@@ -194,20 +242,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         (RoomsScreen()),
                       ],
                     ),))));
-  }
-  Widget openDrawer(BuildContext context){
-    return Drawer(
-      width: 300,
-      child: Column(
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.green,
-            radius: 20,
-          ),
-          Text('the man of the end'),
-        ],
-      ),
-    );
   }
 }
 

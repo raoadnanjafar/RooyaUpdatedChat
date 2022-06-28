@@ -15,7 +15,7 @@ showAlertDialog(
             CupertinoDialogAction(onPressed: cancel, child: Text("Cancel")),
             CupertinoDialogAction(onPressed: done, child: Text("Ok")),
           ],
-          content: Text("You want to delete it?"),
+          content: Text(content.toString()),
         );
       });
 }
