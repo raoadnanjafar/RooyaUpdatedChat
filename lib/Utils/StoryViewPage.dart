@@ -207,62 +207,59 @@ class _StoryViewPageState extends State<StoryViewPage>
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Padding(padding: EdgeInsets.only(top: 60,left: 18),
-                          child: CircularProfileAvatar('',
-                            radius: 20,
-                            child: Image.network('${widget.userStories!.avatar}'),
-                          ),
-                        ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(top: 40, left: 10),
-                        //   child: IconButton(
-                        //     icon: Icon(
-                        //       Icons.arrow_back_ios,
-                        //       color: Colors.white,
-                        //     ),
-                        //     onPressed: () {
-                        //       Get.back();
-                        //     },
-                        //   ),
-                        // ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 40),
-                          child: InkWell(
-                            onTap: () {
-                              controller.pause();
-                              Get.to(UserChatInformation(
-                                      userID: widget.userStories!.userId
-                                          .toString()))
-                                  ?.then((value) => controller.play());
-                            },
-                            child: Text(
-                              '${widget.userStories!.username}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                          ),
-                        ),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(padding: EdgeInsets.only(top: 60,left: 18),
+                    child: CircularProfileAvatar('',
+                      radius: 20,
+                      child: Image.network('${widget.userStories!.avatar}'),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 70),
-                      child: Text(
-                        '${widget.userStories!.stories![currentIndex].timeText}',
-                        style: TextStyle(color: Colors.white),
+                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(top: 40, left: 10),
+                  //   child: IconButton(
+                  //     icon: Icon(
+                  //       Icons.arrow_back_ios,
+                  //       color: Colors.white,
+                  //     ),
+                  //     onPressed: () {
+                  //       Get.back();
+                  //     },
+                  //   ),
+                  // ),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only( top: 63,left: 10),
+                        child: InkWell(
+                          onTap: () {
+                            controller.pause();
+                            Get.to(UserChatInformation(
+                                userID: widget.userStories!.userId
+                                    .toString()))
+                                ?.then((value) => controller.play());
+                          },
+                          child: Text(
+                            '${widget.userStories!.username}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5,top: 5),
+                        child: Text(
+                          '${widget.userStories!.stories![currentIndex].timeText}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
               // IconButton(
               //   icon: Icon(
