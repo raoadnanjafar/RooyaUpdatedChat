@@ -111,7 +111,12 @@ class _HomeScreenState extends State<HomeScreen>
                                     context.pushTransparentRoute(StoryViewPage(
                                       userStories: allstoryList[i],
                                       isAdmin: true,
-                                    ));
+                                    )).then((value)async{
+                                      await controller.getStoryList();
+                                      setState(() {
+                                        
+                                      });
+                                    });
                                   },
                                 )
                               : CircularProfileAvatar(

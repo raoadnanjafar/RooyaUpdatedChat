@@ -81,6 +81,7 @@ class ChatScreenProvider extends GetxController {
     for (var i in storyList) {
       idsOfUserStories.add(i.userId);
     }
+     hasUserStory.value=false;
     if (idsOfUserStories.contains(
         UserDataService.userDataModel!.userData!.userId.toString())) {
       hasUserStory.value=true;
