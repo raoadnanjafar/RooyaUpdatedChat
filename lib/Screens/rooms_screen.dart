@@ -199,43 +199,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           ],
                         ),
                       )
-                    : ListTile(
-                        title: InkWell(
-                          onTap: () {
-                            return createAlertDialoge(context);
-                          },
-                          child: Text(
-                            '',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontFamily: AppFonts.segoeui),
-                          ),
-                        ),
-                        trailing: FocusedMenuHolder(
-                          blurSize: 5.0,
-                          menuItemExtent: 45,
-                          menuWidth: width * 0.4,
-                          menuOffset: 0,
-                          openWithTap: true,
-                          blurBackgroundColor: Colors.black54,
-                          onCneTapMenuItems: <FocusedMenuItem>[
-                            FocusedMenuItem(
-                                title: Text("Select All"), onPressed: () {}),
-                            FocusedMenuItem(
-                                title: Text("Delete All"), onPressed: () {}),
-                            FocusedMenuItem(
-                                title: Text("Mark All"), onPressed: () {}),
-                          ],
-                          onPressed: () {},
-                          child: Icon(
-                            Icons.more_vert,
-                            color: Colors.black,
-                            size: 20,
-                          ),
-                        ),
-                      ),
+                    : SizedBox()
               ),
               Obx(
                 () => !controller.loadChat.value &&

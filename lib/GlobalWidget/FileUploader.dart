@@ -202,3 +202,14 @@ Future sentMessageWithoutFile({Map<String, dynamic>? map}) async {
     print('Exception is = $e');
   }
 }
+
+Future DeleteStorys({Map<String, dynamic>? map}) async {
+  FormData formData = new FormData.fromMap(map!);
+  try {
+    final response = await Dio().post('$baseUrl$deleteStoryAdmin$token',
+        options: Options(headers: header), data: formData);
+    print('sendFileMessage responce data is = ${response.data}');
+  } catch (e) {
+    print('Exception is = $e');
+  }
+}

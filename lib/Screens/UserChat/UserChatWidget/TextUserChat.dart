@@ -832,7 +832,11 @@ class _TextUserChatState extends State<TextUserChat> {
                                       height: height * 0.3,
                                       width: width * 0.5,
                                       child: widget.model!.story == null
-                                          ? SizedBox()
+                                          ? Container(
+                                        height: height * 0.3,
+                                        width: width * 0.5,
+                                        color: Colors.black.withOpacity(0.5),
+                                      )
                                           : Image.network(
                                         '${widget.model!.story!.thumbnail}',
                                         fit: BoxFit.cover,
@@ -848,10 +852,10 @@ class _TextUserChatState extends State<TextUserChat> {
                                     Positioned(
                                         top: 120,
                                         left: 50,
-                                        child: Text(
+                                        child:widget.model!.story == null? Text('Expire Story',style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),):Text(
                                           'View Story',
                                           style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                                        )),
+                                        ) ),
                                   ],
                                 ),
                                 Container(

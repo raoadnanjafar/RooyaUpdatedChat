@@ -261,9 +261,38 @@ class _StoryViewPageState extends State<StoryViewPage>
                         ),
                       ),
                     ],
-                  )
+                  ),
+
                 ],
               ),
+              widget.isAdmin == true ? Padding(
+                padding: const EdgeInsets.only(top: 65,right: 14),
+                child: Align(
+                    alignment: Alignment.topRight,
+                    child: PopupMenuButton(
+                      child: Icon(Icons.more_vert,color: Colors.white),
+                      itemBuilder: (context) {
+                        return ['Delete Story'].map((e) {
+                          return PopupMenuItem(
+                            value: e,
+                            onTap: () async {
+                              DeleteStorys(map: {
+                                'server_key': serverKey,
+                                'story_id': widget
+                                    .userStories!.stories![currentIndex].id
+                              });
+                              Navigator.of(context).pop('delete');
+                              setState(() {
+
+                              });
+                            },
+                            child: Text('$e'),
+                          );
+                        }).toList();
+                      },
+                    )),
+              )
+              :SizedBox(),
               // IconButton(
               //   icon: Icon(
               //     Icons.remove_red_eye,

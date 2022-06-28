@@ -49,6 +49,7 @@ final changeGroupImage = 'changeGroupImage';
 final blockGroup = 'blockGroup';
 final unblockGroup = 'unblockGroup';
 final getUnBlockedUsers = 'get-blocked-users';
+final deleteStoryAdmin = 'delete-story';
 
 GetStorage storage = GetStorage();
 Map<String, String> header = {

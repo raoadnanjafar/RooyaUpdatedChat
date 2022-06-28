@@ -62,6 +62,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -237,7 +238,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
               children: [
                 Container(
                   height: 55,
-                  width: 300,
+                  width: width*0.82,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.blueGrey[50],
@@ -281,10 +282,11 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                       }),
                 ),
                 Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                  // height: 30,
+                  // width: 30,
+                  // decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
                   child: PopupMenuButton(
+                    iconSize: 30,
                     itemBuilder: (context) => [
                       PopupMenuItem(
                           value: selectedFilter,
