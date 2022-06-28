@@ -16,6 +16,7 @@ import 'package:rooya/Screens/SearchUser/SearchUserModel.dart';
 import 'package:rooya/Screens/UserChat/Media/GroupInfoModel.dart';
 import 'package:rooya/Utils/UserDataService.dart';
 
+import '../Models/BlockUser.dart';
 import '../Models/StoryViewsModel.dart';
 
 final getChat = 'get_chats';
@@ -233,7 +234,7 @@ class ApiUtils {
       {int? limit, int? start, Map? mapData}) async {
     var url = Uri.parse('$baseUrl$getChat$token');
     try {
-      var responce =  await http.post(url, body: mapData);
+      var responce = await http.post(url, body: mapData);
       var data = jsonDecode(responce.body);
       // print('group data is = $data');
       if (data['api_status'] == 200) {
@@ -254,8 +255,7 @@ class ApiUtils {
     return [];
   }
 
-  static Future<storyViewModel> storyView(
-      { Map? mapData}) async {
+  static Future<storyViewModel> storyView({Map? mapData}) async {
     print('$mapData');
     var url = Uri.parse('$baseUrl$storyViewsPerson$token');
     try {
@@ -264,10 +264,12 @@ class ApiUtils {
       // print('group data is = $data');
       print('$data');
       if (data['api_status'] == 200) {
-        storyViewModel modellistt =storyViewModel.fromJson(data);
+        storyViewModel modellistt = storyViewModel.fromJson(data);
         return modellistt;
       } else {
-        return storyViewModel(users: [],);
+        return storyViewModel(
+          users: [],
+        );
       }
     } catch (e) {
       print('Exception is = $e');
@@ -531,19 +533,24 @@ class ApiUtils {
     }
   }
 
-  static Future unblockedUser({Map<String,dynamic>? map}) async {
+  static Future<List<BlockUser>> getBlockedUser() async {
     var url = Uri.parse('$baseUrl$getUnBlockedUsers$token');
     try {
-      var responce = await http.post(url, body: map);
-     // var data = jsonDecode(responce.body);
-      // print('blockUnblockUser = $data');
-      // log(' response${responce.body}');
-      // if (data['api_status'] != 200) {
-      //   snackBarFailer('${data['errors']['error_text']}');
-      // }
+      var responce = await http.post(url, body: {'server_key': serverKey});
+      var data = jsonDecode(responce.body);
+      print('blockUnblockUser = $data');
+      if (data['api_status'] == 200) {
+        List list = data['blocked_users'];
+        List<BlockUser> blockUser =
+            list.map((e) => BlockUser.fromJson(e)).toList();
+        return blockUser;
+      } else {
+        return [];
+      }
     } catch (e) {
       print('Exception is = $e');
     }
+    return [];
   }
 
   static Future<List<Messages>> getMessage_list_forGroup(

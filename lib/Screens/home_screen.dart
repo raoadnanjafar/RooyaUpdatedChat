@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:dismissible_page/dismissible_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_storage/get_storage.dart';
@@ -23,7 +23,9 @@ import 'Settings/Settings.dart';
 import 'chat_screen.dart';
 import 'group_screen.dart';
 import 'login_screens/sign_in_tabs_handle.dart';
- final GlobalKey<ScaffoldState> scaffoldStateKey = GlobalKey();
+
+final GlobalKey<ScaffoldState> scaffoldStateKey = GlobalKey();
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -31,7 +33,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   var selectController = Get.put(SelectIndexController());
 
   List iconList = [
@@ -74,124 +77,165 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   bool indexColors = false;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-          key: scaffoldStateKey,
-            drawer: Drawer(
-              width: 220,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20,),
-                    Obx(
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: SafeArea(
+          child: Scaffold(
+              key: scaffoldStateKey,
+              drawer: Drawer(
+                  width: 220,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Obx(
                           () => hasUserStory.value
-                          ? CircularProfileAvatar(
-                        '${UserDataService.userDataModel!.userData!.avatar}',
-                        radius: 46,
-                        borderWidth: 2,
-                        borderColor: buttonColor,
-                        backgroundColor: Colors.blueGrey[100]!,
-                        onTap: () {
-                          int i = storyIds.indexWhere((element) =>
-                          element ==
-                              '${UserDataService.userDataModel!.userData!.userId.toString()}');
-                          context.pushTransparentRoute(StoryViewPage(
-                            userStories: allstoryList[i],
-                            isAdmin: true,
-                          ));
-                        },
-                      )
-                          : CircularProfileAvatar(
-                        '${UserDataService.userDataModel!.userData!.avatar}',
-                        radius: 46,
-                        backgroundColor: Colors.blueGrey[100]!,
-                        onTap: () {
-                          Get.to(
-                              Photo_View_Class(
-                                url:
-                                "${UserDataService.userDataModel!.userData!.avatar}",
-                              ));
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 15,),
-                    InkWell(
-                      onTap: (){
-                        Get.to(
-                            UserChatInformation(
+                              ? CircularProfileAvatar(
+                                  '${UserDataService.userDataModel!.userData!.avatar}',
+                                  radius: 46,
+                                  borderWidth: 2,
+                                  borderColor: buttonColor,
+                                  backgroundColor: Colors.blueGrey[100]!,
+                                  onTap: () {
+                                    int i = storyIds.indexWhere((element) =>
+                                        element ==
+                                        '${UserDataService.userDataModel!.userData!.userId.toString()}');
+                                    context.pushTransparentRoute(StoryViewPage(
+                                      userStories: allstoryList[i],
+                                      isAdmin: true,
+                                    ));
+                                  },
+                                )
+                              : CircularProfileAvatar(
+                                  '${UserDataService.userDataModel!.userData!.avatar}',
+                                  radius: 46,
+                                  backgroundColor: Colors.blueGrey[100]!,
+                                  onTap: () {
+                                    Get.to(Photo_View_Class(
+                                      url:
+                                          "${UserDataService.userDataModel!.userData!.avatar}",
+                                    ));
+                                  },
+                                ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(UserChatInformation(
                                 userID:
-                                '${UserDataService.userDataModel!.userData!.userId}')
-                        );
-                      },
-                      child: Text('${UserDataService.userDataModel!.userData!.firstName}  ${UserDataService.userDataModel!.userData!.lastName}',style:
-                        TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),),
-                    ),
-                    SizedBox(height: 8,),
-                    InkWell(
-                        onTap: (){
-                          Get.to(
-                              UserChatInformation(
+                                    '${UserDataService.userDataModel!.userData!.userId}'));
+                          },
+                          child: Text(
+                            '${UserDataService.userDataModel!.userData!.firstName}  ${UserDataService.userDataModel!.userData!.lastName}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        InkWell(
+                            onTap: () {
+                              Get.to(UserChatInformation(
                                   userID:
-                                  '${UserDataService.userDataModel!.userData!.userId}')
-                          );
-                        },
-                        child: Text('${UserDataService.userDataModel!.userData!.username}@',style: TextStyle(fontSize: 20),)),
-                  Divider(height: 20,color: Colors.grey,),
-                    SizedBox(height: 20,),
-                    InkWell(
-                      onTap: (){
-                        Get.to(Apearennce());
-                      },
-                      child: Text('Appearance',style: TextStyle(fontSize: 18,color: Colors.black),),
+                                      '${UserDataService.userDataModel!.userData!.userId}'));
+                            },
+                            child: Text(
+                              '${UserDataService.userDataModel!.userData!.username}@',
+                              style: TextStyle(fontSize: 20),
+                            )),
+                        Divider(
+                          height: 20,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(Apearennce());
+                          },
+                          child: Text(
+                            'Appearance',
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(BlockUsersScreenList());
+                          },
+                          child: Text(
+                            'Blocked Users',
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Get.to(Settings());
+                          },
+                          child: Text(
+                            'Settings',
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            var selectController =
+                                Get.find<SelectIndexController>();
+                            // final controller = Get.find<GroupProvider>();
+                            selectController.updateColor(0);
+                            // controller.listofMember.value=[];
+                            storage.erase();
+                            Get.deleteAll();
+                            Get.offAll(SignInTabsHandle());
+                          },
+                          child: Text(
+                            'Logout',
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
                     ),
-                    SizedBox(height: 16,),
-                    InkWell(
-                      onTap: (){
-                        Get.to(BlockUsersScreenList());
-                      },
-                      child: Text('Blocked Users',style: TextStyle(fontSize: 18,color: Colors.black),),
-                    ),
-                    SizedBox(height: 16,),
-                    InkWell(
-                      onTap: (){
-                        Get.to(Settings());
-                      },
-                      child: Text('Settings',style: TextStyle(fontSize: 18,color: Colors.black),),
-                    ),
-                    SizedBox(height: 16,),
-                    InkWell(
-                      onTap: (){
-                        var selectController = Get.find<SelectIndexController>();
-                        // final controller = Get.find<GroupProvider>();
-                        selectController.updateColor(0);
-                        // controller.listofMember.value=[];
-                        storage.erase();
-                        Get.deleteAll();
-                        Get.offAll(SignInTabsHandle());
-                      },
-                      child: Text('Logout',style: TextStyle(fontSize: 18,color: Colors.red,fontWeight: FontWeight.bold),),
-                    )
-                  ],
-                ),
-              )
-            ),
-            backgroundColor: Colors.white,
-            body: DefaultTabController(
-                length: 3,
-                child: NestedScrollView(
+                  )),
+              backgroundColor: Colors.white,
+              body: DefaultTabController(
+                  length: 3,
+                  child: NestedScrollView(
                     physics: NeverScrollableScrollPhysics(),
                     headerSliverBuilder: (context, isScrool) {
                       return [
                         SliverAppBar(
                           automaticallyImplyLeading: false,
                           elevation: 0,
-                          collapsedHeight: height * 0.160,
+                          collapsedHeight: Platform.isAndroid
+                              ? height * 0.160
+                              : height * 0.180,
                           backgroundColor: Colors.white,
                           //expandedHeight: height * 0.120,
                           bottom: TabBar(
-                            onTap: (w){
+                            onTap: (w) {
                               setState(() {
                                 //indexColors = false;
                               });
@@ -203,36 +247,56 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               Tab(
                                 height: 39,
                                 child: Column(
-                                children: [
-                                  SvgPicture.asset('assets/user/prs.svg',color: Colors.black,),
-                                  SizedBox(height: 4,),
-                                  Text('Chat',style: TextStyle(color: Colors.black),),
-                                ],
-                              ),),
-                              Tab(
-                                height: 40,
-                                child: Column(
-                                children: [
-                                  SvgPicture.asset('assets/user/persons.svg',),
-                                  Text('Groups',style: TextStyle(color: Colors.black),),
-                                ],
-                              ),),
-                              Tab(
-                                height: 40,
-                                child: Column(
-                                children: [
-                                  SvgPicture.asset('assets/user/sw.svg',),
-                                  SizedBox(height: 4,),
-                                  Text('Rooms',style: TextStyle(color: Colors.black),),
-                                ],
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/user/prs.svg',
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      'Chat',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                               ),
+                              Tab(
+                                height: 40,
+                                child: Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/user/persons.svg',
+                                    ),
+                                    Text(
+                                      'Groups',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Tab(
+                                height: 40,
+                                child: Column(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/user/sw.svg',
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      'Rooms',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
-
                           ),
                           flexibleSpace: MySliver(),
                         ),
-
                       ];
                     },
                     body: TabBarView(
@@ -241,7 +305,9 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         (GroupScreen()),
                         (RoomsScreen()),
                       ],
-                    ),))));
+                    ),
+                  )))),
+    );
   }
 }
 

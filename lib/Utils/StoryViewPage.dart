@@ -77,6 +77,8 @@ class _StoryViewPageState extends State<StoryViewPage>
     super.dispose();
   }
 
+  TextEditingController captionCon = TextEditingController();
+
   PageController pageController =
       PageController(initialPage: 0, keepPage: false);
 
@@ -104,20 +106,20 @@ class _StoryViewPageState extends State<StoryViewPage>
                   openSheet = false;
                 });
               } else {
-                if (openSheet == false) {
-                  openSheet = true;
-                  controller.pause();
-                  replyPreview(
-                    widget.userStories!.stories![currentIndex].id.toString(),
-                  ).then((value) {
-                    controller.play();
-                    openSheet = false;
-                    if (value == 'send') {
-                      snackBarSuccess(
-                          'Message sent successfully to ${widget.userStories!.firstName} ${widget.userStories!.lastName}');
-                    }
-                  });
-                }
+                // if (openSheet == false) {
+                //   openSheet = true;
+                //   controller.pause();
+                //   replyPreview(
+                //     widget.userStories!.stories![currentIndex].id.toString(),
+                //   ).then((value) {
+                //     controller.play();
+                //     openSheet = false;
+                //     if (value == 'send') {
+                //       snackBarSuccess(
+                //           'Message sent successfully to ${widget.userStories!.firstName} ${widget.userStories!.lastName}');
+                //     }
+                //   });
+                // }
               }
             });
           }
@@ -150,7 +152,7 @@ class _StoryViewPageState extends State<StoryViewPage>
                   width: width,
                   child: StoryView(
                     controller: controller,
-                    currentIndex: (int c) async{
+                    currentIndex: (int c) async {
                       print('currentIndex = $c');
                       currentIndex = c + 1;
                       model = await ApiUtils.storyView(mapData: {
@@ -278,7 +280,7 @@ class _StoryViewPageState extends State<StoryViewPage>
                 child: SlideTransition(
                   position: animation,
                   child: Container(
-                    height: 50,
+                    height: height * 0.075,
                     width: width,
                     margin: EdgeInsets.only(bottom: 50),
                     child: widget.isAdmin!
@@ -302,12 +304,59 @@ class _StoryViewPageState extends State<StoryViewPage>
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(Icons.keyboard_arrow_up_rounded,
-                                  color: Colors.white),
-                              Text(
-                                'Reply',
-                                style: TextStyle(color: Colors.white54),
+                              Container(
+                                height: height * 0.060,
+                                margin: EdgeInsets.only(left: 10, right: 10),
+                                decoration: new BoxDecoration(
+                                    borderRadius: new BorderRadius.circular(30),
+                                    border: Border.all(
+                                        color: Colors.green, width: 2)),
+                                child: TextField(
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                  onSubmitted: (v) {
+                                    controller.play();
+                                  },
+                                  onTap: () {
+                                    controller.pause();
+                                  },
+                                  controller: captionCon,
+                                  decoration: InputDecoration(
+                                    hintText: 'Send message',
+                                    hintStyle: TextStyle(
+                                        color: Colors.white, fontSize: 13),
+                                    isDense: true,
+                                    suffixIcon: IconButton(
+                                        onPressed: () async {
+                                          sentMessageWithoutFile(map: {
+                                            'server_key': serverKey,
+                                            'text': captionCon.text,
+                                            'user_id':
+                                                '${widget.userStories!.userId}',
+                                            'message_hash_id': '44444444',
+                                            'story_id': widget.userStories!
+                                                .stories![currentIndex].id
+                                          });
+                                          captionCon.clear();
+                                        },
+                                        icon: Icon(
+                                          Icons.send,
+                                          color: Colors.greenAccent,
+                                        )),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: BorderSide(
+                                        width: 0,
+                                        color: Colors.green,
+                                        style: BorderStyle.none,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
+                              SizedBox(
+                                height: 5,
+                              )
                             ],
                           ),
                   ),
