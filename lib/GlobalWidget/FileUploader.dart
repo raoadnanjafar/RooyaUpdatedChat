@@ -208,7 +208,7 @@ Future DeleteStorys({Map<String, dynamic>? map}) async {
   try {
     final response = await Dio().post('$baseUrl$deleteStoryAdmin$token',
         options: Options(headers: header), data: formData);
-    print('sendFileMessage responce data is = ${response.data}');
+    print('Detele story response  is = ${response.data}');
   } catch (e) {
     print('Exception is = $e');
   }
