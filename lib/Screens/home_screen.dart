@@ -251,6 +251,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ? height * 0.165
                               : height * 0.180,
                           backgroundColor: Colors.white,
+                          pinned: false,
                           expandedHeight: height * 0.120,
                           forceElevated: true, //* here
                           shadowColor: Colors.black.withOpacity(0.5),
