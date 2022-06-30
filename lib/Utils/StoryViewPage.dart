@@ -1,4 +1,5 @@
 import 'package:dismissible_page/dismissible_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rooya/ApiConfig/ApiUtils.dart';
@@ -209,29 +210,30 @@ class _StoryViewPageState extends State<StoryViewPage>
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+               // mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 60, left: 18),
+                    padding: const EdgeInsets.only(top: 65, left: 12),
+                    child: InkWell(
+                      onTap: (){
+                        Get.back();
+                    },
+                      child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        ),
+                    ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 60,left: 3),
                     child: CircularProfileAvatar(
                       '',
                       radius: 20,
                       child: Image.network('${widget.userStories!.avatar}'),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 40, left: 10),
-                  //   child: IconButton(
-                  //     icon: Icon(
-                  //       Icons.arrow_back_ios,
-                  //       color: Colors.white,
-                  //     ),
-                  //     onPressed: () {
-                  //       Get.back();
-                  //     },
-                  //   ),
-                  // ),
+
                   Column(
                     children: [
                       Padding(
@@ -339,9 +341,16 @@ class _StoryViewPageState extends State<StoryViewPage>
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(Icons.keyboard_arrow_up_rounded,
-                                  color: Colors.white),
-                              Text('',
+                              InkWell(
+                                onTap: (){
+                                  replyPreview(
+                                    widget.userStories!.stories![currentIndex].id.toString(),
+                                  );
+                                },
+                                child: Icon(Icons.keyboard_arrow_up_rounded,
+                                    color: Colors.white),
+                              ),
+                              Text('Reply',
                                   style: TextStyle(color: Colors.white54)),
                             ],
                           ),
@@ -428,7 +437,7 @@ class _StoryViewPageState extends State<StoryViewPage>
         //   ),
         // ),
         return Container(
-            height: height * 0.470,
+            height: height * 0.400,
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -438,7 +447,7 @@ class _StoryViewPageState extends State<StoryViewPage>
                     margin: EdgeInsets.only(bottom: 5, left: 10, right: 10),
                     decoration: new BoxDecoration(
                         borderRadius: new BorderRadius.circular(30),
-                        border: Border.all(color: Colors.green, width: 1)),
+                        border: Border.all(color: Colors.grey.shade500, width: 1)),
                     child: TextField(
                       style: TextStyle(color: Colors.white, fontSize: 18),
                       onSubmitted: (v) {
@@ -464,7 +473,7 @@ class _StoryViewPageState extends State<StoryViewPage>
                             },
                             icon: Icon(
                               Icons.send,
-                              color: Colors.greenAccent,
+                              color: Colors.white,
                             )),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),

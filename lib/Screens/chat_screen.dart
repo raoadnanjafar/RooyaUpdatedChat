@@ -95,232 +95,247 @@ class _ChatScreenState extends State<ChatScreen>
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: listOfSelectedMember.isNotEmpty
-                    ? Container(
-                        decoration:
-                            BoxDecoration(color: primaryColor.withOpacity(0.5)),
-                        child: Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  listOfSelectedMember.clear();
-                                  setState(() {});
-                                },
-                                icon: Icon(Icons.clear)),
-                            Text('${listOfSelectedMember.length}'),
-                            Expanded(
-                                child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.volume_off,
-                                    size: 20,
+
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: listOfSelectedMember.isNotEmpty
+                      ? Container(
+                          decoration:
+                              BoxDecoration(color: primaryColor.withOpacity(0.5)),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    listOfSelectedMember.clear();
+                                    setState(() {});
+                                  },
+                                  icon: Icon(Icons.clear)),
+                              Text('${listOfSelectedMember.length}'),
+                              Expanded(
+                                  child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.volume_off,
+                                      size: 20,
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () async {
+                                  IconButton(
+                                    onPressed: () async {
+                                      await showAlertDialog(
+                                          context: context,
+                                          cancel: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          done: () {
+                                            for (var i = 0;
+                                                i < listOfSelectedMember.length;
+                                                i++) {
+                                              Map payLoad = {
+                                                'server_key': serverKey,
+                                                'userId': listOfSelectedMember[i]
+                                                    .userId
+                                                    .toString()
+                                              };
+                                              ApiUtils.deleteConversation(
+                                                  map: payLoad);
+                                              controller.listofChat.remove(
+                                                  listOfSelectedMember[i]);
+                                            }
+                                            listOfSelectedMember.clear();
+                                            setState(() {});
+                                            Navigator.of(context).pop();
+                                          });
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      CupertinoIcons.delete,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.more_vert,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  )
+                                ],
+                              ))
+                            ],
+                          ),
+                        )
+                      : SizedBox(),
+                ),
+                Obx(
+                  () => !controller.loadChat.value &&
+                          controller.listofChat.isEmpty
+                      ? SliverToBoxAdapter(
+                          child: SizedBox(
+                          child: Center(
+                              // child: SpinKitFadingCircle(
+                              //   color: buttonColor,
+                              //   size: 50.0,
+                              // ),
+                              ),
+                          height: height - 150,
+                          width: width,
+                        ))
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                          var date = DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                  "${controller.listofChat[index].lastMessage!.time}") *
+                              1000);
+                          return Slidable(
+                            key: const ValueKey(0),
+                            startActionPane: ActionPane(
+                              motion: const ScrollMotion(),
+                              dragDismissible: false,
+                              dismissible: DismissiblePane(onDismissed: () {}),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (c) async {
                                     await showAlertDialog(
                                         context: context,
                                         cancel: () {
                                           Navigator.of(context).pop();
                                         },
                                         done: () {
-                                          for (var i = 0;
-                                              i < listOfSelectedMember.length;
-                                              i++) {
-                                            Map payLoad = {
-                                              'server_key': serverKey,
-                                              'userId': listOfSelectedMember[i]
-                                                  .userId
-                                                  .toString()
-                                            };
-                                            ApiUtils.deleteConversation(
-                                                map: payLoad);
-                                            controller.listofChat.remove(
-                                                listOfSelectedMember[i]);
-                                          }
-                                          listOfSelectedMember.clear();
-                                          setState(() {});
+                                          Map map = {
+                                            'server_key': serverKey,
+                                            'user_id':
+                                                '${controller.listofChat[index].userId}'
+                                          };
+                                          ApiUtils.deleteConversation(map: map)
+                                              .then((value) {
+                                            controller.getChatList();
+                                          });
+                                          controller.listofChat.removeAt(index);
                                           Navigator.of(context).pop();
                                         });
                                     setState(() {});
                                   },
-                                  icon: Icon(
-                                    CupertinoIcons.delete,
-                                    size: 20,
-                                  ),
+                                  autoClose: true,
+                                  backgroundColor: Color(0xFFFE4A49),
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete,
+                                  label: 'Delete',
                                 ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.more_vert,
-                                    size: 20,
-                                  ),
+                                SlidableAction(
+                                  onPressed: doNothing,
+                                  backgroundColor: Color(0xFF21B7CA),
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.share,
+                                  label: 'Share',
                                 ),
-                                SizedBox(
-                                  width: 5,
-                                )
                               ],
-                            ))
-                          ],
-                        ),
-                      )
-                    : SizedBox(),
-              ),
-              Obx(
-                () => !controller.loadChat.value &&
-                        controller.listofChat.isEmpty
-                    ? SliverToBoxAdapter(
-                        child: SizedBox(
-                        child: Center(
-                            // child: SpinKitFadingCircle(
-                            //   color: buttonColor,
-                            //   size: 50.0,
-                            // ),
                             ),
-                        height: height - 150,
-                        width: width,
-                      ))
-                    : SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                        var date = DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                "${controller.listofChat[index].lastMessage!.time}") *
-                            1000);
-                        return Slidable(
-                          key: const ValueKey(0),
-                          startActionPane: ActionPane(
-                            motion: const ScrollMotion(),
-                            dragDismissible: false,
-                            dismissible: DismissiblePane(onDismissed: () {}),
-                            children: [
-                              SlidableAction(
-                                onPressed: (c) async {
-                                  await showAlertDialog(
-                                      context: context,
-                                      cancel: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      done: () {
-                                        Map map = {
-                                          'server_key': serverKey,
-                                          'user_id':
-                                              '${controller.listofChat[index].userId}'
-                                        };
-                                        ApiUtils.deleteConversation(map: map)
-                                            .then((value) {
-                                          controller.getChatList();
-                                        });
-                                        controller.listofChat.removeAt(index);
-                                        Navigator.of(context).pop();
+                            endActionPane: ActionPane(
+                              motion: ScrollMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) async {
+                                    // if (controller.listofMember[index].block == 0) {
+                                    //   Map map = {
+                                    //     'userId':
+                                    //         '${controller.listofMember[index].members![controller.listofMember[index].members!.indexWhere((element) => element.userId.toString() != storage.read('userID'))]}',
+                                    //     'groupId':
+                                    //         '${controller.listofMember[index].groupId}'
+                                    //   };
+                                    //   await ApiUtils.blockUser(map: map);
+                                    //   await controller.getGroupList();
+                                    //   setState(() {});
+                                    // } else {
+                                    //   Map map = {
+                                    //     'userId':
+                                    //         '${controller.listofMember[index].members![controller.listofMember[index].members!.indexWhere((element) => element.userId.toString() != storage.read('userID'))]}',
+                                    //     'groupId':
+                                    //         '${controller.listofMember[index].groupId}'
+                                    //   };
+                                    //   await ApiUtils.unblockUser(map: map);
+                                    //   await controller.getGroupList();
+                                    //   setState(() {});
+                                    // }
+                                  },
+                                  backgroundColor: Color(0xFF7BC043),
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.block,
+                                  // label: controller.listofMember[index].block == 0
+                                  //     ? 'Block'
+                                  //     : 'Unblock',
+                                ),
+                                SlidableAction(
+                                  onPressed: doNothing,
+                                  backgroundColor: Color(0xFF0392CF),
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.save,
+                                  label: 'Save',
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    if (listOfSelectedMember.isEmpty) {
+                                      controller.leaveGroup();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (c) => UserChat(
+                                                    groupID: controller
+                                                        .listofChat[index].userId
+                                                        .toString(),
+                                                    blocked: false,
+                                                    name: controller
+                                                            .listofChat[index]
+                                                            .firstName
+                                                            .toString()
+                                                            .isEmpty
+                                                        ? controller
+                                                            .listofChat[index]
+                                                            .username
+                                                            .toString()
+                                                        : controller
+                                                                .listofChat[index]
+                                                                .firstName
+                                                                .toString() +
+                                                            controller
+                                                                .listofChat[index]
+                                                                .lastName
+                                                                .toString(),
+                                                    profilePic: controller
+                                                        .listofChat[index].avatar,
+                                                    fromGroup: false,
+                                                  ))).then((value) async {
+                                        await controller.getChatList();
+                                        controller.connectToSocket();
+                                        setState(() {});
                                       });
-                                  setState(() {});
-                                },
-                                autoClose: true,
-                                backgroundColor: Color(0xFFFE4A49),
-                                foregroundColor: Colors.white,
-                                icon: Icons.delete,
-                                label: 'Delete',
-                              ),
-                              SlidableAction(
-                                onPressed: doNothing,
-                                backgroundColor: Color(0xFF21B7CA),
-                                foregroundColor: Colors.white,
-                                icon: Icons.share,
-                                label: 'Share',
-                              ),
-                            ],
-                          ),
-                          endActionPane: ActionPane(
-                            motion: ScrollMotion(),
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) async {
-                                  // if (controller.listofMember[index].block == 0) {
-                                  //   Map map = {
-                                  //     'userId':
-                                  //         '${controller.listofMember[index].members![controller.listofMember[index].members!.indexWhere((element) => element.userId.toString() != storage.read('userID'))]}',
-                                  //     'groupId':
-                                  //         '${controller.listofMember[index].groupId}'
-                                  //   };
-                                  //   await ApiUtils.blockUser(map: map);
-                                  //   await controller.getGroupList();
-                                  //   setState(() {});
-                                  // } else {
-                                  //   Map map = {
-                                  //     'userId':
-                                  //         '${controller.listofMember[index].members![controller.listofMember[index].members!.indexWhere((element) => element.userId.toString() != storage.read('userID'))]}',
-                                  //     'groupId':
-                                  //         '${controller.listofMember[index].groupId}'
-                                  //   };
-                                  //   await ApiUtils.unblockUser(map: map);
-                                  //   await controller.getGroupList();
-                                  //   setState(() {});
-                                  // }
-                                },
-                                backgroundColor: Color(0xFF7BC043),
-                                foregroundColor: Colors.white,
-                                icon: Icons.block,
-                                // label: controller.listofMember[index].block == 0
-                                //     ? 'Block'
-                                //     : 'Unblock',
-                              ),
-                              SlidableAction(
-                                onPressed: doNothing,
-                                backgroundColor: Color(0xFF0392CF),
-                                foregroundColor: Colors.white,
-                                icon: Icons.save,
-                                label: 'Save',
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  if (listOfSelectedMember.isEmpty) {
-                                    controller.leaveGroup();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (c) => UserChat(
-                                                  groupID: controller
-                                                      .listofChat[index].userId
-                                                      .toString(),
-                                                  blocked: false,
-                                                  name: controller
-                                                          .listofChat[index]
-                                                          .firstName
-                                                          .toString()
-                                                          .isEmpty
-                                                      ? controller
-                                                          .listofChat[index]
-                                                          .username
-                                                          .toString()
-                                                      : controller
-                                                              .listofChat[index]
-                                                              .firstName
-                                                              .toString() +
-                                                          controller
-                                                              .listofChat[index]
-                                                              .lastName
-                                                              .toString(),
-                                                  profilePic: controller
-                                                      .listofChat[index].avatar,
-                                                  fromGroup: false,
-                                                ))).then((value) async {
-                                      await controller.getChatList();
-                                      controller.connectToSocket();
+                                    } else {
+                                      if (!listOfSelectedMember.contains(
+                                          controller.listofChat[index])) {
+                                        listOfSelectedMember
+                                            .add(controller.listofChat[index]);
+                                      } else {
+                                        listOfSelectedMember
+                                            .remove(controller.listofChat[index]);
+                                      }
                                       setState(() {});
-                                    });
-                                  } else {
-                                    if (!listOfSelectedMember.contains(
-                                        controller.listofChat[index])) {
+                                    }
+                                  },
+                                  onLongPress: () {
+                                    if (!listOfSelectedMember
+                                        .contains(controller.listofChat[index])) {
                                       listOfSelectedMember
                                           .add(controller.listofChat[index]);
                                     } else {
@@ -328,196 +343,185 @@ class _ChatScreenState extends State<ChatScreen>
                                           .remove(controller.listofChat[index]);
                                     }
                                     setState(() {});
-                                  }
-                                },
-                                onLongPress: () {
-                                  if (!listOfSelectedMember
-                                      .contains(controller.listofChat[index])) {
-                                    listOfSelectedMember
-                                        .add(controller.listofChat[index]);
-                                  } else {
-                                    listOfSelectedMember
-                                        .remove(controller.listofChat[index]);
-                                  }
-                                  setState(() {});
-                                },
-                                child: Row(
-                                  children: [
-                                    listOfSelectedMember.isNotEmpty
-                                        ? !listOfSelectedMember.contains(
-                                                controller.listofChat[index])
-                                            ? Container(
-                                                height: 20,
-                                                width: 20,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                        width: 1,
-                                                        color: buttonColor)),
-                                              )
-                                            : Container(
-                                                height: 20,
-                                                width: 20,
-                                                child: Icon(
-                                                  Icons.check_circle,
-                                                  color: buttonColor,
-                                                ),
-                                              )
-                                        : SizedBox(),
-                                    Expanded(
-                                      child: ListTile(
-                                        leading: controller.idsOfUserStories
-                                                .contains(
-                                                    '${controller.listofChat[index].userId}')
-                                            ? CircularProfileAvatar(
-                                                '',
-                                                radius: 29,
-                                                borderWidth: 2,
-                                                borderColor: buttonColor,
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      "${controller.listofChat[index].avatar!}",
-                                                  placeholder: (context, url) =>
-                                                      CircularProgressIndicator(),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                onTap: listOfSelectedMember
-                                                        .isNotEmpty
-                                                    ? null
-                                                    : () {
-                                                        if (listOfSelectedMember
-                                                            .isEmpty) {
-                                                          int i = controller
-                                                              .idsOfUserStories
-                                                              .indexWhere(
-                                                                  (element) =>
-                                                                      element ==
-                                                                      '${controller.listofChat[index].userId}');
-                                                          context
-                                                              .pushTransparentRoute(
-                                                                  StoryViewPage(
-                                                            userStories:
-                                                                controller
-                                                                    .storyList[i],
-                                                            socket: controller
-                                                                .socket,
-                                                          ))
-                                                              .then(
-                                                                  (value) async {
-                                                            await controller
-                                                                .getChatList();
-                                                            controller
-                                                                .connectToSocket();
-                                                            setState(() {});
-                                                          });
-                                                        }
-                                                      },
-                                                imageFit: BoxFit.cover,
-                                              )
-                                            : CircularProfileAvatar(
-                                                '',
-                                                radius: 29,
-                                                child: CachedNetworkImage(
-                                                  imageUrl:
-                                                      "${controller.listofChat[index].avatar!}",
-                                                  placeholder: (context, url) =>
-                                                      CircularProgressIndicator(),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                onTap: listOfSelectedMember
-                                                        .isNotEmpty
-                                                    ? null
-                                                    : () {
-                                                        if (listOfSelectedMember
-                                                            .isEmpty) {
-                                                          Get.to(
-                                                              Photo_View_Class(
-                                                            url:
-                                                                "${controller.listofChat[index].avatar!}",
-                                                          ));
-                                                        }
-                                                      },
-                                                imageFit: BoxFit.cover,
-                                              ),
-                                        title: Text(
-                                          "${controller.listofChat[index].name!}",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontFamily: AppFonts.segoeui,
-                                              fontSize: 16),
-                                        ),
-                                        subtitle: Text(
-                                          controller.listofChat[index]
-                                                      .lastMessage!.type ==
-                                                  'text'
-                                              ? "${controller.listofChat[index].lastMessage!.text}"
-                                              : '${controller.listofChat[index].lastMessage!.type}',
-                                          style: TextStyle(
-                                              color: Color(0XFF373737),
-                                              fontFamily: AppFonts.segoeui,
-                                              fontSize: 12),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        trailing: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            "${controller.listofChat[index].messageCount}" ==
-                                                    '0'
-                                                ? SizedBox()
-                                                : Container(
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.green),
-                                                    child: Text(
-                                                      "${controller.listofChat[index].messageCount}",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 10,
-                                                          fontFamily:
-                                                              AppFonts.segoeui),
-                                                    ),
-                                                    padding: EdgeInsets.all(5),
+                                  },
+                                  child: Row(
+                                    children: [
+                                      listOfSelectedMember.isNotEmpty
+                                          ? !listOfSelectedMember.contains(
+                                                  controller.listofChat[index])
+                                              ? Container(
+                                                  height: 20,
+                                                  width: 20,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      border: Border.all(
+                                                          width: 1,
+                                                          color: buttonColor)),
+                                                )
+                                              : Container(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child: Icon(
+                                                    Icons.check_circle,
+                                                    color: buttonColor,
                                                   ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              //'${timeago.format(DateTime.parse("${controller.listofMember[index].lastActive}"), locale: 'en_short')} ago',
-                                              //"${controller.listofChat.value.data![index].lastMessage!.timeText}",
-                                              '${dateFormat.format(date)}',
-                                              style: TextStyle(
-                                                  color: Color(0XFF373737),
-                                                  fontSize: 10,
-                                                  fontFamily: AppFonts.segoeui),
-                                            )
-                                          ],
+                                                )
+                                          : SizedBox(),
+                                      Expanded(
+                                        child: ListTile(
+                                          leading: controller.idsOfUserStories
+                                                  .contains(
+                                                      '${controller.listofChat[index].userId}')
+                                              ? CircularProfileAvatar(
+                                                  '',
+                                                  radius: 29,
+                                                  borderWidth: 2,
+                                                  borderColor: buttonColor,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        "${controller.listofChat[index].avatar!}",
+                                                    placeholder: (context, url) =>
+                                                        CircularProgressIndicator(),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  onTap: listOfSelectedMember
+                                                          .isNotEmpty
+                                                      ? null
+                                                      : () {
+                                                          if (listOfSelectedMember
+                                                              .isEmpty) {
+                                                            int i = controller
+                                                                .idsOfUserStories
+                                                                .indexWhere(
+                                                                    (element) =>
+                                                                        element ==
+                                                                        '${controller.listofChat[index].userId}');
+                                                            context
+                                                                .pushTransparentRoute(
+                                                                    StoryViewPage(
+                                                              userStories:
+                                                                  controller
+                                                                      .storyList[i],
+                                                              socket: controller
+                                                                  .socket,
+                                                            ))
+                                                                .then(
+                                                                    (value) async {
+                                                              await controller
+                                                                  .getChatList();
+                                                              controller
+                                                                  .connectToSocket();
+                                                              setState(() {});
+                                                            });
+                                                          }
+                                                        },
+                                                  imageFit: BoxFit.cover,
+                                                )
+                                              : CircularProfileAvatar(
+                                                  '',
+                                                  radius: 29,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        "${controller.listofChat[index].avatar!}",
+                                                    placeholder: (context, url) =>
+                                                        CircularProgressIndicator(),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  onTap: listOfSelectedMember
+                                                          .isNotEmpty
+                                                      ? null
+                                                      : () {
+                                                          if (listOfSelectedMember
+                                                              .isEmpty) {
+                                                            Get.to(
+                                                                Photo_View_Class(
+                                                              url:
+                                                                  "${controller.listofChat[index].avatar!}",
+                                                            ));
+                                                          }
+                                                        },
+                                                  imageFit: BoxFit.cover,
+                                                ),
+                                          title: Text(
+                                            "${controller.listofChat[index].name!}",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontFamily: AppFonts.segoeui,
+                                                fontSize: 16),
+                                          ),
+                                          subtitle: Text(
+                                            controller.listofChat[index]
+                                                        .lastMessage!.type ==
+                                                    'text'
+                                                ? "${controller.listofChat[index].lastMessage!.text}"
+                                                : '${controller.listofChat[index].lastMessage!.type}',
+                                            style: TextStyle(
+                                                color: Color(0XFF373737),
+                                                fontFamily: AppFonts.segoeui,
+                                                fontSize: 12),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          trailing: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              "${controller.listofChat[index].messageCount}" ==
+                                                      '0'
+                                                  ? SizedBox()
+                                                  : Container(
+                                                      decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color: Colors.green),
+                                                      child: Text(
+                                                        "${controller.listofChat[index].messageCount}",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 10,
+                                                            fontFamily:
+                                                                AppFonts.segoeui),
+                                                      ),
+                                                      padding: EdgeInsets.all(5),
+                                                    ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                //'${timeago.format(DateTime.parse("${controller.listofMember[index].lastActive}"), locale: 'en_short')} ago',
+                                                //"${controller.listofChat.value.data![index].lastMessage!.timeText}",
+                                                '${dateFormat.format(date)}',
+                                                style: TextStyle(
+                                                    color: Color(0XFF373737),
+                                                    fontSize: 10,
+                                                    fontFamily: AppFonts.segoeui),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                height: 1,
-                                color: Colors.black12,
-                                margin: EdgeInsets.only(
-                                    left: width * 0.23,
-                                    right: width * 0.040,
-                                    bottom: height * 0.018),
-                              ),
-                            ],
-                          ),
-                        );
-                      }, childCount: controller.listofChat.length)),
-              )
-            ],
+                                Container(
+                                  height: 1,
+                                  color: Colors.black12,
+                                  margin: EdgeInsets.only(
+                                      left: width * 0.23,
+                                      right: width * 0.040,
+                                      bottom: height * 0.018),
+                                ),
+                              ],
+                            ),
+                          );
+                        }, childCount: controller.listofChat.length)),
+                )
+              ],
+            ),
           ),
           Obx(() => controller.isLoading.value == true
               ? InkWell(

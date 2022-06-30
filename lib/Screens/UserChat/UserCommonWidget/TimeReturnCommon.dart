@@ -19,7 +19,7 @@ class _TimeRetuernCommonState extends State<TimeRetuernCommon> {
   Widget build(BuildContext context) {
     var date = DateTime.fromMillisecondsSinceEpoch(int.parse("${widget.model!.time}") * 1000);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Padding(
           padding: EdgeInsets.only(left: width / 50),

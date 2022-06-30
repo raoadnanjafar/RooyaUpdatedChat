@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rooya/ApiConfig/SizeConfiq.dart';
+import 'package:rooya/GlobalWidget/Contacts/ContactView.dart';
 import 'package:rooya/Models/UserChatModel.dart';
 import 'package:rooya/Screens/Information/UserChatInformation/user_chat_information.dart';
 import 'package:rooya/Utils/UserDataService.dart';
@@ -61,7 +62,11 @@ class _TextUserChatState extends State<TextUserChat> {
                           height: height * 0.3,
                           width: width * 0.5,
                           child: widget.model!.story == null
-                              ? SizedBox()
+                              ? Container(
+                            height: height * 0.3,
+                            width: width * 0.5,
+                            color: Colors.black.withOpacity(0.5),
+                          )
                               : Image.network(
                             '${widget.model!.story!.thumbnail}',
                             fit: BoxFit.cover,
@@ -77,7 +82,7 @@ class _TextUserChatState extends State<TextUserChat> {
                         Positioned(
                             top: 120,
                             left: 50,
-                            child: Text(
+                            child: widget.model!.story == null? Text('Expire Story',style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),):Text(
                               'View Story',
                               style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                             )),
@@ -99,9 +104,9 @@ class _TextUserChatState extends State<TextUserChat> {
                               style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
                             ),
                           ),
-                          SizedBox(
-                            height: height / 100,
-                          ),
+                          // SizedBox(
+                          //   height: height / 100,
+                          // ),
                           TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
                         ],
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,9 +144,9 @@ class _TextUserChatState extends State<TextUserChat> {
                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.w300, fontFamily: AppFonts.segoeui, fontSize: 14),
                     ),
                   ),
-                  SizedBox(
-                    height: height / 100,
-                  ),
+                  // SizedBox(
+                  //   height: height / 100,
+                  // ),
                   TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,9 +233,9 @@ class _TextUserChatState extends State<TextUserChat> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: height / 100,
-                    ),
+                    // SizedBox(
+                    //   height: height / 100,
+                    // ),
                     TimeRetuernCommon(fromGroup: widget.fromGroup, model: widget.model)
                   ],
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -362,11 +367,11 @@ class _TextUserChatState extends State<TextUserChat> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: height / 100,
-                      ),
+                      // SizedBox(
+                      //   height: height / 100,
+                      // ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(left: width / 50),
@@ -504,11 +509,11 @@ class _TextUserChatState extends State<TextUserChat> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
+                        // SizedBox(
+                        //   height: height / 100,
+                        // ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.only(left: width / 50),
@@ -639,11 +644,11 @@ class _TextUserChatState extends State<TextUserChat> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            height: height / 100,
-                          ),
+                          // SizedBox(
+                          //   height: height / 100,
+                          // ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(left: width / 50),
@@ -858,75 +863,78 @@ class _TextUserChatState extends State<TextUserChat> {
                                         ) ),
                                   ],
                                 ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: height * 0.010, horizontal: width * 0.030),
-                                  decoration: BoxDecoration(
-                                      color: widget.model!.seen != '0'
-                                          ? returnColorFromString(seenBackColor)
-                                          : widget.model!.delivered != '0'
-                                          ? returnColorFromString(receiveBackColor)
-                                          : returnColorFromString(sentBackColor),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Column(
-                                    children: [
-                                      // Text(
-                                      //   '${widget.model!.text}',
-                                      //   style: TextStyle(
-                                      //       color: widget.model!.seen != '0'
-                                      //           ? returnColorFromString(seenTextColor)
-                                      //           : widget.model!.delivered != '0'
-                                      //               ? returnColorFromString(receiveTextColor)
-                                      //               : returnColorFromString(sentTextColor),
-                                      //       fontWeight: FontWeight.w300,
-                                      //       fontFamily: AppFonts.segoeui,
-                                      //       fontSize: 14),
-                                      // ),
-                                      TextReplyCommon(model: widget.model, fromGroup: widget.fromGroup),
-                                      SizedBox(
-                                        height: height / 100,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(left: width / 50),
-                                            child: Text(
-                                              '${dateFormat.format(date)}',
-                                              style: TextStyle(
-                                                color: widget.model!.seen != '0'
-                                                    ? returnColorFromString(seenTimeColor)
-                                                    : widget.model!.delivered != '0'
-                                                    ? returnColorFromString(receiveTimeColor)
-                                                    : returnColorFromString(sentTimeColor),
-                                                fontFamily: AppFonts.segoeui,
-                                                fontSize: 9.0,
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(maxWidth: width*0.60),
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: height * 0.010, horizontal: width * 0.030),
+                                    decoration: BoxDecoration(
+                                        color: widget.model!.seen != '0'
+                                            ? returnColorFromString(seenBackColor)
+                                            : widget.model!.delivered != '0'
+                                            ? returnColorFromString(receiveBackColor)
+                                            : returnColorFromString(sentBackColor),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    child: Column(
+                                      children: [
+                                        // Text(
+                                        //   '${widget.model!.text}',
+                                        //   style: TextStyle(
+                                        //       color: widget.model!.seen != '0'
+                                        //           ? returnColorFromString(seenTextColor)
+                                        //           : widget.model!.delivered != '0'
+                                        //               ? returnColorFromString(receiveTextColor)
+                                        //               : returnColorFromString(sentTextColor),
+                                        //       fontWeight: FontWeight.w300,
+                                        //       fontFamily: AppFonts.segoeui,
+                                        //       fontSize: 14),
+                                        // ),
+                                        TextReplyCommon(model: widget.model, fromGroup: widget.fromGroup),
+                                        // SizedBox(
+                                        //   height: height*0.001,
+                                        // ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(left: width / 50),
+                                              child: Text(
+                                                '${dateFormat.format(date)}',
+                                                style: TextStyle(
+                                                  color: widget.model!.seen != '0'
+                                                      ? returnColorFromString(seenTimeColor)
+                                                      : widget.model!.delivered != '0'
+                                                      ? returnColorFromString(receiveTimeColor)
+                                                      : returnColorFromString(sentTimeColor),
+                                                  fontFamily: AppFonts.segoeui,
+                                                  fontSize: 9.0,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: 3,
-                                          ),
-                                          widget.model!.seen != '0'
-                                              ? FaIcon(
-                                            FontAwesomeIcons.checkDouble,
-                                            size: 15,
-                                            color: returnColorFromString(seenCheck),
-                                          )
-                                              : widget.model!.delivered != '0'
-                                              ? FaIcon(
-                                            FontAwesomeIcons.checkDouble,
-                                            size: 15,
-                                            color: returnColorFromString(receiveCheck),
-                                          )
-                                              : FaIcon(
-                                            FontAwesomeIcons.check,
-                                            size: 15,
-                                            color: returnColorFromString(sentCheck),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                            SizedBox(
+                                              width: 3,
+                                            ),
+                                            widget.model!.seen != '0'
+                                                ? FaIcon(
+                                              FontAwesomeIcons.checkDouble,
+                                              size: 15,
+                                              color: returnColorFromString(seenCheck),
+                                            )
+                                                : widget.model!.delivered != '0'
+                                                ? FaIcon(
+                                              FontAwesomeIcons.checkDouble,
+                                              size: 15,
+                                              color: returnColorFromString(receiveCheck),
+                                            )
+                                                : FaIcon(
+                                              FontAwesomeIcons.check,
+                                              size: 15,
+                                              color: returnColorFromString(sentCheck),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    ),
                                   ),
                                 )
                               ]
@@ -938,39 +946,39 @@ class _TextUserChatState extends State<TextUserChat> {
               );
       }
       if (widget.model!.replyId == '0') {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: height * 0.010, horizontal: width * 0.030),
-          decoration: BoxDecoration(
-              color: widget.model!.seen != '0'
-                  ? returnColorFromString(seenBackColor)
-                  : widget.model!.delivered != '0'
-                      ? returnColorFromString(receiveBackColor)
-                      : returnColorFromString(sentBackColor),
-              borderRadius: BorderRadius.circular(8)),
-          child: Column(
-            children: [
-              // Text(
-              //   '${widget.model!.text}',
-              //   style: TextStyle(
-              //       color: widget.model!.seen != '0'
-              //           ? returnColorFromString(seenTextColor)
-              //           : widget.model!.delivered != '0'
-              //               ? returnColorFromString(receiveTextColor)
-              //               : returnColorFromString(sentTextColor),
-              //       fontWeight: FontWeight.w300,
-              //       fontFamily: AppFonts.segoeui,
-              //       fontSize: 14),
-              // ),
-              TextReplyCommon(model: widget.model, fromGroup: widget.fromGroup),
-              SizedBox(
-                height: height / 100,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: width / 50),
-                    child: Text(
+        return ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: width*0.60),
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: height * 0.010, horizontal: width * 0.030),
+            decoration: BoxDecoration(
+                color: widget.model!.seen != '0'
+                    ? returnColorFromString(seenBackColor)
+                    : widget.model!.delivered != '0'
+                        ? returnColorFromString(receiveBackColor)
+                        : returnColorFromString(sentBackColor),
+                borderRadius: BorderRadius.circular(8)),
+            child: Column(
+              children: [
+                // Text(
+                //   '${widget.model!.text}',
+                //   style: TextStyle(
+                //       color: widget.model!.seen != '0'
+                //           ? returnColorFromString(seenTextColor)
+                //           : widget.model!.delivered != '0'
+                //               ? returnColorFromString(receiveTextColor)
+                //               : returnColorFromString(sentTextColor),
+                //       fontWeight: FontWeight.w300,
+                //       fontFamily: AppFonts.segoeui,
+                //       fontSize: 14),
+                // ),
+                TextReplyCommon(model: widget.model, fromGroup: widget.fromGroup),
+                // SizedBox(
+                //   height: height / 100,
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
                       '${dateFormat.format(date)}',
                       style: TextStyle(
                         color: widget.model!.seen != '0'
@@ -982,31 +990,31 @@ class _TextUserChatState extends State<TextUserChat> {
                         fontSize: 9.0,
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 3,
-                  ),
-                  widget.model!.seen != '0'
-                      ? FaIcon(
-                          FontAwesomeIcons.checkDouble,
-                          size: 15,
-                          color: returnColorFromString(seenCheck),
-                        )
-                      : widget.model!.delivered != '0'
-                          ? FaIcon(
-                              FontAwesomeIcons.checkDouble,
-                              size: 15,
-                              color: returnColorFromString(receiveCheck),
-                            )
-                          : FaIcon(
-                              FontAwesomeIcons.check,
-                              size: 15,
-                              color: returnColorFromString(sentCheck),
-                            ),
-                ],
-              )
-            ],
-            crossAxisAlignment: CrossAxisAlignment.start,
+                    SizedBox(
+                      width: 3,
+                    ),
+                    widget.model!.seen != '0'
+                        ? FaIcon(
+                            FontAwesomeIcons.checkDouble,
+                            size: 15,
+                            color: returnColorFromString(seenCheck),
+                          )
+                        : widget.model!.delivered != '0'
+                            ? FaIcon(
+                                FontAwesomeIcons.checkDouble,
+                                size: 15,
+                                color: returnColorFromString(receiveCheck),
+                              )
+                            : FaIcon(
+                                FontAwesomeIcons.check,
+                                size: 15,
+                                color: returnColorFromString(sentCheck),
+                              ),
+                  ],
+                )
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
           ),
         );
       } else {
@@ -1070,68 +1078,71 @@ class _TextUserChatState extends State<TextUserChat> {
                         ),
                       ]),
                     ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${widget.model!.text}',
-                            style: TextStyle(
-                                color: widget.model!.seen != '0'
-                                    ? returnColorFromString(seenTextColor)
-                                    : widget.model!.delivered != '0'
-                                        ? returnColorFromString(receiveTextColor)
-                                        : returnColorFromString(sentTextColor),
-                                fontWeight: FontWeight.w300,
-                                fontFamily: AppFonts.segoeui,
-                                fontSize: 14),
-                          ),
-                          SizedBox(
-                            height: height / 100,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(left: width / 50),
-                                child: Text(
-                                  '${dateFormat.format(date)}',
-                                  style: TextStyle(
-                                    color: widget.model!.seen != '0'
-                                        ? returnColorFromString(seenTimeColor)
-                                        : widget.model!.delivered != '0'
-                                            ? returnColorFromString(receiveTimeColor)
-                                            : returnColorFromString(sentTimeColor),
-                                    fontFamily: AppFonts.segoeui,
-                                    fontSize: 9.0,
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: width*0.60),
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${widget.model!.text}',
+                              style: TextStyle(
+                                  color: widget.model!.seen != '0'
+                                      ? returnColorFromString(seenTextColor)
+                                      : widget.model!.delivered != '0'
+                                          ? returnColorFromString(receiveTextColor)
+                                          : returnColorFromString(sentTextColor),
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: AppFonts.segoeui,
+                                  fontSize: 14),
+                            ),
+                            // SizedBox(
+                            //   height: height / 100,
+                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(left: width / 50),
+                                  child: Text(
+                                    '${dateFormat.format(date)}',
+                                    style: TextStyle(
+                                      color: widget.model!.seen != '0'
+                                          ? returnColorFromString(seenTimeColor)
+                                          : widget.model!.delivered != '0'
+                                              ? returnColorFromString(receiveTimeColor)
+                                              : returnColorFromString(sentTimeColor),
+                                      fontFamily: AppFonts.segoeui,
+                                      fontSize: 9.0,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 3,
-                              ),
-                              widget.model!.seen != '0'
-                                  ? FaIcon(
-                                      FontAwesomeIcons.checkDouble,
-                                      size: 15,
-                                      color: returnColorFromString(seenCheck),
-                                    )
-                                  : widget.model!.delivered != '0'
-                                      ? FaIcon(
-                                          FontAwesomeIcons.checkDouble,
-                                          size: 15,
-                                          color: returnColorFromString(receiveCheck),
-                                        )
-                                      : FaIcon(
-                                          FontAwesomeIcons.check,
-                                          size: 15,
-                                          color: returnColorFromString(sentCheck),
-                                        ),
-                            ],
-                          )
-                        ],
+                                SizedBox(
+                                  width: 3,
+                                ),
+                                widget.model!.seen != '0'
+                                    ? FaIcon(
+                                        FontAwesomeIcons.checkDouble,
+                                        size: 15,
+                                        color: returnColorFromString(seenCheck),
+                                      )
+                                    : widget.model!.delivered != '0'
+                                        ? FaIcon(
+                                            FontAwesomeIcons.checkDouble,
+                                            size: 15,
+                                            color: returnColorFromString(receiveCheck),
+                                          )
+                                        : FaIcon(
+                                            FontAwesomeIcons.check,
+                                            size: 15,
+                                            color: returnColorFromString(sentCheck),
+                                          ),
+                              ],
+                            )
+                          ],
+                        ),
+                        padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                       ),
-                      padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                     ),
                   ],
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1191,68 +1202,71 @@ class _TextUserChatState extends State<TextUserChat> {
                           ),
                         ]),
                       ),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${widget.model!.text}',
-                              style: TextStyle(
-                                  color: widget.model!.seen != '0'
-                                      ? returnColorFromString(seenTextColor)
-                                      : widget.model!.delivered != '0'
-                                          ? returnColorFromString(receiveTextColor)
-                                          : returnColorFromString(sentTextColor),
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 14),
-                            ),
-                            SizedBox(
-                              height: height / 100,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(left: width / 50),
-                                  child: Text(
-                                    '${dateFormat.format(date)}',
-                                    style: TextStyle(
-                                      color: widget.model!.seen != '0'
-                                          ? returnColorFromString(seenTimeColor)
-                                          : widget.model!.delivered != '0'
-                                              ? returnColorFromString(receiveTimeColor)
-                                              : returnColorFromString(sentTimeColor),
-                                      fontFamily: AppFonts.segoeui,
-                                      fontSize: 9.0,
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: width*0.60),
+                        child: Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${widget.model!.text}',
+                                style: TextStyle(
+                                    color: widget.model!.seen != '0'
+                                        ? returnColorFromString(seenTextColor)
+                                        : widget.model!.delivered != '0'
+                                            ? returnColorFromString(receiveTextColor)
+                                            : returnColorFromString(sentTextColor),
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: AppFonts.segoeui,
+                                    fontSize: 14),
+                              ),
+                              // SizedBox(
+                              //   height: height / 100,
+                              // ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(left: width / 50),
+                                    child: Text(
+                                      '${dateFormat.format(date)}',
+                                      style: TextStyle(
+                                        color: widget.model!.seen != '0'
+                                            ? returnColorFromString(seenTimeColor)
+                                            : widget.model!.delivered != '0'
+                                                ? returnColorFromString(receiveTimeColor)
+                                                : returnColorFromString(sentTimeColor),
+                                        fontFamily: AppFonts.segoeui,
+                                        fontSize: 9.0,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 3,
-                                ),
-                                widget.model!.seen != '0'
-                                    ? FaIcon(
-                                        FontAwesomeIcons.checkDouble,
-                                        size: 15,
-                                        color: returnColorFromString(seenCheck),
-                                      )
-                                    : widget.model!.delivered != '0'
-                                        ? FaIcon(
-                                            FontAwesomeIcons.checkDouble,
-                                            size: 15,
-                                            color: returnColorFromString(receiveCheck),
-                                          )
-                                        : FaIcon(
-                                            FontAwesomeIcons.check,
-                                            size: 15,
-                                            color: returnColorFromString(sentCheck),
-                                          ),
-                              ],
-                            )
-                          ],
+                                  SizedBox(
+                                    width: 3,
+                                  ),
+                                  widget.model!.seen != '0'
+                                      ? FaIcon(
+                                          FontAwesomeIcons.checkDouble,
+                                          size: 15,
+                                          color: returnColorFromString(seenCheck),
+                                        )
+                                      : widget.model!.delivered != '0'
+                                          ? FaIcon(
+                                              FontAwesomeIcons.checkDouble,
+                                              size: 15,
+                                              color: returnColorFromString(receiveCheck),
+                                            )
+                                          : FaIcon(
+                                              FontAwesomeIcons.check,
+                                              size: 15,
+                                              color: returnColorFromString(sentCheck),
+                                            ),
+                                ],
+                              )
+                            ],
+                          ),
+                          padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                         ),
-                        padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                       ),
                     ],
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1326,68 +1340,71 @@ class _TextUserChatState extends State<TextUserChat> {
                             ),
                           ]),
                         ),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${widget.model!.text}',
-                                style: TextStyle(
-                                    color: widget.model!.seen != '0'
-                                        ? returnColorFromString(seenTextColor)
-                                        : widget.model!.delivered != '0'
-                                            ? returnColorFromString(receiveTextColor)
-                                            : returnColorFromString(sentTextColor),
-                                    fontWeight: FontWeight.w300,
-                                    fontFamily: AppFonts.segoeui,
-                                    fontSize: 14),
-                              ),
-                              SizedBox(
-                                height: height / 100,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(left: width / 50),
-                                    child: Text(
-                                      '${dateFormat.format(date)}',
-                                      style: TextStyle(
-                                        color: widget.model!.seen != '0'
-                                            ? returnColorFromString(seenTimeColor)
-                                            : widget.model!.delivered != '0'
-                                                ? returnColorFromString(receiveTimeColor)
-                                                : returnColorFromString(sentTimeColor),
-                                        fontFamily: AppFonts.segoeui,
-                                        fontSize: 9.0,
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: width*0.60),
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${widget.model!.text}',
+                                  style: TextStyle(
+                                      color: widget.model!.seen != '0'
+                                          ? returnColorFromString(seenTextColor)
+                                          : widget.model!.delivered != '0'
+                                              ? returnColorFromString(receiveTextColor)
+                                              : returnColorFromString(sentTextColor),
+                                      fontWeight: FontWeight.w300,
+                                      fontFamily: AppFonts.segoeui,
+                                      fontSize: 14),
+                                ),
+                                // SizedBox(
+                                //   height: height / 100,
+                                // ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(left: width / 50),
+                                      child: Text(
+                                        '${dateFormat.format(date)}',
+                                        style: TextStyle(
+                                          color: widget.model!.seen != '0'
+                                              ? returnColorFromString(seenTimeColor)
+                                              : widget.model!.delivered != '0'
+                                                  ? returnColorFromString(receiveTimeColor)
+                                                  : returnColorFromString(sentTimeColor),
+                                          fontFamily: AppFonts.segoeui,
+                                          fontSize: 9.0,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 3,
-                                  ),
-                                  widget.model!.seen != '0'
-                                      ? FaIcon(
-                                          FontAwesomeIcons.checkDouble,
-                                          size: 15,
-                                          color: returnColorFromString(seenCheck),
-                                        )
-                                      : widget.model!.delivered != '0'
-                                          ? FaIcon(
-                                              FontAwesomeIcons.checkDouble,
-                                              size: 15,
-                                              color: returnColorFromString(receiveCheck),
-                                            )
-                                          : FaIcon(
-                                              FontAwesomeIcons.check,
-                                              size: 15,
-                                              color: returnColorFromString(sentCheck),
-                                            ),
-                                ],
-                              )
-                            ],
+                                    SizedBox(
+                                      width: 3,
+                                    ),
+                                    widget.model!.seen != '0'
+                                        ? FaIcon(
+                                            FontAwesomeIcons.checkDouble,
+                                            size: 15,
+                                            color: returnColorFromString(seenCheck),
+                                          )
+                                        : widget.model!.delivered != '0'
+                                            ? FaIcon(
+                                                FontAwesomeIcons.checkDouble,
+                                                size: 15,
+                                                color: returnColorFromString(receiveCheck),
+                                              )
+                                            : FaIcon(
+                                                FontAwesomeIcons.check,
+                                                size: 15,
+                                                color: returnColorFromString(sentCheck),
+                                              ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                           ),
-                          padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                         ),
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1440,68 +1457,71 @@ class _TextUserChatState extends State<TextUserChat> {
                               ),
                             ]),
                           ),
-                          Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${widget.model!.text}',
-                                  style: TextStyle(
-                                      color: widget.model!.seen != '0'
-                                          ? returnColorFromString(seenTextColor)
-                                          : widget.model!.delivered != '0'
-                                              ? returnColorFromString(receiveTextColor)
-                                              : returnColorFromString(sentTextColor),
-                                      fontWeight: FontWeight.w300,
-                                      fontFamily: AppFonts.segoeui,
-                                      fontSize: 14),
-                                ),
-                                SizedBox(
-                                  height: height / 100,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.only(left: width / 50),
-                                      child: Text(
-                                        '${dateFormat.format(date)}',
-                                        style: TextStyle(
-                                          color: widget.model!.seen != '0'
-                                              ? returnColorFromString(seenTimeColor)
-                                              : widget.model!.delivered != '0'
-                                                  ? returnColorFromString(receiveTimeColor)
-                                                  : returnColorFromString(sentTimeColor),
-                                          fontFamily: AppFonts.segoeui,
-                                          fontSize: 9.0,
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: width*0.60),
+                            child: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${widget.model!.text}',
+                                    style: TextStyle(
+                                        color: widget.model!.seen != '0'
+                                            ? returnColorFromString(seenTextColor)
+                                            : widget.model!.delivered != '0'
+                                                ? returnColorFromString(receiveTextColor)
+                                                : returnColorFromString(sentTextColor),
+                                        fontWeight: FontWeight.w300,
+                                        fontFamily: AppFonts.segoeui,
+                                        fontSize: 14),
+                                  ),
+                                  // SizedBox(
+                                  //   height: height / 100,
+                                  // ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(left: width / 50),
+                                        child: Text(
+                                          '${dateFormat.format(date)}',
+                                          style: TextStyle(
+                                            color: widget.model!.seen != '0'
+                                                ? returnColorFromString(seenTimeColor)
+                                                : widget.model!.delivered != '0'
+                                                    ? returnColorFromString(receiveTimeColor)
+                                                    : returnColorFromString(sentTimeColor),
+                                            fontFamily: AppFonts.segoeui,
+                                            fontSize: 9.0,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 3,
-                                    ),
-                                    widget.model!.seen != '0'
-                                        ? FaIcon(
-                                            FontAwesomeIcons.checkDouble,
-                                            size: 15,
-                                            color: returnColorFromString(seenCheck),
-                                          )
-                                        : widget.model!.delivered != '0'
-                                            ? FaIcon(
-                                                FontAwesomeIcons.checkDouble,
-                                                size: 15,
-                                                color: returnColorFromString(receiveCheck),
-                                              )
-                                            : FaIcon(
-                                                FontAwesomeIcons.check,
-                                                size: 15,
-                                                color: returnColorFromString(sentCheck),
-                                              ),
-                                  ],
-                                )
-                              ],
+                                      SizedBox(
+                                        width: 3,
+                                      ),
+                                      widget.model!.seen != '0'
+                                          ? FaIcon(
+                                              FontAwesomeIcons.checkDouble,
+                                              size: 15,
+                                              color: returnColorFromString(seenCheck),
+                                            )
+                                          : widget.model!.delivered != '0'
+                                              ? FaIcon(
+                                                  FontAwesomeIcons.checkDouble,
+                                                  size: 15,
+                                                  color: returnColorFromString(receiveCheck),
+                                                )
+                                              : FaIcon(
+                                                  FontAwesomeIcons.check,
+                                                  size: 15,
+                                                  color: returnColorFromString(sentCheck),
+                                                ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                             ),
-                            padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                           ),
                         ],
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1558,68 +1578,71 @@ class _TextUserChatState extends State<TextUserChat> {
                       )
                     ]),
                   ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${widget.model!.text}',
-                          style: TextStyle(
-                              color: widget.model!.seen != '0'
-                                  ? returnColorFromString(seenTextColor)
-                                  : widget.model!.delivered != '0'
-                                      ? returnColorFromString(receiveTextColor)
-                                      : returnColorFromString(sentTextColor),
-                              fontWeight: FontWeight.w300,
-                              fontFamily: AppFonts.segoeui,
-                              fontSize: 14),
-                        ),
-                        SizedBox(
-                          height: height / 100,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(left: width / 50),
-                              child: Text(
-                                '${dateFormat.format(date)}',
-                                style: TextStyle(
-                                  color: widget.model!.seen != '0'
-                                      ? returnColorFromString(seenTimeColor)
-                                      : widget.model!.delivered != '0'
-                                          ? returnColorFromString(receiveTimeColor)
-                                          : returnColorFromString(sentTimeColor),
-                                  fontFamily: AppFonts.segoeui,
-                                  fontSize: 9.0,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: width*0.60),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${widget.model!.text}',
+                            style: TextStyle(
+                                color: widget.model!.seen != '0'
+                                    ? returnColorFromString(seenTextColor)
+                                    : widget.model!.delivered != '0'
+                                        ? returnColorFromString(receiveTextColor)
+                                        : returnColorFromString(sentTextColor),
+                                fontWeight: FontWeight.w300,
+                                fontFamily: AppFonts.segoeui,
+                                fontSize: 14),
+                          ),
+                          // SizedBox(
+                          //   height: height / 100,
+                          // ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(left: width / 50),
+                                child: Text(
+                                  '${dateFormat.format(date)}',
+                                  style: TextStyle(
+                                    color: widget.model!.seen != '0'
+                                        ? returnColorFromString(seenTimeColor)
+                                        : widget.model!.delivered != '0'
+                                            ? returnColorFromString(receiveTimeColor)
+                                            : returnColorFromString(sentTimeColor),
+                                    fontFamily: AppFonts.segoeui,
+                                    fontSize: 9.0,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 3,
-                            ),
-                            widget.model!.seen != '0'
-                                ? FaIcon(
-                                    FontAwesomeIcons.checkDouble,
-                                    size: 15,
-                                    color: returnColorFromString(seenCheck),
-                                  )
-                                : widget.model!.delivered != '0'
-                                    ? FaIcon(
-                                        FontAwesomeIcons.checkDouble,
-                                        size: 15,
-                                        color: returnColorFromString(receiveCheck),
-                                      )
-                                    : FaIcon(
-                                        FontAwesomeIcons.check,
-                                        size: 15,
-                                        color: returnColorFromString(sentCheck),
-                                      ),
-                          ],
-                        )
-                      ],
+                              SizedBox(
+                                width: 3,
+                              ),
+                              widget.model!.seen != '0'
+                                  ? FaIcon(
+                                      FontAwesomeIcons.checkDouble,
+                                      size: 15,
+                                      color: returnColorFromString(seenCheck),
+                                    )
+                                  : widget.model!.delivered != '0'
+                                      ? FaIcon(
+                                          FontAwesomeIcons.checkDouble,
+                                          size: 15,
+                                          color: returnColorFromString(receiveCheck),
+                                        )
+                                      : FaIcon(
+                                          FontAwesomeIcons.check,
+                                          size: 15,
+                                          color: returnColorFromString(sentCheck),
+                                        ),
+                            ],
+                          )
+                        ],
+                      ),
+                      padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                     ),
-                    padding: EdgeInsets.only(left: width * 0.030, bottom: height * 0.010, right: width * 0.030, top: height * 0.0050),
                   ),
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,

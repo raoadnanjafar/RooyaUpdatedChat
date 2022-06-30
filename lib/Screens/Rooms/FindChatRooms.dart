@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -237,7 +238,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
             Row(
               children: [
                 Container(
-                  height: 55,
+                  height: 40,
                   width: width*0.82,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
@@ -247,9 +248,11 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                       textEditingController: locationController,
                       googleAPIKey: "$google_map_api_key",
                       inputDecoration: InputDecoration(
+                        //isDense: true,
+                          isCollapsed: true,
                           hintText: 'Select location',
                           hintStyle: TextStyle(fontSize: 13, fontFamily: AppFonts.segoeui),
-                          contentPadding: EdgeInsets.only(left: 8),
+                          contentPadding: EdgeInsets.only(left: 8,top: 8),
                           border: InputBorder.none),
                       getPlaceDetailWithLatLng: (Prediction prediction) async {
                         lat = double.parse(prediction.lat!);
@@ -287,6 +290,7 @@ class _FindChatRoomsState extends State<FindChatRooms> {
                   // decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.green),
                   child: PopupMenuButton(
                     iconSize: 30,
+                    icon: Icon(CupertinoIcons.ellipsis),
                     itemBuilder: (context) => [
                       PopupMenuItem(
                           value: selectedFilter,

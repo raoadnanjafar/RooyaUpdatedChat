@@ -80,7 +80,7 @@ class _GroupInformationState extends State<GroupInformation> {
                         ),
                         actions: [
                           Visibility(
-                            visible: groupModel.userData!.admin == '1'
+                            visible: groupModel.userData!.admin == '0'
                                 ? false
                                 : true,
                             child: Container(
@@ -98,7 +98,7 @@ class _GroupInformationState extends State<GroupInformation> {
                             ),
                           ),
                           Visibility(
-                            visible: groupModel.userData!.admin == '1'
+                            visible: groupModel.userData!.admin == '0'
                                 ? false
                                 : true,
                             child: Container(
@@ -630,7 +630,7 @@ class _GroupInformationState extends State<GroupInformation> {
                                                   title: Text("Info"),
                                                   onPressed: () {}),
                                             ]
-                                          : groupModel.owner!
+                                          : groupModel.parts![index].admin=='false'
                                               ? <FocusedMenuItem>[
                                                   FocusedMenuItem(
                                                       title: Text("Info"),

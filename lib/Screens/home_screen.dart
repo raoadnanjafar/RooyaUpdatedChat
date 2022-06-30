@@ -61,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen>
     (RoomsScreen()),
     // (FriendsScreen()),
   ];
+ late TabController _tabController;
 
   @override
   void initState() {
@@ -74,6 +75,12 @@ class _HomeScreenState extends State<HomeScreen>
     };
     token = '?access_token=${storage.read('token')}';
     super.initState();
+    _tabController = new TabController(vsync: this, length: 3);
+    _tabController.addListener(_handleTabSelection);
+  }
+  void _handleTabSelection() {
+    setState(() {
+    });
   }
 
   bool indexColors = false;
@@ -241,21 +248,22 @@ class _HomeScreenState extends State<HomeScreen>
                           automaticallyImplyLeading: false,
                           elevation: 0.5,
                           collapsedHeight: Platform.isAndroid
-                              ? height * 0.160
+                              ? height * 0.165
                               : height * 0.180,
                           backgroundColor: Colors.white,
                           expandedHeight: height * 0.120,
                           forceElevated: true, //* here
                           shadowColor: Colors.black.withOpacity(0.5),
                           bottom: TabBar(
-                            onTap: (w) {
-                              setState(() {
-                                //indexColors = false;
-                              });
-                            },
+                            labelColor: Colors.black,
+                            unselectedLabelColor: Colors.grey,
+                            controller: _tabController,
                             indicatorColor: Colors.green,
                             //indicatorWeight: 2,
-                            indicatorSize: TabBarIndicatorSize.label,
+                            indicator: UnderlineTabIndicator(
+                                borderSide: BorderSide(width: 2.0,color: Colors.green),
+                                insets: EdgeInsets.symmetric(horizontal:24.0)
+                            ),
                             tabs: [
                               Tab(
                                 height: 39,
@@ -263,14 +271,18 @@ class _HomeScreenState extends State<HomeScreen>
                                   children: [
                                     SvgPicture.asset(
                                       'assets/user/prs.svg',
-                                      color: Colors.black,
-                                    ),
+                                      color:_tabController.index == 0
+                                          ? Colors.black
+                                          : Colors.grey),
+
                                     SizedBox(
                                       height: 4,
                                     ),
                                     Text(
                                       'Chat',
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(color: _tabController.index == 0
+                                          ? Colors.black
+                                          : Colors.grey),
                                     ),
                                   ],
                                 ),
@@ -281,10 +293,15 @@ class _HomeScreenState extends State<HomeScreen>
                                   children: [
                                     SvgPicture.asset(
                                       'assets/user/persons.svg',
+                                        color: _tabController.index == 1
+                                            ? Colors.black
+                                            : Colors.grey
                                     ),
                                     Text(
                                       'Groups',
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(color: _tabController.index == 1
+                                          ? Colors.black
+                                          : Colors.grey),
                                     ),
                                   ],
                                 ),
@@ -294,14 +311,18 @@ class _HomeScreenState extends State<HomeScreen>
                                 child: Column(
                                   children: [
                                     SvgPicture.asset(
-                                      'assets/user/sw.svg',
+                                      'assets/user/sw.svg',color: _tabController.index == 2
+                                    ? Colors.black
+                                    : Colors.grey
                                     ),
                                     SizedBox(
                                       height: 4,
                                     ),
                                     Text(
                                       'Rooms',
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(color: _tabController.index == 2
+                                          ? Colors.black
+                                          : Colors.grey),
                                     ),
                                   ],
                                 ),
@@ -312,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen>
                         ),
                       ];
                     },
-                    body: TabBarView(
+                    body: TabBarView(controller: _tabController,
                       children: [
                         (ChatScreen()),
                         (GroupScreen()),

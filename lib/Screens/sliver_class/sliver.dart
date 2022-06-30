@@ -51,9 +51,6 @@ class _MySliverState extends State<MySliver> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          SizedBox(
-            height: 1,
-          ),
           ListTile(
               leading: Obx(
                 () => hasUserStory.value
@@ -96,7 +93,7 @@ class _MySliverState extends State<MySliver> {
                 padding: const EdgeInsets.only(left: 10),
                 child: Container(
                   //margin: EdgeInsets.only(right: 10),
-                  height: 30,
+                  height: 32,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade200,
                     borderRadius: BorderRadius.circular(18),
@@ -107,7 +104,7 @@ class _MySliverState extends State<MySliver> {
                         hintText: 'Search here...',
                         hintStyle: TextStyle(fontSize: 12),
                         isDense: true,
-                        contentPadding: EdgeInsets.only(top: 3),
+                        contentPadding: EdgeInsets.only(top: 5),
                         isCollapsed: true,
                         prefixIcon: Icon(
                           Icons.search,
@@ -173,47 +170,52 @@ class _MySliverState extends State<MySliver> {
           Expanded(
             child: Obx(() => !storyLoaded.value
                 ? SizedBox()
-                : Center(
-                    child: ListView.builder(
-                      itemCount: controller.storyList.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(left: 16),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 55,
-                              width: 56,
-                              decoration: BoxDecoration(shape: BoxShape.circle),
-                              child: CircularProfileAvatar(
-                                '${controller.storyList[index].stories![0].thumbnail}',
-                                borderWidth: 1,
-                                borderColor: buttonColor,
-                                backgroundColor: Colors.blueGrey[100]!,
-                                onTap: listOfSelectedMember.isNotEmpty
-                                    ? null
-                                    : () {
-                                        context
-                                            .pushTransparentRoute(
-                                                StoryScreenUpdated(
-                                          storyList: controller.storyList,
-                                          currentIndex: index,
-                                        ))
-                                            .then((value) async {
-                                          await controller.getChatList();
-                                          controller.connectToSocket();
-                                          await controller.getStoryList();
-                                          setState(() {});
-                                        });
-                                      },
+                : Padding(
+                  padding: const EdgeInsets.only(left: 4,top: 2),
+                  child: Center(
+                      child: ListView.builder(
+                        itemCount: controller.storyList.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(left: 12),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 55,
+                                width: 56,
+                                decoration: BoxDecoration(shape: BoxShape.circle),
+                                child: CircularProfileAvatar(
+                                  '${controller.storyList[index].stories![0].thumbnail}',
+                                  borderWidth: 1,
+                                  borderColor: buttonColor,
+                                  backgroundColor: Colors.blueGrey[100]!,
+                                  onTap: listOfSelectedMember.isNotEmpty
+                                      ? null
+                                      : () {
+                                          context
+                                              .pushTransparentRoute(
+                                                  StoryScreenUpdated(
+                                            storyList: controller.storyList,
+                                            currentIndex: index,
+                                          ))
+                                              .then((value) async {
+                                            await controller.getChatList();
+                                            controller.connectToSocket();
+                                            await controller.getStoryList();
+                                            setState(() {});
+                                          });
+                                        },
+                                ),
                               ),
-                            ),
-                            Text('${controller.storyList[index].username}')
-                          ],
+                              Container(
+                                  width: 50,
+                                  child: Center(child: Text('${controller.storyList[index].username}',overflow: TextOverflow.ellipsis,)))
+                            ],
+                          ),
                         ),
+                        scrollDirection: Axis.horizontal,
                       ),
-                      scrollDirection: Axis.horizontal,
                     ),
-                  )),
+                )),
           )
           // Container(
           //   height: height * 0.045,
